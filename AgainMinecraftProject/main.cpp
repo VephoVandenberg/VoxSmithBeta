@@ -1,6 +1,10 @@
-#include <iostream>
+#include "src/app/app.h"
 
-int main()
+int main(int argc, char **argv)
 {
-	std::cout << "Hi" << std::endl;
+	App::Application* app = new App::Application;
+	app->run();
+	delete app;
+
+	return 0;
 }
