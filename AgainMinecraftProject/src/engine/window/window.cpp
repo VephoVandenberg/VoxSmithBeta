@@ -32,7 +32,7 @@ void Engine::clearScreen()
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Engine::sfwapBuffersAndPollEvents(GLFWwindow* window)
+void Engine::update(GLFWwindow* window)
 {
 	glfwSwapBuffers(window);
 	glfwPollEvents();

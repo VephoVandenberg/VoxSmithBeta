@@ -1,4 +1,6 @@
 #include "../engine/window/window.h"
+#include "../engine/shader/shader.h"
+#include "../engine/renderer/renderer.h"
 
 #include "app.h"
 
@@ -22,9 +24,28 @@ void Application::init()
 
 void Application::run()
 {
+	float vertices[] = {
+		0.0f, 0.0f,
+		1.0f, 0.0f,
+		0.0f, 1.0f,
+
+		1.0f, 0.0f,
+		1.0f, 1.0f,
+		0.0f, 1.0f
+	};
+
+	Shader shader;
+	initShader(shader, "shaders/base_shader.vert", "shaders/base_shader.frag");
+
+	initRenderer(vertices, sizeof(vertices));
+
 	while (m_isRunning)
 	{
 		clearScreen();
-		sfwapBuffersAndPollEvents(m_window);
+
+		useShader(shader);
+		render();
+
+		update(m_window);
 	}
 }
