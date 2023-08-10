@@ -7,5 +7,5 @@ namespace Engine
 	GLFWwindow* getWindow(const char* title, size_t width, size_t height);
 
 	void clearScreen();
-	void update(GLFWwindow* window);
+	void updateScreen(GLFWwindow* window);
 }

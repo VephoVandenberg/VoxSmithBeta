@@ -1,4 +1,5 @@
-﻿  app.cpp
-  renderer.cpp
+﻿  texture.cpp
+  window.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\window\window.cpp(17,94): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
   Generating Code...
   AgainMinecraftProject.vcxproj -> D:\Working\AgainMinecraftProject\x64\Debug\AgainMinecraftProject.exe

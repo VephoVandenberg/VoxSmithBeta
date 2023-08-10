@@ -1,5 +1,4 @@
 #include "../engine/window/window.h"
-#include "../engine/shader/shader.h"
 #include "../engine/renderer/renderer.h"
 
 #include "app.h"
@@ -25,27 +24,46 @@ void Application::init()
 void Application::run()
 {
 	float vertices[] = {
-		0.0f, 0.0f,
-		1.0f, 0.0f,
-		0.0f, 1.0f,
+		0, 0,	0, 0,
+		1, 0,	1, 0,
+		0, 1,	0, 1,
 
-		1.0f, 0.0f,
-		1.0f, 1.0f,
-		0.0f, 1.0f
+		1, 0,	1, 0,
+		1, 1,	1, 1,
+		0, 1,	0, 1
 	};
 
 	Shader shader;
-	initShader(shader, "shaders/base_shader.vert", "shaders/base_shader.frag");
 
+	initShader(shader, "shaders/base_shader.vert", "shaders/base_shader.frag");
 	initRenderer(vertices, sizeof(vertices));
+	useShader(shader);
+
+	Texture texture;
+	initTexture(texture, "textures/grass.png");
+	useTexture(texture);
 
 	while (m_isRunning)
 	{
 		clearScreen();
 
-		useShader(shader);
 		render();
 
-		update(m_window);
+		updateScreen(m_window);
 	}
+}
+
+void Application::handleInput()
+{
+
+}
+
+void Application::onRender()
+{
+
+}
+
+void Application::onUpdate()
+{
+
 }

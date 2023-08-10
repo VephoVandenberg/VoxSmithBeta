@@ -136,13 +136,17 @@
     <ClCompile Include="src\app\app.cpp" />
     <ClCompile Include="src\engine\renderer\renderer.cpp" />
     <ClCompile Include="src\engine\shader\shader.cpp" />
+    <ClCompile Include="src\engine\texture\texture.cpp" />
     <ClCompile Include="src\engine\window\window.cpp" />
     <ClCompile Include="vendor\GLAD\src\glad.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app\app.h" />
+    <ClInclude Include="src\engine\camera\camera.h" />
     <ClInclude Include="src\engine\renderer\renderer.h" />
     <ClInclude Include="src\engine\shader\shader.h" />
+    <ClInclude Include="src\engine\texture\stb_loader.h" />
+    <ClInclude Include="src\engine\texture\texture.h" />
     <ClInclude Include="src\engine\window\window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

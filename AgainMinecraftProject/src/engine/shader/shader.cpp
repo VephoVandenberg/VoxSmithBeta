@@ -62,7 +62,7 @@ void Engine::initShader(Shader& shader, const char* vPath, const char* fPath)
 	if (!success)
 	{
 		glGetShaderInfoLog(fID, 512, NULL, infolog);
-		std::cout << "ERROR::VERTEX_SHADER::COMPILATION_FAILED:" << std::endl;
+		std::cout << "ERROR::FRAGMENT_SHADER::COMPILATION_FAILED:" << std::endl;
 		std::cout << infolog << std::endl;
 		exit(EXIT_FAILURE);
 	}
@@ -86,4 +86,19 @@ void Engine::initShader(Shader& shader, const char* vPath, const char* fPath)
 void Engine::useShader(Shader& shader)
 {
 	glUseProgram(shader.id);
+}
+
+void Engine::setUniformi(Shader& shader, const char* uniform, int value)
+{
+	glUniform1d(glGetUniformLocation(shader.id, uniform), value);
+}
+
+void setUniform3f(Shader& shader, const char* uniform, glm::vec3 vec)
+{
+	glUniform3fv(glGetUniformLocation(shader.id, uniform), 1, &vec[0]);
+}
+
+void setUniform4m(Shader& shader, const char* uniform, glm::mat4 mat)
+{
+	glUniformMatrix4fv(glGetUniformLocation(shader.id, uniform), 1, false, &mat[0][0]);
 }
