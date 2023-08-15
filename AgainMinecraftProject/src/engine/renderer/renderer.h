@@ -2,6 +2,9 @@
 
 namespace Engine
 {
-	void initRenderer(const float* vertices, size_t size);
-	void render();
+	namespace Renderer
+	{
+		void initRenderer(const float* vertices, size_t size);
+		void render();
+	}
 }

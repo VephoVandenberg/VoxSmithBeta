@@ -4,8 +4,8 @@ namespace Engine
 {
 	struct Texture
 	{
-		unsigned int id;
-		int width, height, nrChannels;
+		uint32_t id;
+		int32_t width, height, nrChannels;
 	};
 
 	bool initTexture(Texture& texture, const char* path);

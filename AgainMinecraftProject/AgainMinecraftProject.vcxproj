@@ -134,6 +134,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\app\app.cpp" />
+    <ClCompile Include="src\engine\camera\camera.cpp" />
     <ClCompile Include="src\engine\renderer\renderer.cpp" />
     <ClCompile Include="src\engine\shader\shader.cpp" />
     <ClCompile Include="src\engine\texture\texture.cpp" />

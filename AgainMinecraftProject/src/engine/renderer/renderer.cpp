@@ -1,13 +1,14 @@
+#include <stdint.h>
 #include <glad/glad.h>
 
 #include "renderer.h"
 
-using namespace Engine;
+using namespace Engine::Renderer;
 
-static unsigned int VAO;
-static unsigned int VBO;
+static uint32_t VAO;
+static uint32_t VBO;
 
-void Engine::initRenderer(const float* vertices, size_t size)
+void Engine::Renderer::initRenderer(const float* vertices, size_t size)
 {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -18,13 +19,13 @@ void Engine::initRenderer(const float* vertices, size_t size)
 	glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3  * sizeof(float)));
 }
 
-void Engine::render()	
+void Engine::Renderer::render()	
 {
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);

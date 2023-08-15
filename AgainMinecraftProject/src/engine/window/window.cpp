@@ -14,7 +14,7 @@ GLFWwindow* Engine::getWindow(const char* title, size_t width, size_t height)
 		exit(EXIT_FAILURE);
 	}
 
-	GLFWwindow* window = glfwCreateWindow(width, height, title, glfwGetPrimaryMonitor(), nullptr);
+	GLFWwindow* window = glfwCreateWindow(width, height, title, nullptr, nullptr);
 	glfwMakeContextCurrent(window);
 
 	if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -22,6 +22,7 @@ GLFWwindow* Engine::getWindow(const char* title, size_t width, size_t height)
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		exit(EXIT_FAILURE);
 	}
+	glViewport(0, 0, width, height);
 
 	return window;
 }

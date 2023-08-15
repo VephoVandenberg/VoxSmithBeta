@@ -20,15 +20,15 @@ bool Engine::initTexture(Texture& texture, const char* path)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	if (std::string(path).find(".jpg", 3) && data)
+	if (std::string(path).find(".jpg") && data)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.width, texture.height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.width, texture.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		stbi_image_free(data);
 		return true;
 	}
 	
-	if (std::string(path).find(".png", 3) && data)
+	if (std::string(path).find(".png") && data)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.width, texture.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
@@ -37,6 +37,7 @@ bool Engine::initTexture(Texture& texture, const char* path)
 	}
 
 	std::cout << "Could not initalize texture" << std::endl;
+	exit(EXIT_FAILURE);
 	return false;
 }
 

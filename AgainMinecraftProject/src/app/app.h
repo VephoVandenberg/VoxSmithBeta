@@ -2,6 +2,7 @@
 
 #include "../engine/shader/shader.h"
 #include "../engine/texture/texture.h"
+#include "../engine/camera/camera.h"
 
 #include <map>
 
@@ -25,14 +26,16 @@ namespace App
 
 	private:
 		void init();
-		void handleInput();
 		void onRender();
 		void onUpdate();
+		void handleInput();
 
 		bool m_isRunning = false;
+		bool m_keyboard[1024];
 		GLFWwindow* m_window = nullptr;
 
 		std::map<const char*, Engine::Shader> m_shaders;
 		std::map<const char*, Engine::Texture> m_textures;
+		Engine::Camera m_camera;
 	};
 }
