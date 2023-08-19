@@ -12,15 +12,17 @@ static Camera* g_camera = nullptr;
 
 static bool g_firstMouseMove = true;
 
-void Engine::initCamera(Camera& camera, const glm::vec3 target, const glm::vec3 pos)
+void Engine::initCamera(Camera& camera, GLFWwindow* window, const glm::vec3 target, const glm::vec3 pos)
 {
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	camera.pos = pos;
 	camera.speed = g_cameraSpeed;
 	camera.front = target;
 	camera.up = { 0.0f, 1.0f, 0.0f };
 	camera.view = glm::lookAt(camera.pos, camera.front, camera.up);
-
 	g_camera = &camera;
+	glfwSetCursorPosCallback(window, updateCameraRotation);
 }
 
 void Engine::updateCameraMove(const bool* keyboard)

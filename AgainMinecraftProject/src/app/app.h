@@ -26,6 +26,8 @@ namespace App
 
 	private:
 		void init();
+		void initShaders();
+		void initTextures();
 		void onRender();
 		void onUpdate();
 		void handleInput();

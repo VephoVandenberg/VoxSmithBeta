@@ -19,7 +19,7 @@ namespace Engine
 		float pitch;
 	};
 
-	void initCamera(Camera& camera, const glm::vec3 target, const glm::vec3 pos);
+	void initCamera(Camera& camera, GLFWwindow* window, const glm::vec3 target, const glm::vec3 pos);
 	void updateCameraMove(const bool* keyboard);
 	void updateCameraRotation(GLFWwindow* window, const double xPos, const double yPos);
 }

@@ -4,14 +4,14 @@
 #include <functional>
 
 #include "../engine/window/window.h"
-#include "../engine/renderer/renderer.h"
+#include "../engine/renderer/cube_renderer.h"
 
 #include "app.h"
 
 using namespace Engine;
 using namespace App;
 
-const char* g_title = "Azamat's Minecraft fucking again";
+const char* g_title = "Azamat's making Minecraft fucking again";
 constexpr size_t g_width = 1240;
 constexpr size_t g_height = 720;
 
@@ -24,35 +24,93 @@ Application::Application()
 void Application::init()
 {
 	m_window = getWindow(g_title, g_width, g_height);
+
+	m_camera.lastX = g_width / 2;
+	m_camera.lastY = g_height / 2;
+	initCamera(m_camera, m_window, glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 3.0f));
+	initShaders();
+	initTextures();
 }
 
-void Application::run()
+void Application::initShaders()
 {
+
 	float vertices[] = {
+		// back
 		0, 0, 0, 	0, 0,
 		1, 0, 0,	1, 0,
 		0, 1, 0,	0, 1,
 
 		1, 0, 0,	1, 0,
 		1, 1, 0,	1, 1,
-		0, 1, 0,	0, 1
+		0, 1, 0,	0, 1,
+
+		// front
+		0, 0, 1, 	0, 0,
+		1, 0, 1,	1, 0,
+		0, 1, 1,	0, 1,
+
+		1, 0, 1,	1, 0,
+		1, 1, 1,	1, 1,
+		0, 1, 1,	0, 1,
+
+		// top
+		0, 1, 1, 	0, 0,
+		1, 1, 1,	1, 0,
+		0, 1, 0,	0, 1,
+
+		1, 1, 1,	1, 0,
+		1, 1, 0,	1, 1,
+		0, 1, 0,	0, 1,
+
+		// bottom
+		0, 0, 1, 	0, 0,
+		1, 0, 1,	1, 0,
+		0, 0, 0,	0, 1,
+
+		1, 0, 1,	1, 0,
+		1, 0, 0,	1, 1,
+		0, 0, 0,	0, 1,
+
+		// left
+		0, 0, 0, 	0, 0,
+		0, 0, 1,	1, 0,
+		0, 1, 0,	0, 1,
+
+		0, 0, 1,	1, 0,
+		0, 1, 1,	1, 1,
+		0, 1, 0,	0, 1,
+
+		// right
+		1, 0, 1, 	0, 0,
+		1, 0, 0,	1, 0,
+		1, 1, 1,	0, 1,
+
+		1, 0, 0,	1, 0,
+		1, 1, 0,	1, 1,
+		1, 1, 1,	0, 1,
 	};
 
 	Shader shader;
-
-	m_camera.lastX = g_width / 2;
-	m_camera.lastY = g_height / 2;
-	initCamera(m_camera, glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 3.0f));
-	glfwSetCursorPosCallback(m_window, updateCameraRotation);
-	initShader(shader, "shaders/base_shader.vert", "shaders/base_shader.frag");
-	glm::mat4 projection = 
+	initShader(shader, "shaders/cube_shader.vert", "shaders/cube_shader.frag");
+	m_shaders.insert({ "cube", shader });
+	useShader(m_shaders["cube"]);
+	glm::mat4 projection =
 		glm::perspective(
 			glm::radians(45.0f), static_cast<float>(g_width) / static_cast<float>(g_height), 0.1f, 100.0f);
-	Renderer::initRenderer(vertices, sizeof(vertices));
-	useShader(shader);
-	setUniform4m(shader, "u_projection", projection);
-	setUniform4m(shader, "u_view", m_camera.view);
+	Renderer::loadData(vertices, sizeof(vertices));
+	useShader(m_shaders["cube"]);
+	setUniform4m(m_shaders["cube"], "u_projection", projection);
+	setUniform4m(m_shaders["cube"], "u_view", m_camera.view);
+}
 
+void Application::initTextures()
+{
+
+}
+
+void Application::run()
+{
 	Texture texture;
 	initTexture(texture, "textures/grass.png");
 	useTexture(texture);
@@ -60,7 +118,7 @@ void Application::run()
 	while (m_isRunning)
 	{
 		clearScreen();
-		setUniform4m(shader, "u_view", m_camera.view);
+		setUniform4m(m_shaders["cube"], "u_view", m_camera.view);
 
 		onRender();
 
@@ -112,7 +170,7 @@ void Application::handleInput()
 
 void Application::onRender()
 {
-	Renderer::render();
+	Renderer::renderCube();
 }
 
 void Application::onUpdate()

@@ -2,9 +2,7 @@
 
 /** TO DO LIST
 * Agenda
-* - Do the camera
 * Later
-* - Cube
 * - Create a mesh
 * - Face cullung
 * - Investigate math behind coordinate systems and matrices
