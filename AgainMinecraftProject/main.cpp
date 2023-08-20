@@ -2,8 +2,9 @@
 
 /** TO DO LIST
 * Agenda
-* Later
 * - Create a mesh
+* - Fix camera
+* Later
 * - Face cullung
 * - Investigate math behind coordinate systems and matrices
 */

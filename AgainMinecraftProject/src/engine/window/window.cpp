@@ -16,6 +16,7 @@ GLFWwindow* Engine::getWindow(const char* title, size_t width, size_t height)
 
 	GLFWwindow* window = glfwCreateWindow(width, height, title, nullptr, nullptr);
 	glfwMakeContextCurrent(window);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{

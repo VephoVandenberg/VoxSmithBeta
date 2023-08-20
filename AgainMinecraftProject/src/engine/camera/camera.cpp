@@ -12,16 +12,25 @@ static Camera* g_camera = nullptr;
 
 static bool g_firstMouseMove = true;
 
-void Engine::initCamera(Camera& camera, GLFWwindow* window, const glm::vec3 target, const glm::vec3 pos)
+void Engine::initCamera(GLFWwindow* window, const glm::vec3 target, const glm::vec3 pos)
 {
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	if (g_camera)
+	{
+		return;
+	}
 
-	camera.pos = pos;
-	camera.speed = g_cameraSpeed;
-	camera.front = target;
-	camera.up = { 0.0f, 1.0f, 0.0f };
-	camera.view = glm::lookAt(camera.pos, camera.front, camera.up);
-	g_camera = &camera;
+	g_camera = new Camera;
+
+	g_camera->lastX = 620;
+	g_camera->yaw = -90.0f;
+	g_camera->pitch = 0.0f;
+	g_camera->lastY = 360;
+	g_camera->pos = pos;
+	g_camera->speed = g_cameraSpeed;
+	g_camera->front = target;
+	g_camera->up = { 0.0f, 1.0f, 0.0f };
+	g_camera->view = glm::lookAt(g_camera->pos, g_camera->front, g_camera->up);
+
 	glfwSetCursorPosCallback(window, updateCameraRotation);
 }
 
@@ -61,6 +70,11 @@ void Engine::updateCameraMove(const bool* keyboard)
 
 void Engine::updateCameraRotation(GLFWwindow* window, const double xPos, const double yPos)
 {
+	if (!g_camera)
+	{
+		return;
+	}
+
 	if (g_firstMouseMove)
 	{
 		g_camera->lastX = xPos;
@@ -94,4 +108,9 @@ void Engine::updateCameraRotation(GLFWwindow* window, const double xPos, const d
 	direction.y = sin(glm::radians(g_camera->pitch));
 	direction.z = sin(glm::radians(g_camera->yaw)) * cos(glm::radians(g_camera->pitch));
 	g_camera->front = glm::normalize(direction);
+}
+
+glm::mat4 Engine::getCameraView()
+{
+	return g_camera->view;
 }

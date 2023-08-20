@@ -4,7 +4,7 @@ namespace Engine
 {
 	namespace Renderer
 	{
-		void loadData(const float* vertices, size_t size);
+		void loadData();
 		
 		void renderQuad();
 		void renderCube();

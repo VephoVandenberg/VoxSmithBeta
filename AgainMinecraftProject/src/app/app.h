@@ -38,6 +38,5 @@ namespace App
 
 		std::map<const char*, Engine::Shader> m_shaders;
 		std::map<const char*, Engine::Texture> m_textures;
-		Engine::Camera m_camera;
 	};
 }

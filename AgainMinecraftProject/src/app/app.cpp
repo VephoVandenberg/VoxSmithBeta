@@ -25,72 +25,13 @@ void Application::init()
 {
 	m_window = getWindow(g_title, g_width, g_height);
 
-	m_camera.lastX = g_width / 2;
-	m_camera.lastY = g_height / 2;
-	initCamera(m_camera, m_window, glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 3.0f));
+	initCamera(m_window, glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 3.0f));
 	initShaders();
 	initTextures();
 }
 
 void Application::initShaders()
 {
-
-	float vertices[] = {
-		// back
-		0, 0, 0, 	0, 0,
-		1, 0, 0,	1, 0,
-		0, 1, 0,	0, 1,
-
-		1, 0, 0,	1, 0,
-		1, 1, 0,	1, 1,
-		0, 1, 0,	0, 1,
-
-		// front
-		0, 0, 1, 	0, 0,
-		1, 0, 1,	1, 0,
-		0, 1, 1,	0, 1,
-
-		1, 0, 1,	1, 0,
-		1, 1, 1,	1, 1,
-		0, 1, 1,	0, 1,
-
-		// top
-		0, 1, 1, 	0, 0,
-		1, 1, 1,	1, 0,
-		0, 1, 0,	0, 1,
-
-		1, 1, 1,	1, 0,
-		1, 1, 0,	1, 1,
-		0, 1, 0,	0, 1,
-
-		// bottom
-		0, 0, 1, 	0, 0,
-		1, 0, 1,	1, 0,
-		0, 0, 0,	0, 1,
-
-		1, 0, 1,	1, 0,
-		1, 0, 0,	1, 1,
-		0, 0, 0,	0, 1,
-
-		// left
-		0, 0, 0, 	0, 0,
-		0, 0, 1,	1, 0,
-		0, 1, 0,	0, 1,
-
-		0, 0, 1,	1, 0,
-		0, 1, 1,	1, 1,
-		0, 1, 0,	0, 1,
-
-		// right
-		1, 0, 1, 	0, 0,
-		1, 0, 0,	1, 0,
-		1, 1, 1,	0, 1,
-
-		1, 0, 0,	1, 0,
-		1, 1, 0,	1, 1,
-		1, 1, 1,	0, 1,
-	};
-
 	Shader shader;
 	initShader(shader, "shaders/cube_shader.vert", "shaders/cube_shader.frag");
 	m_shaders.insert({ "cube", shader });
@@ -98,27 +39,26 @@ void Application::initShaders()
 	glm::mat4 projection =
 		glm::perspective(
 			glm::radians(45.0f), static_cast<float>(g_width) / static_cast<float>(g_height), 0.1f, 100.0f);
-	Renderer::loadData(vertices, sizeof(vertices));
+	Renderer::loadData();
 	useShader(m_shaders["cube"]);
 	setUniform4m(m_shaders["cube"], "u_projection", projection);
-	setUniform4m(m_shaders["cube"], "u_view", m_camera.view);
+	setUniform4m(m_shaders["cube"], "u_view", getCameraView());
 }
 
 void Application::initTextures()
 {
-
+	Texture texture;
+	initTexture(texture, "textures/grass.png");
+	m_textures["grass"] = texture;
 }
 
 void Application::run()
 {
-	Texture texture;
-	initTexture(texture, "textures/grass.png");
-	useTexture(texture);
-
+	useTexture(m_textures["grass"]);
 	while (m_isRunning)
 	{
 		clearScreen();
-		setUniform4m(m_shaders["cube"], "u_view", m_camera.view);
+		setUniform4m(m_shaders["cube"], "u_view", getCameraView());
 
 		onRender();
 
