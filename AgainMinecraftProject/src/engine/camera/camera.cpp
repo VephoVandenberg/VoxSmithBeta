@@ -22,9 +22,9 @@ void Engine::initCamera(GLFWwindow* window, const glm::vec3 target, const glm::v
 	g_camera = new Camera;
 
 	g_camera->lastX = 620;
+	g_camera->lastY = 360;
 	g_camera->yaw = -90.0f;
 	g_camera->pitch = 0.0f;
-	g_camera->lastY = 360;
 	g_camera->pos = pos;
 	g_camera->speed = g_cameraSpeed;
 	g_camera->front = target;

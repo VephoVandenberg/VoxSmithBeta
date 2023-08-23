@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -132,25 +132,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\app\app.cpp" />
     <ClCompile Include="src\engine\camera\camera.cpp" />
-    <ClCompile Include="src\engine\renderer\cube_renderer.cpp" />
+    <ClCompile Include="src\engine\renderer\block_renderer.cpp" />
     <ClCompile Include="src\engine\renderer\mesh.cpp" />
     <ClCompile Include="src\engine\shader\shader.cpp" />
     <ClCompile Include="src\engine\texture\texture.cpp" />
     <ClCompile Include="src\engine\window\window.cpp" />
+    <ClCompile Include="src\modules\chunk\chunk.cpp" />
     <ClCompile Include="vendor\GLAD\src\glad.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app\app.h" />
     <ClInclude Include="src\engine\camera\camera.h" />
-    <ClInclude Include="src\engine\renderer\cube_renderer.h" />
-    <ClInclude Include="src\engine\renderer\mehs.h" />
+    <ClInclude Include="src\engine\renderer\block_renderer.h" />
+    <ClInclude Include="src\engine\renderer\mesh.h" />
     <ClInclude Include="src\engine\shader\shader.h" />
+    <ClInclude Include="src\engine\shader\shader_list.h" />
     <ClInclude Include="src\engine\texture\stb_loader.h" />
     <ClInclude Include="src\engine\texture\texture.h" />
     <ClInclude Include="src\engine\window\window.h" />
+    <ClInclude Include="src\modules\chunk\block.h" />
+    <ClInclude Include="src\modules\chunk\chunk.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\mesh_shader.frag" />
+    <None Include="shaders\mesh_shader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

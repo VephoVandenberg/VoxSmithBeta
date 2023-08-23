@@ -25,7 +25,7 @@ GLFWwindow* Engine::getWindow(const char* title, size_t width, size_t height)
 	}
 	glViewport(0, 0, width, height);
 	glEnable(GL_DEPTH_TEST);
-
+	glEnable(GL_CULL_FACE);
 
 	return window;
 }

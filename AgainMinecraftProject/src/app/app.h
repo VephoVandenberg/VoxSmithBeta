@@ -4,7 +4,10 @@
 #include "../engine/texture/texture.h"
 #include "../engine/camera/camera.h"
 
+#include "../modules/chunk/chunk.h"
+
 #include <map>
+#include <vector>
 
 struct GLFWwindow;
 
@@ -38,5 +41,7 @@ namespace App
 
 		std::map<const char*, Engine::Shader> m_shaders;
 		std::map<const char*, Engine::Texture> m_textures;
+		std::vector<glm::vec3> m_blockPositions;
+		std::vector<GameModule::Chunk> m_chunks;
 	};
 }

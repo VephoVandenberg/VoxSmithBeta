@@ -5,9 +5,24 @@
 
 #include <glad/glad.h>
 
+#include "shader_list.h"
 #include "shader.h"
 
 using namespace Engine;
+
+void Engine::loadShaders(std::map<const char*, Shader>& shaders)
+{
+	for (auto& el : s_shaderPaths)
+	{
+		auto shaderName = el.first;
+		auto vPath = el.second.first;
+		auto fPath = el.second.second;
+
+		Shader shader;
+		initShader(shader, vPath, fPath);
+		shaders.insert({ shaderName, shader });
+	}
+}
 
 void Engine::initShader(Shader& shader, const char* vPath, const char* fPath)
 {

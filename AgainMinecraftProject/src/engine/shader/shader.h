@@ -1,5 +1,7 @@
 #pragma once
 
+#include <map>
+
 #include <glm/glm.hpp>
 
 namespace Engine
@@ -9,6 +11,8 @@ namespace Engine
 		size_t id;
 	};
 
+
+	void loadShaders(std::map<const char*, Shader>& shaders);
 	void initShader(Shader& shader, const char* vPath, const char* fPath);
 	void useShader(Shader& shader);
 	

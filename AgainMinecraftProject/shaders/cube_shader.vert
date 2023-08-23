@@ -5,11 +5,12 @@ layout (location = 1) in vec2 aTexCoords;
 
 out vec2 fragTexCoords;
 
+uniform vec3 u_position;
 uniform mat4 u_projection;
 uniform mat4 u_view;
 
 void main()
 {
-	gl_Position = u_projection * u_view * vec4(aPos, 1.0f);
+	gl_Position = u_projection * u_view * vec4(aPos + u_position, 1.0f);
 	fragTexCoords = aTexCoords;
 }
