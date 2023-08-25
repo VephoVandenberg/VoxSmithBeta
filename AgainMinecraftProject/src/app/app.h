@@ -17,10 +17,9 @@ namespace App
 	{
 	public:
 		Application();
+		~Application();
 
 		void run();
-
-		~Application() = default;
 		
 		Application(const Application&) = delete;
 		Application(Application&&) = delete;
@@ -41,7 +40,6 @@ namespace App
 
 		std::map<const char*, Engine::Shader> m_shaders;
 		std::map<const char*, Engine::Texture> m_textures;
-		std::vector<glm::vec3> m_blockPositions;
 		std::vector<GameModule::Chunk> m_chunks;
 	};
 }

@@ -146,6 +146,7 @@
   <ItemGroup>
     <ClInclude Include="src\app\app.h" />
     <ClInclude Include="src\engine\camera\camera.h" />
+    <ClInclude Include="src\engine\ray\ray.h" />
     <ClInclude Include="src\engine\renderer\block_renderer.h" />
     <ClInclude Include="src\engine\renderer\mesh.h" />
     <ClInclude Include="src\engine\shader\shader.h" />
@@ -159,6 +160,8 @@
   <ItemGroup>
     <None Include="shaders\mesh_shader.frag" />
     <None Include="shaders\mesh_shader.vert" />
+    <None Include="shaders\ray_shader.frag" />
+    <None Include="shaders\ray_shader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

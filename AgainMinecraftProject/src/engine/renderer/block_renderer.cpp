@@ -1,96 +1,116 @@
 #include <stdint.h>
 #include <glad/glad.h>
 
+#include "../ray/ray.h"
+
 #include "block_renderer.h"
 
 using namespace Engine::Renderer;
 
-static uint32_t VAO;
-static uint32_t VBO;
+Buffer g_buffer;
 
-void Engine::Renderer::loadData()
+// This might not be needed anymore
+constexpr float g_cubeVertices[] = {
+	// Vertices, TexCoords
+
+	// back
+	0, 0, 0, 	0, 0,
+	1, 0, 0,	1, 0,
+	0, 1, 0,	0, 1,
+
+	1, 0, 0,	1, 0,
+	1, 1, 0,	1, 1,
+	0, 1, 0,	0, 1,
+
+	// front
+	0, 0, 1, 	0, 0,
+	1, 0, 1,	1, 0,
+	0, 1, 1,	0, 1,
+
+	1, 0, 1,	1, 0,
+	1, 1, 1,	1, 1,
+	0, 1, 1,	0, 1,
+
+	// top
+	0, 1, 1, 	0, 0,
+	1, 1, 1,	1, 0,
+	0, 1, 0,	0, 1,
+
+	1, 1, 1,	1, 0,
+	1, 1, 0,	1, 1,
+	0, 1, 0,	0, 1,
+
+	// bottom
+	0, 0, 1, 	0, 0,
+	1, 0, 1,	1, 0,
+	0, 0, 0,	0, 1,
+
+	1, 0, 1,	1, 0,
+	1, 0, 0,	1, 1,
+	0, 0, 0,	0, 1,
+
+	// left
+	0, 0, 0, 	0, 0,
+	0, 0, 1,	1, 0,
+	0, 1, 0,	0, 1,
+
+	0, 0, 1,	1, 0,
+	0, 1, 1,	1, 1,
+	0, 1, 0,	0, 1,
+
+	// right
+	1, 0, 1, 	0, 0,
+	1, 0, 0,	1, 0,
+	1, 1, 1,	0, 1,
+
+	1, 0, 0,	1, 0,
+	1, 1, 0,	1, 1,
+	1, 1, 1,	0, 1,
+};
+
+constexpr float g_lineWidth = 5.0f;
+
+void Engine::Renderer::loadCubeData(Buffer& buffer, const float* vertices, bool hasColor, bool hasTexture)
+{
+	// This function might not be needed at all
+}
+
+void Engine::Renderer::loadRayData(const Ray& ray)
 {
 	const float vertices[] = {
-		// Vertices, TexCoords
-
-		// back
-		0, 0, 0, 	0, 0,
-		1, 0, 0,	1, 0,
-		0, 1, 0,	0, 1,
-
-		1, 0, 0,	1, 0,
-		1, 1, 0,	1, 1,
-		0, 1, 0,	0, 1,
-
-		// front
-		0, 0, 1, 	0, 0,
-		1, 0, 1,	1, 0,
-		0, 1, 1,	0, 1,
-
-		1, 0, 1,	1, 0,
-		1, 1, 1,	1, 1,
-		0, 1, 1,	0, 1,
-
-		// top
-		0, 1, 1, 	0, 0,
-		1, 1, 1,	1, 0,
-		0, 1, 0,	0, 1,
-
-		1, 1, 1,	1, 0,
-		1, 1, 0,	1, 1,
-		0, 1, 0,	0, 1,
-
-		// bottom
-		0, 0, 1, 	0, 0,
-		1, 0, 1,	1, 0,
-		0, 0, 0,	0, 1,
-
-		1, 0, 1,	1, 0,
-		1, 0, 0,	1, 1,
-		0, 0, 0,	0, 1,
-
-		// left
-		0, 0, 0, 	0, 0,
-		0, 0, 1,	1, 0,
-		0, 1, 0,	0, 1,
-
-		0, 0, 1,	1, 0,
-		0, 1, 1,	1, 1,
-		0, 1, 0,	0, 1,
-
-		// right
-		1, 0, 1, 	0, 0,
-		1, 0, 0,	1, 0,
-		1, 1, 1,	0, 1,
-
-		1, 0, 0,	1, 0,
-		1, 1, 0,	1, 1,
-		1, 1, 1,	0, 1,
+		ray.start.x, ray.start.y, ray.start.z,
+		ray.end.x, ray.end.y, ray.end.z
 	};
 
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
+	glGenVertexArrays(1, &g_buffer.VAO);
+	glGenBuffers(1, &g_buffer.VBO);
 
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBindVertexArray(g_buffer.VAO);
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, g_buffer.VBO);
+	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), vertices, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3  * sizeof(float)));
+	glLineWidth(g_lineWidth);
 }
 
-void Engine::Renderer::renderQuad()	
+void Engine::Renderer::render(const Type type)
 {
-	glBindVertexArray(VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-}
+	glBindVertexArray(g_buffer.VAO);
+	switch (type)
+	{
+	case Type::CUBE:
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		break;
 
-void Engine::Renderer::renderCube()
-{
-	glBindVertexArray(VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	case Type::QUAD:
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		break;
+	
+	case Type::RAY:
+		glDrawArrays(GL_LINES, 0, 2);
+		break;
+	}
 }

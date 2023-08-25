@@ -80,9 +80,14 @@
     <ClInclude Include="src\engine\shader\shader_list.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\ray\ray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\mesh_shader.vert" />
     <None Include="shaders\mesh_shader.frag" />
+    <None Include="shaders\ray_shader.vert" />
+    <None Include="shaders\ray_shader.frag" />
   </ItemGroup>
 </Project>

@@ -4,6 +4,7 @@
 
 using namespace Engine::Renderer;
 
+
 void Engine::Renderer::loadData(Mesh* mesh)
 {
 	glGenVertexArrays(1, &mesh->VAO);
@@ -19,6 +20,11 @@ void Engine::Renderer::loadData(Mesh* mesh)
 
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
 	glEnableVertexAttribArray(1);
+}
+
+void Engine::Renderer::updateData(Mesh* mesh)
+{
+
 }
 
 void Engine::Renderer::renderMesh(const Mesh* mesh)

@@ -22,6 +22,7 @@ namespace Engine
 		};
 
 		void loadData(Mesh* mesh);
+		void updateData(Mesh* mesh);
 		void renderMesh(const Mesh* mesh);
 	}
 }

@@ -5,6 +5,8 @@
 
 #include "../engine/window/window.h"
 #include "../engine/shader/shader_list.h"
+
+#include "../engine/ray/ray.h"
 #include "../engine/renderer/block_renderer.h"
 
 #include "../modules/chunk/chunk.h"
@@ -19,15 +21,23 @@ const char* g_title = "Azamat's making Minecraft fucking again";
 constexpr size_t g_width = 1240;
 constexpr size_t g_height = 720;
 
-constexpr size_t numberOfChunksX = 1;
-constexpr size_t numberOfChunksZ = 1;
+constexpr size_t numberOfChunksX = 3;
+constexpr size_t numberOfChunksZ = 3;
 
 constexpr glm::vec3 g_chunkSize = { 8, 8, 8 };
+
+Ray m_ray;
+Renderer::Buffer m_rayBuffer;
 
 Application::Application()
 	: m_isRunning(true)
 {
 	init();
+}
+
+Application::~Application()
+{
+	freeCamera();
 }
 
 void Application::init()
@@ -43,18 +53,8 @@ void Application::init()
 		for (uint32_t z = 0; z < numberOfChunksZ; z++)
 		{
 			m_chunks.emplace_back(generateChunk({ x, 0, z }));
-			generateMesh(&m_chunks.back());
-		}
-	}
-
-	for (uint32_t x = 0; x < g_chunkSize.x; x++)
-	{
-		for (uint32_t y = 0; y < g_chunkSize.y; y++)
-		{
-			for (uint32_t z = 0; z < g_chunkSize.z; z++)
-			{
-				m_blockPositions.push_back({ x, y, z });
-			}
+			generateMesh(m_chunks.back());
+			loadChunkMesh(m_chunks.back());
 		}
 	}
 }
@@ -66,7 +66,6 @@ void Application::initShaders()
 	glm::mat4 projection =
 		glm::perspective(
 			glm::radians(45.0f), static_cast<float>(g_width) / static_cast<float>(g_height), 0.1f, 100.0f);
-	Renderer::loadData();
 
 	useShader(m_shaders[s_cubeShader]);
 	setUniform4m(m_shaders[s_cubeShader], "u_projection", projection);
@@ -75,6 +74,10 @@ void Application::initShaders()
 	useShader(m_shaders[s_meshShader]);
 	setUniform4m(m_shaders[s_meshShader], "u_projection", projection);
 	setUniform4m(m_shaders[s_meshShader], "u_view", getCameraView());
+
+	useShader(m_shaders[s_rayShader]);
+	setUniform4m(m_shaders[s_rayShader], "u_projection", projection);
+	setUniform4m(m_shaders[s_rayShader], "u_view", getCameraView());
 }
 
 void Application::initTextures()
@@ -136,18 +139,36 @@ void Application::handleInput()
 	{
 		m_keyboard[GLFW_KEY_S] = false;
 	}
+
+	if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+	{
+		m_keyboard[GLFW_MOUSE_BUTTON_1] = true;
+	}
+	else
+	{
+		m_keyboard[GLFW_MOUSE_BUTTON_1] = false;
+	}
 }
 
 void Application::onRender()
 {
 	setUniform4m(m_shaders[s_meshShader], "u_view", getCameraView());
-	for (auto& chunk: m_chunks)
+	for (const auto& chunk: m_chunks)
 	{
-		drawChunk(&chunk);
+		drawChunk(chunk);
 	}
+
+	setUniform4m(m_shaders[s_rayShader], "u_view", getCameraView());
+	Renderer::render(Renderer::Type::RAY);
 }
 
 void Application::onUpdate()
 {
 	updateCameraMove(m_keyboard);
+
+	if (m_keyboard[GLFW_MOUSE_BUTTON_1])
+	{
+		Ray ray = castRay();
+		Renderer::loadRayData(ray);
+	}
 }

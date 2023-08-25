@@ -105,15 +105,18 @@ void Engine::useShader(Shader& shader)
 
 void Engine::setUniformi(Shader& shader, const char* uniform, uint32_t value)
 {
+	useShader(shader);
 	glUniform1d(glGetUniformLocation(shader.id, uniform), value);
 }
 
 void Engine::setUniform3f(Shader& shader, const char* uniform, glm::vec3 vec)
 {
+	useShader(shader);
 	glUniform3fv(glGetUniformLocation(shader.id, uniform), 1, &vec[0]);
 }
 
 void Engine::setUniform4m(Shader& shader, const char* uniform, glm::mat4 mat)
 {
+	useShader(shader);
 	glUniformMatrix4fv(glGetUniformLocation(shader.id, uniform), 1, false, &mat[0][0]);
 }

@@ -7,6 +7,7 @@
 using namespace Engine;
 
 constexpr float g_cameraSpeed = 0.005f;
+constexpr float g_rayMagnitude = 2.0f;
 
 static Camera* g_camera = nullptr;
 
@@ -32,6 +33,11 @@ void Engine::initCamera(GLFWwindow* window, const glm::vec3 target, const glm::v
 	g_camera->view = glm::lookAt(g_camera->pos, g_camera->front, g_camera->up);
 
 	glfwSetCursorPosCallback(window, updateCameraRotation);
+}
+
+void Engine::freeCamera()
+{
+	delete g_camera;
 }
 
 void Engine::updateCameraMove(const bool* keyboard)
@@ -113,4 +119,12 @@ void Engine::updateCameraRotation(GLFWwindow* window, const double xPos, const d
 glm::mat4 Engine::getCameraView()
 {
 	return g_camera->view;
+}
+
+Ray Engine::castRay()
+{
+	glm::vec3 start = g_camera->pos;
+	glm::vec3 end = start + g_camera->front * g_rayMagnitude;
+
+	return { start, end };
 }

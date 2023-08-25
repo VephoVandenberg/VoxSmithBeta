@@ -1,17 +1,8 @@
-﻿  chunk.cpp
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(133,17): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
-          with
-          [
-              T=float
-          ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(134,19): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
-          with
-          [
-              T=float
-          ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(135,19): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
-          with
-          [
-              T=float
-          ]
+﻿  camera.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\camera\camera.cpp(86,21): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\camera\camera.cpp(87,21): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\camera\camera.cpp(91,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\camera\camera.cpp(92,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\camera\camera.cpp(93,20): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\camera\camera.cpp(94,20): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
   AgainMinecraftProject.vcxproj -> D:\Working\AgainMinecraftProject\x64\Debug\AgainMinecraftProject.exe

@@ -5,6 +5,11 @@
 
 #include "../../engine/renderer/mesh.h"
 
+namespace Engine
+{
+	struct Ray;
+}
+
 namespace GameModule
 {
 	struct Block;
@@ -17,7 +22,11 @@ namespace GameModule
 	};
 
 	Chunk generateChunk(glm::vec3 pos);
-	void generateMesh(Chunk* chunk);
-	void drawChunk(const Chunk* chunk);
+	void loadChunkMesh(Chunk& chunk);
+	void processRayInChunk(Chunk& chunk);
+	bool rayInChunk(const Chunk& chunk, const Engine::Ray& ray);
+	void checkNeighbourChunk(Chunk& chunk1, Chunk& chunk2);
+	void generateMesh(Chunk& chunk);
+	void drawChunk(const Chunk& chunk);
 }
  

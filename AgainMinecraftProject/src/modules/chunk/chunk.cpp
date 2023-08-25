@@ -57,121 +57,180 @@ bool checkAir(Block* blocks, uint32_t size, uint32_t index)
 	return false;
 }
 
-void GameModule::generateMesh(Chunk* chunk)
+void updateFacePos(Engine::Renderer::Vertex* vertices, const Block& block)
 {
-	size_t nVertices = 
-		g_chunkSizeX * g_chunkSizeY * g_chunkSizeZ * 36;
-	chunk->mesh.vertices = new Engine::Renderer::Vertex[nVertices];
+	for (uint32_t iVertex = 0; iVertex < g_vertexPerFace; iVertex++)
+	{
+		vertices[iVertex].pos += block.pos;
+	}
+}
 
+void GameModule::generateMesh(Chunk& chunk)
+{
 	auto nBlocks = g_chunkSizeX * g_chunkSizeY * g_chunkSizeZ;
+
+	size_t nVertices = nBlocks * g_vertexPerCube;
+
+	chunk.mesh.vertices = new Engine::Renderer::Vertex[nVertices];
 
 	uint32_t iFace = 0;
 	for (uint32_t iBlock = 0; iBlock < nBlocks; iBlock++)
 	{
-		if (chunk->blocks[iBlock].type == BlockType::AIR)
-		{
-			continue;
-		}
-
-		auto& pos = chunk->blocks[iBlock].pos;
 		Engine::Renderer::Vertex back[] = {
-			{pos + glm::vec3(0, 0, 0), { 0, 0 }},
-			{pos + glm::vec3(0, 1, 0), { 0, 1 }},
-			{pos + glm::vec3(1, 0, 0), { 1, 0 }},
+			{glm::vec3(0, 0, 0), { 0, 0 }},
+			{glm::vec3(0, 1, 0), { 0, 1 }},
+			{glm::vec3(1, 0, 0), { 1, 0 }},
 
-			{pos + glm::vec3(1, 0, 0), { 1, 0 }},
-			{pos + glm::vec3(0, 1, 0), { 0, 1 }},
-			{pos + glm::vec3(1, 1, 0), { 1, 1 }},
+			{glm::vec3(1, 0, 0), { 1, 0 }},
+			{glm::vec3(0, 1, 0), { 0, 1 }},
+			{glm::vec3(1, 1, 0), { 1, 1 }},
 		};
 		Engine::Renderer::Vertex front[] = {
-			{pos + glm::vec3(0, 0, 1), { 0, 0 }},
-			{pos + glm::vec3(1, 0, 1), { 1, 0 }},
-			{pos + glm::vec3(0, 1, 1), { 0, 1 }},
+			{glm::vec3(0, 0, 1), { 0, 0 }},
+			{glm::vec3(1, 0, 1), { 1, 0 }},
+			{glm::vec3(0, 1, 1), { 0, 1 }},
 
-			{pos + glm::vec3(1, 0, 1), { 1, 0 }},
-			{pos + glm::vec3(1, 1, 1), { 1, 1 }},
-			{pos + glm::vec3(0, 1, 1), { 0, 1 }},
+			{glm::vec3(1, 0, 1), { 1, 0 }},
+			{glm::vec3(1, 1, 1), { 1, 1 }},
+			{glm::vec3(0, 1, 1), { 0, 1 }},
 		};
 		Engine::Renderer::Vertex top[] = {
-			{pos + glm::vec3(0, 1, 1), { 0, 0 }},
-			{pos + glm::vec3(1, 1, 1), { 1, 0 }},
-			{pos + glm::vec3(0, 1, 0), { 0, 1 }},
+			{glm::vec3(0, 1, 1), { 0, 0 }},
+			{glm::vec3(1, 1, 1), { 1, 0 }},
+			{glm::vec3(0, 1, 0), { 0, 1 }},
 
-			{pos + glm::vec3(1, 1, 1), { 1, 0 }},
-			{pos + glm::vec3(1, 1, 0), { 1, 1 }},
-			{pos + glm::vec3(0, 1, 0), { 0, 1 }},
+			{glm::vec3(1, 1, 1), { 1, 0 }},
+			{glm::vec3(1, 1, 0), { 1, 1 }},
+			{glm::vec3(0, 1, 0), { 0, 1 }},
 		};
 		Engine::Renderer::Vertex bottom[] = {
-			{pos + glm::vec3(0, 0, 1), { 0, 0 }},
-			{pos + glm::vec3(0, 0, 0), { 0, 1 }},
-			{pos + glm::vec3(1, 0, 1), { 1, 0 }},
+			{glm::vec3(0, 0, 1), { 0, 0 }},
+			{glm::vec3(0, 0, 0), { 0, 1 }},
+			{glm::vec3(1, 0, 1), { 1, 0 }},
 
-			{pos + glm::vec3(1, 0, 0), { 1, 1 }},
-			{pos + glm::vec3(1, 0, 1), { 1, 0 }},
-			{pos + glm::vec3(0, 0, 0), { 0, 1 }},
+			{glm::vec3(1, 0, 0), { 1, 1 }},
+			{glm::vec3(1, 0, 1), { 1, 0 }},
+			{glm::vec3(0, 0, 0), { 0, 1 }},
 		};
 		Engine::Renderer::Vertex left[] = {
-			{pos + glm::vec3(0, 0, 0), { 0, 0 }},
-			{pos + glm::vec3(0, 0, 1), { 1, 0 }},
-			{pos + glm::vec3(0, 1, 0), { 0, 1 }},
+			{glm::vec3(0, 0, 0), { 0, 0 }},
+			{glm::vec3(0, 0, 1), { 1, 0 }},
+			{glm::vec3(0, 1, 0), { 0, 1 }},
 
-			{pos + glm::vec3(0, 0, 1), { 1, 0 }},
-			{pos + glm::vec3(0, 1, 1), { 1, 1 }},
-			{pos + glm::vec3(0, 1, 0), { 0, 1 }},
+			{glm::vec3(0, 0, 1), { 1, 0 }},
+			{glm::vec3(0, 1, 1), { 1, 1 }},
+			{glm::vec3(0, 1, 0), { 0, 1 }},
 		};
 		Engine::Renderer::Vertex right[] = {
-			{pos + glm::vec3(1, 0, 1), { 0, 0 }},
-			{pos + glm::vec3(1, 0, 0), { 1, 0 }},
-			{pos + glm::vec3(1, 1, 1), { 0, 1 }},
+			{glm::vec3(1, 0, 1), { 0, 0 }},
+			{glm::vec3(1, 0, 0), { 1, 0 }},
+			{glm::vec3(1, 1, 1), { 0, 1 }},
 
-			{pos + glm::vec3(1, 0, 0), { 1, 0 }},
-			{pos + glm::vec3(1, 1, 0), { 1, 1 }},
-			{pos + glm::vec3(1, 1, 1), { 0, 1 }}
+			{glm::vec3(1, 0, 0), { 1, 0 }},
+			{glm::vec3(1, 1, 0), { 1, 1 }},
+			{glm::vec3(1, 1, 1), { 0, 1 }}
 		};
 
-		auto iPos = pos - chunk->pos;
+		auto iPos = chunk.blocks[iBlock].pos - chunk.pos;
 		uint32_t iTop = (iPos.y + 1) * g_chunkSizeX * g_chunkSizeZ + iPos.z * g_chunkSizeX + iPos.x;
 		uint32_t iFront = iPos.y * g_chunkSizeX * g_chunkSizeZ + (iPos.z + 1) * g_chunkSizeX + iPos.x;
 		uint32_t iRight = iPos.y * g_chunkSizeX * g_chunkSizeZ + iPos.z * g_chunkSizeX + (iPos.x + 1);
 
-		// Remake that shit
-		if (checkAir(chunk->blocks, nBlocks, iTop))
+		if (chunk.blocks[iBlock].type == BlockType::AIR)
 		{
-			
-		}
-		else
-		{
-			
-		}
+			if (chunk.blocks[iTop].type != BlockType::AIR &&
+				iPos.y < g_chunkSizeY - 1)
+			{
+				updateFacePos(bottom, chunk.blocks[iTop]);
+				std::copy(
+					bottom, bottom + g_vertexPerFace,
+					chunk.mesh.vertices + iFace * g_vertexPerCube
+				);
+				iFace++;
+			}
 
-		if (checkAir(chunk->blocks, nBlocks, iFront))
-		{
-			
-		}
-		else
-		{
-			
-		}
+			if (chunk.blocks[iFront].type != BlockType::AIR &&
+				iPos.z < g_chunkSizeZ - 1)
+			{
+				updateFacePos(back, chunk.blocks[iFront]);
+				std::copy(
+					back, back + g_vertexPerFace,
+					chunk.mesh.vertices + iFace * g_vertexPerCube
+				);
+				iFace++;
+			}
 
-		if (checkAir(chunk->blocks, nBlocks, iRight))
-		{
-			
+			if (chunk.blocks[iRight].type != BlockType::AIR &&
+				iPos.x < g_chunkSizeX - 1)
+			{
+				updateFacePos(left, chunk.blocks[iRight]);
+				std::copy(
+					left, left + g_vertexPerFace,
+					chunk.mesh.vertices + iFace * g_vertexPerCube
+				);
+				iFace++;
+			}
 		}
 		else
 		{
-			
+			if (chunk.blocks[iTop].type == BlockType::AIR &&
+				iPos.y < g_chunkSizeY - 1)
+			{
+				updateFacePos(top, chunk.blocks[iBlock]);
+				std::copy(
+					top, top + g_vertexPerFace,
+					chunk.mesh.vertices + iFace * g_vertexPerCube
+				);
+				iFace++;
+			}
+
+			if (chunk.blocks[iFront].type == BlockType::AIR &&
+				iPos.z < g_chunkSizeZ - 1)
+			{
+				updateFacePos(front, chunk.blocks[iBlock]);
+				std::copy(
+					front, front + g_vertexPerFace,
+					chunk.mesh.vertices + iFace * g_vertexPerCube
+				);
+				iFace++;
+			}
+
+			if (chunk.blocks[iRight].type == BlockType::AIR &&
+				iPos.x < g_chunkSizeX - 1)
+			{
+				updateFacePos(right, chunk.blocks[iBlock]);
+				std::copy(
+					right, right + g_vertexPerFace,
+					chunk.mesh.vertices + iFace * g_vertexPerCube
+				);
+				iFace++;
+			}
 		}
 	}
-	chunk->mesh.size = sizeof(Engine::Renderer::Vertex) * nBlocks;
-	Engine::Renderer::loadData(&chunk->mesh);
+	chunk.mesh.size = sizeof(Engine::Renderer::Vertex) * nBlocks * g_vertexPerCube;
 }
 
-void GameModule::drawChunk(const Chunk* chunk)
+void GameModule::loadChunkMesh(Chunk& chunk)
 {
-	if (!chunk)
+	Engine::Renderer::loadData(&chunk.mesh);
+}
+
+void GameModule::drawChunk(const Chunk& chunk)
+{
+	if (chunk.mesh.size == 0)
 	{
 		return;
 	}
 
-	Engine::Renderer::renderMesh(&chunk->mesh);
+	Engine::Renderer::renderMesh(&chunk.mesh);
+}
+
+void GameModule::checkNeighbourChunk(Chunk& chunk1, Chunk& chunk2)
+{
+
+}
+
+bool GameModule::rayInChunk(const Chunk& chunk, const Engine::Ray& ray)
+{
+	return false;
 }

@@ -2,7 +2,9 @@
 
 /** TO DO LIST
 * Agenda
-* - Culled mesh has to be made
+* - Raycasting
+* - drawing ray
+* - updating mesh
 * Later 
 * - ECS
 * - Investigate math behind coordinate systems and matrices
