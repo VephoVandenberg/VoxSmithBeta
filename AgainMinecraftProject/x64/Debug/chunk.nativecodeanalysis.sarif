@@ -1,0 +1,1321 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "runs": [
+    {
+      "results": [
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                },
+                "region": {
+                  "startLine": 72,
+                  "startColumn": 21,
+                  "endLine": 72,
+                  "endColumn": 31
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::generateMesh",
+                  "decoratedName": "?generateMesh@GameModule@@YAXAEAUChunk@1@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                },
+                "region": {
+                  "startLine": 182,
+                  "startColumn": 28,
+                  "endLine": 182,
+                  "endColumn": 36
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::generateMesh",
+                  "decoratedName": "?generateMesh@GameModule@@YAXAEAUChunk@1@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                },
+                "region": {
+                  "startLine": 193,
+                  "startColumn": 28,
+                  "endLine": 193,
+                  "endColumn": 36
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::generateMesh",
+                  "decoratedName": "?generateMesh@GameModule@@YAXAEAUChunk@1@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                },
+                "region": {
+                  "startLine": 204,
+                  "startColumn": 28,
+                  "endLine": 204,
+                  "endColumn": 36
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::generateMesh",
+                  "decoratedName": "?generateMesh@GameModule@@YAXAEAUChunk@1@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                },
+                "region": {
+                  "startLine": 147,
+                  "startColumn": 28,
+                  "endLine": 147,
+                  "endColumn": 36
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::generateMesh",
+                  "decoratedName": "?generateMesh@GameModule@@YAXAEAUChunk@1@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                },
+                "region": {
+                  "startLine": 158,
+                  "startColumn": 28,
+                  "endLine": 158,
+                  "endColumn": 36
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::generateMesh",
+                  "decoratedName": "?generateMesh@GameModule@@YAXAEAUChunk@1@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                },
+                "region": {
+                  "startLine": 169,
+                  "startColumn": 28,
+                  "endLine": 169,
+                  "endColumn": 36
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::generateMesh",
+                  "decoratedName": "?generateMesh@GameModule@@YAXAEAUChunk@1@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "PREfast",
+          "fullName": "PREfast Code Analysis",
+          "version": "14.35.32217.1",
+          "informationUri": "https://aka.ms/cpp/ca"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+          },
+          "roles": [
+            "analysisTarget",
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "e39ba3174cd199ace8465a712562ad303e94ee6f6d41abf4d92880870571a0fc"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/glm.hpp"
+          },
+          "hashes": {
+            "sha-256": "a60e914477f5850be5df4564dfc5a74e659f0b20042595760c680223fb19ec71"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/_fixes.hpp"
+          },
+          "hashes": {
+            "sha-256": "6fc9790fefc3bf84901fac960297c31e231e8d062b1a719750bcdae61abca254"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/setup.hpp"
+          },
+          "hashes": {
+            "sha-256": "bbb0f036c33b0efec3ce60044dce73b0c09b5506b8110fb392ab62d0f8601e29"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/simd/platform.h"
+          },
+          "hashes": {
+            "sha-256": "2d172348af79a755ae878f09bf19ac2202974f18dab22acd7520104414fdcde3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/fwd.hpp"
+          },
+          "hashes": {
+            "sha-256": "804cd91cb5260d9a3f33166c6834329c2e226b112ef6db22a0d655ab6dd4fd4f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/qualifier.hpp"
+          },
+          "hashes": {
+            "sha-256": "38eeeb81a7a992d7469467e3833accf208f16a9c91e26b82e859e50972f10318"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/vec2.hpp"
+          },
+          "hashes": {
+            "sha-256": "08e7ea130089684f5bb0c3facd6437831959d5bc0b375f949d1c8f28d4f8afa8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_bool2.hpp"
+          },
+          "hashes": {
+            "sha-256": "08bc020cccad86af4294e2e1cdac3ffb2033041358d4102e281130588432788c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_vec2.hpp"
+          },
+          "hashes": {
+            "sha-256": "41c11ba64bf0b6f82a474dee65fb96dac50ec504a997b0d0103eb1b08a884c8c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_vec2.inl"
+          },
+          "hashes": {
+            "sha-256": "4f537da648857d68202b64fc9b1e467731089551a8fe1fbe72f776d484020f51"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/compute_vector_relational.hpp"
+          },
+          "hashes": {
+            "sha-256": "ff168fc500c89f8d41b336b61e2b288e0a756a6aa67b03cde527f619baa73a82"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_bool2_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "e2f84fd2b920227c511ebc2afd798e9002c21272e4c0aff9793bcad6c84c6716"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_float2.hpp"
+          },
+          "hashes": {
+            "sha-256": "cbb12f8f18196f7b7e47c4ba64d11bc2ffaf18fcf13294b733d7814223652174"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_float2_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "d9855e815a007eecfeabb34fe85009b5a70c2b21a9aad6e96689059faf12693e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_double2.hpp"
+          },
+          "hashes": {
+            "sha-256": "aa65d51f6f502e7be3c03f23d614e58b3c3620a68f3a76a1ddafc54db2d9e654"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_double2_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "97825cffc45a58054c9f6dfc07ccbc40bb0cd4c47183a8b4e7bd29a2e737ab10"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_int2.hpp"
+          },
+          "hashes": {
+            "sha-256": "0b22b6950e3274a9c285fbf6a7d85a7521c956bda32e44c4a883ccf30d26cb1c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_int2_sized.hpp"
+          },
+          "hashes": {
+            "sha-256": "4bcf7b8241e0063e2536bbc019083e1f253c47a734bcd4738cebf5a620470503"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/scalar_int_sized.hpp"
+          },
+          "hashes": {
+            "sha-256": "19ec6f0609602ec5e59a8008770706adc1168e768decb2c0219e6d8638fded5c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_uint2.hpp"
+          },
+          "hashes": {
+            "sha-256": "3d098c2039dbc9ba6d63512a1b5127075557602baa3e9f0f57152226bd859ea1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_uint2_sized.hpp"
+          },
+          "hashes": {
+            "sha-256": "dd246da5ae6ffa6f38d9ae8d4988535395c732e2467278ae882e3c9d3c01d587"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/scalar_uint_sized.hpp"
+          },
+          "hashes": {
+            "sha-256": "4cf39d073cfb89e468d54d186811d1e24692893bef7bf7b8416b1a2ffbb42f57"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/vec3.hpp"
+          },
+          "hashes": {
+            "sha-256": "fe0cd0d3de3cfcb701aeaf8f1ab38fe4d88870db78eab3ce0ff519df9153fc24"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_bool3.hpp"
+          },
+          "hashes": {
+            "sha-256": "a828c03d2b6e9f68d4b859c4465cf1a0f2b42c94825e80643ac77fba99fde1b8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_vec3.hpp"
+          },
+          "hashes": {
+            "sha-256": "d77e115b9020391bfb48620a8160c939cfdeed6ed5f76f46dc7b4e0fbcfb4537"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_vec3.inl"
+          },
+          "hashes": {
+            "sha-256": "5ac2332075a4692dac544f1558b797c04c731de2d9ef3302287f2aa39fa8a55f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_bool3_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "7aa0a1650188f00e603af5d837b84a092c480e6a395e782d619c4762c7de753d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_float3.hpp"
+          },
+          "hashes": {
+            "sha-256": "0ea127ffc477a43a39ca0737ae9062363541dcf4fb39540d0d2447ad3b8a16c9"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_float3_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "3928df5009a88ba934f4e4fba3b38c3d1d1cea4a203a8b7fd6552000703d5fc4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_double3.hpp"
+          },
+          "hashes": {
+            "sha-256": "640fd2e9cb876b076381b2564a6dd6dc564cb28aa334c0726a0b9d5cf38d6b84"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_double3_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "0cf3c9415fa477eb52840778be7f7ee8d104c3fd911fc5b72b56e84a0a220fac"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_int3.hpp"
+          },
+          "hashes": {
+            "sha-256": "0732541c4b296456a1be9999253f2e4c7b68f0f4dd997e974816cbaeb667d2bf"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_int3_sized.hpp"
+          },
+          "hashes": {
+            "sha-256": "5591ca8630ebabaca6252e8131e8f0bad51e68c70bd3978ae96752316ac34d9c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_uint3.hpp"
+          },
+          "hashes": {
+            "sha-256": "7719bc51395424bbd73f9bec3e43fe341495f924c8a97bcdf3a1163e19d29a32"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_uint3_sized.hpp"
+          },
+          "hashes": {
+            "sha-256": "0f6d956d610a36f228c7a6c2d2f29fbf7a877f37377d0ef5ddea1b1e2d6139d4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/vec4.hpp"
+          },
+          "hashes": {
+            "sha-256": "77ffbc1bf2fe8d6ca9ea7f11d7728bc1b779afa1634ad0dfbfdccb5b9a270d13"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_bool4.hpp"
+          },
+          "hashes": {
+            "sha-256": "754ecb017dfebaa17a185533d282c30e400cfa161233af835ae38f17703770d5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_vec4.hpp"
+          },
+          "hashes": {
+            "sha-256": "4e51a9652a024720210ae356c47a6f411f078b995cdbe5653e9cc27f4df37ef1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_vec4.inl"
+          },
+          "hashes": {
+            "sha-256": "3cee7227d7ab4325f8c6dfb02a80be30878af92b617efe7aaec12743f2b97721"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_bool4_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "93cb3a0613e0dec131e9f572f392e9c0799b03ed4bb84a63c81c10ada416964c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_float4.hpp"
+          },
+          "hashes": {
+            "sha-256": "cc41791cc7bbced0d798a58ba796a2ebdc5f10af483986773d95a55be95c3fe7"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_float4_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "11dbb5651fb744c866cb8deadf84c03a6c1f2b901f62ad9f1f26edef998a217b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_double4.hpp"
+          },
+          "hashes": {
+            "sha-256": "6f48af6fa7e368e8848ce7b040a6efe05ac80e087dc6f91fad9d58e2ed90ef6d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_double4_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "cde72699e11ccc7b28955065217387d3f9d7d6087ee2992fc7c48e9daaa08a3e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_int4.hpp"
+          },
+          "hashes": {
+            "sha-256": "8eb57ddad25682eb4617a62fea5629f2923c20f2cdaa7c0f1f9337044afdcade"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_int4_sized.hpp"
+          },
+          "hashes": {
+            "sha-256": "733d4313b73eb482e5ae40807e9a14f7992599a47f3c689b1664be97c08a18b3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_uint4.hpp"
+          },
+          "hashes": {
+            "sha-256": "c2fefc4791975a7799147d5c0f2626816020489d574c03b85a35e1c45aec5c34"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/vector_uint4_sized.hpp"
+          },
+          "hashes": {
+            "sha-256": "f520cfd07ccc383185ad6644ba2b6b5133b98240d8b4baf1880e4928951365a0"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/mat2x2.hpp"
+          },
+          "hashes": {
+            "sha-256": "6056a3c939a3b2e6723fbda0bc2e40a88a376ae026db9542188863187d91dc46"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_double2x2.hpp"
+          },
+          "hashes": {
+            "sha-256": "e28536ec12657a2e585bb6017ec113904b9f6c804cbaf68c16a9682397a0b823"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_mat2x2.hpp"
+          },
+          "hashes": {
+            "sha-256": "946a1580d3371d06b5fc4444b1e8d94516c701f9372e9ebeddeaf868c975898d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_mat2x2.inl"
+          },
+          "hashes": {
+            "sha-256": "353cf0ca8242144d769c586a5a37ea13069deb8f0364067eef6258250f60df33"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/matrix.hpp"
+          },
+          "hashes": {
+            "sha-256": "23e083028b3194de3dcd7d89223d45c52c659fb40c7a4a58339692bbb821ec01"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/mat2x3.hpp"
+          },
+          "hashes": {
+            "sha-256": "adeaedc3219cb10fa58aa30196491783faa4f86b5ef06407926ac9eb0e89b858"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_double2x3.hpp"
+          },
+          "hashes": {
+            "sha-256": "c11a0748fa8c7786ac25361e61a85022f7eded975d73080e1d8761ab41013bb1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_mat2x3.hpp"
+          },
+          "hashes": {
+            "sha-256": "cdb5e5b247d53d7e3614b7d9ebf4c9975c9b8ffdfef055b3604248be83986160"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_mat2x3.inl"
+          },
+          "hashes": {
+            "sha-256": "dd2ba32110e514514a071be9d8af9cd4a104710eb78a18273783740aa1e6993d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_double2x3_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "1ba3ed6f786496481c3f972119fc2e1cbf68f1aa758e6a8b74001efbea5b36d0"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_float2x3.hpp"
+          },
+          "hashes": {
+            "sha-256": "7a677179835b2a26da137f7dd42512db7bda0e4182f1865f6e9f30835c02ac0b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_float2x3_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "ea9b5d97edd6a1d9be9552b2da1bc88657e0b52f35a2c8f8b05d21d6b39f93aa"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/mat2x4.hpp"
+          },
+          "hashes": {
+            "sha-256": "37d8f5a57c2885d495185153ad13b6b5a1da35294e48f934729f09dda7876203"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_double2x4.hpp"
+          },
+          "hashes": {
+            "sha-256": "ec639b0b93a6ec60c8de7095e2e5452eeb15dc8fd40f8c271925a96d2feb23ac"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_mat2x4.hpp"
+          },
+          "hashes": {
+            "sha-256": "7196fb6ca4922bd73938f3202d1c5795ed2bd4c7c792a2ae8408bb579d460212"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_mat2x4.inl"
+          },
+          "hashes": {
+            "sha-256": "03137081a35a05fe635841aa0cd73b668279d4a8fdec920049d5c8c86eb38084"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_double2x4_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "281b2a8761ccd5759d2fd152282858429db4e45b665ab106a7d87682a55e89b6"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_float2x4.hpp"
+          },
+          "hashes": {
+            "sha-256": "605920fe8064ea495dac25bd67324df9e48b014b18ab6f5957290dddeaccc399"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_float2x4_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "05b75e5b02168e44b199d3d47434840a0f0c852e2bae1e57ad4a15e4413b3422"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/mat3x2.hpp"
+          },
+          "hashes": {
+            "sha-256": "9bc06112c9f23e61895c8a755bfcfd87e6a130336fdaf3b8e26963dd5fe670c8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_double3x2.hpp"
+          },
+          "hashes": {
+            "sha-256": "4be9c05f29a7d77e6a79266fd923420f30851ffb48a1cb7c09174654b5f29789"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_mat3x2.hpp"
+          },
+          "hashes": {
+            "sha-256": "3a686f9a945896c879ad4d40dc107d35a5da34dae23427c6e02d5c7c30109660"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_mat3x2.inl"
+          },
+          "hashes": {
+            "sha-256": "8d92f493626947ecb2e6ae626a9d4c5dd000556f2d244bfbd6fb9f702431e311"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_double3x2_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "0ef483e736066641b1f404d6167f083efd7ac59ebdf8a25256e8ec96d90f2806"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_float3x2.hpp"
+          },
+          "hashes": {
+            "sha-256": "02a7ac14ec45a771a0a9bb1512cb3f54e62f3e694318f625d47880e546a69203"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_float3x2_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "f9fbabe399b19161caaa361ae1c215b1955263cc914190300b64d9ce92d9ebab"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/mat3x3.hpp"
+          },
+          "hashes": {
+            "sha-256": "4da5a7d6ec599625d15f6e79e24a86aec6c395c66a88cf26650c9e908c8a8df9"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_double3x3.hpp"
+          },
+          "hashes": {
+            "sha-256": "430b06751247f8d8654a7163e26cc337f507316fbf5f10e8c2bf517c2aaa5ca8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_mat3x3.hpp"
+          },
+          "hashes": {
+            "sha-256": "98d23285fa6f089eb4289c6100137f9e3dcb0d9258f2b09ff8f7c0ab218198d9"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_mat3x3.inl"
+          },
+          "hashes": {
+            "sha-256": "a5c46968594f73463df0eadc2eacf279962da6284d209bd95a709cb9ac3b72af"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_double3x3_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "176aabc4e86027253dd5543ddd9684dbcbad1fea33c3c5ccc0b473f491b95580"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_float3x3.hpp"
+          },
+          "hashes": {
+            "sha-256": "299e7945455a373d8d49dda9d1cfec0eb4b48eff8f1c14c156ba88fbdde4eee0"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_float3x3_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "896dd61706db0a36b0e58e880f48566d29a58ffac1da85f69aa4a4a260bf1454"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/mat3x4.hpp"
+          },
+          "hashes": {
+            "sha-256": "15d1f563d4584fec99a384514a6e07022499828201110dbf215a26c140ab77c9"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_double3x4.hpp"
+          },
+          "hashes": {
+            "sha-256": "62527ff366e80a4c954c8724695bc09a202e60fc478250f4870c87998b00c9ab"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_mat3x4.hpp"
+          },
+          "hashes": {
+            "sha-256": "3610e3994ae92343e68afe3be25240a07de8384e200b619ff7c57630a00a369f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_mat3x4.inl"
+          },
+          "hashes": {
+            "sha-256": "a03235ddf08df119efa8c8b9fcc343e3d3109168d171960e87efea82e24535f9"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_double3x4_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "ae712fc20285c97f9433d88dab2915ac39a38f5e59ee62ad7c30c5ec0092129a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_float3x4.hpp"
+          },
+          "hashes": {
+            "sha-256": "cd9bceec04a4fdade2fc8940468e256e4871a5629824a0a390986524be26fc4d"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_float3x4_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "96aa315929994b7d2fae34f6c33eb6df4ae614b50fe03fedc9c7df91c337d8d2"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/mat4x2.hpp"
+          },
+          "hashes": {
+            "sha-256": "9e773ef2f92febf5fc5d92b4b60e35fbe69a6876f9f7611f662c1169f62ff13b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_double4x2.hpp"
+          },
+          "hashes": {
+            "sha-256": "b61b99842606f38bb7127750cd7eb313a9333fce80980220bfde8e81df119762"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_mat4x2.hpp"
+          },
+          "hashes": {
+            "sha-256": "0b8558216ad73e33a9f81e27c7e7ae2533aa7cac5fa4bd1df7f9192853749a9a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_mat4x2.inl"
+          },
+          "hashes": {
+            "sha-256": "2398a7611d09ddcb31118d5ba4bd14e43f736a4fc96ce3f3990047d3a7b7321f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_double4x2_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "996b6d3f29d0fc6f7cf9f0f9981b4cc519fff55341423fbf261c8c1a204b42a9"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_float4x2.hpp"
+          },
+          "hashes": {
+            "sha-256": "3d4b080dda4dbe1350d0ab96a18dbf297de911b9710257dd272a5049ca999e02"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_float4x2_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "bc4f715f93951b2154a15d906557f7474673411590f61c2f520e2cbae6f67917"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/mat4x3.hpp"
+          },
+          "hashes": {
+            "sha-256": "738acb70ca0e61e503e3944fc7cb0f9e0e92fb77b592f59da61f0b29084fb074"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_double4x3.hpp"
+          },
+          "hashes": {
+            "sha-256": "021dbc9cc77be8a0dff9f84a5103bfdccb013ea0a134b2bbeab97fad44314f2a"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_mat4x3.hpp"
+          },
+          "hashes": {
+            "sha-256": "91163024d07d4d493afa9251f32c190b8b510af423a2681dd30de34087b18011"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_mat4x3.inl"
+          },
+          "hashes": {
+            "sha-256": "593c8ddfed736810a0a527f9fef428c42e9ac9ceb2c41593610742bc9e690067"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_double4x3_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "3b47d8d4e2b86551fabd9d85aba2cc60488255f7fcfcf7cf5b3ad793fb8f1319"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_float4x3.hpp"
+          },
+          "hashes": {
+            "sha-256": "22116ae630cd2be2baad2c7f545814f6b21bb3bf9dc8913d848c61f54ac9b666"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_float4x3_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "426099fdd6b1a040ccae7e31d3adb240d798efefd2492e611b3180495a49fd48"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/mat4x4.hpp"
+          },
+          "hashes": {
+            "sha-256": "5d8bac395211111db631fa4c19358ab740b07b40c4ed671949d0bacaa05b41c2"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_double4x4.hpp"
+          },
+          "hashes": {
+            "sha-256": "26040ba340dcb95f4d48f3e0ccc8828af925be7c04c171702282a7139e04b5c4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_mat4x4.hpp"
+          },
+          "hashes": {
+            "sha-256": "3c9a7babf858367b8ab70eeb81877760b6cf6e7755c3db606cca2e97673f35dc"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_mat4x4.inl"
+          },
+          "hashes": {
+            "sha-256": "99e745c336972833c3b8fabf44c4fde69290b361294a6a65667f86382f4fe8bf"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_double4x4_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "7669392ddeb68c4cc3bd7d4f6517e74e7900a49e6a98fc68c2b7a486daa801bb"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_float4x4.hpp"
+          },
+          "hashes": {
+            "sha-256": "e8c9c29e09ed93683aed373ce03c9ef7af9e4f0e63f2b66ad6d74c4a2c4fb177"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_float4x4_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "89c47a65ef88bb4bdb4b09a9981ff8249465fffb429c47693bc7fac0a2857fbd"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/func_matrix.inl"
+          },
+          "hashes": {
+            "sha-256": "3e40ff85473a7dd2049239aa8ae7050df7545c4ceb8208f1e7bbb2f03be78ba8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/geometric.hpp"
+          },
+          "hashes": {
+            "sha-256": "38d156e97a440c26888b98a84732299218707f1d09a3d8915f413325a6384cc1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/func_geometric.inl"
+          },
+          "hashes": {
+            "sha-256": "490ee8efe78ffea91c863458a8f862056dabc9ba2e1000827806101b90d20310"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/exponential.hpp"
+          },
+          "hashes": {
+            "sha-256": "5f5d347f4b73b9753203502e588aa0c8affae0eaebe737a9b02da56ac49d5674"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_vec1.hpp"
+          },
+          "hashes": {
+            "sha-256": "a1545eccffd1680b8fdcbdcf730d79ccea7f3484b7a78ee055d2e090dc338400"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_vec1.inl"
+          },
+          "hashes": {
+            "sha-256": "f124b670b49ed4e2c3e9842ad3c52962f2d0c0722bccbfb5b7fdc516acebd364"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/func_exponential.inl"
+          },
+          "hashes": {
+            "sha-256": "0264b95a89c569be0a7c8fba007aacb851063d61f3345e7863e60c2049ca681f"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/vector_relational.hpp"
+          },
+          "hashes": {
+            "sha-256": "d31e49c0b04d7904882183f538bb49ab4f8827583053a5cea482facea451e37e"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/func_vector_relational.inl"
+          },
+          "hashes": {
+            "sha-256": "c9c60151b8b877d573b9fdb07f29364070c3e9f6736b39186bca6cc6b8112a5b"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/_vectorize.hpp"
+          },
+          "hashes": {
+            "sha-256": "119aa7332b6801c70f27460d5a0ec3f8baeb5099d269ad85077c367e3b18bd06"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/common.hpp"
+          },
+          "hashes": {
+            "sha-256": "f3512ae64c0991372daad9cff5a761a97b8d3a1a82fa3132aa3f501661e51fd1"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/func_common.inl"
+          },
+          "hashes": {
+            "sha-256": "ff5ee8894d641a60e1b55f3130dff5de0d9369a368a76fefd369d8cf75ea93d8"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/compute_common.hpp"
+          },
+          "hashes": {
+            "sha-256": "604a836664c4d29dc4f963feae571705d3a76432849e1dffc9e320e83264b8aa"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_double2x2_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "2b795b1e984fa3b7d24e0b95aa61c0597c239cb5d5187cb6691bddefc9664fa3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_float2x2.hpp"
+          },
+          "hashes": {
+            "sha-256": "bf4587b54860ca193dcb1a2fdcc327f70a771812fb7834d265c40b5b8a8e885c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/ext/matrix_float2x2_precision.hpp"
+          },
+          "hashes": {
+            "sha-256": "52a85595bf0ac4b3a5035de32e7f207c5997846e368962100f2e11e5e60d6bab"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/trigonometric.hpp"
+          },
+          "hashes": {
+            "sha-256": "bbd62e937699757aac3a38c8f00d8362f22e6243814713577875b0923b7b0163"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/func_trigonometric.inl"
+          },
+          "hashes": {
+            "sha-256": "338418b118bdb6af143fe8633299b0781885c87136610b6af4cb47df83fb5ed5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/packing.hpp"
+          },
+          "hashes": {
+            "sha-256": "1210b6194da61a9b13b287c191a2d89242ebfa3518feab1fe9a3a49069c0f083"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/func_packing.inl"
+          },
+          "hashes": {
+            "sha-256": "579fb9b927f3b435350d63400e21da5457343bc3726e95d40d46c3203425eab4"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_half.hpp"
+          },
+          "hashes": {
+            "sha-256": "24173e7aaebf52860dfa8448c90db1f3cb3fcb9a56dc7126988165ae4c8ddc90"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/type_half.inl"
+          },
+          "hashes": {
+            "sha-256": "910739a7048639738f4b87a0ed95c1c3e800551c44316a4e2366a097dca52a00"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/integer.hpp"
+          },
+          "hashes": {
+            "sha-256": "98abbde1905926b960ca16bca288bd1a5444f8acf126a04c7d08b04128648a7c"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/glm/glm/detail/func_integer.inl"
+          },
+          "hashes": {
+            "sha-256": "161a37183e7d111564d59ae8e93d3e1d9c875813af4ed89af476bfc60ea97efe"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/renderer/mesh.h"
+          },
+          "hashes": {
+            "sha-256": "d3ec4a1f01d495ee9f7ad631b213675b8e581b9848cab687968557cf0fdefabd"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/modules/chunk/block.h"
+          },
+          "hashes": {
+            "sha-256": "8e39170764f6fd47d29324228361b265598f321200082a8cabbc7511ada2fdb3"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/modules/chunk/chunk.h"
+          },
+          "hashes": {
+            "sha-256": "e7eeea691230f36bc3e262906557c7408c1a9e9040b520a1ffd4001f4ca1d407"
+          }
+        }
+      ]
+    }
+  ]
+}

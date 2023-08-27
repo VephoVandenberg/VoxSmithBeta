@@ -2,9 +2,7 @@
 
 /** TO DO LIST
 * Agenda
-* - Raycasting
-* - drawing ray
-* - updating mesh
+* - updating mesh with ray(i.e. adding block and removing block)
 * Later 
 * - ECS
 * - Investigate math behind coordinate systems and matrices

@@ -21,8 +21,8 @@ const char* g_title = "Azamat's making Minecraft fucking again";
 constexpr size_t g_width = 1240;
 constexpr size_t g_height = 720;
 
-constexpr size_t numberOfChunksX = 3;
-constexpr size_t numberOfChunksZ = 3;
+constexpr size_t numberOfChunksX = 1;
+constexpr size_t numberOfChunksZ = 1;
 
 constexpr glm::vec3 g_chunkSize = { 8, 8, 8 };
 
@@ -140,13 +140,26 @@ void Application::handleInput()
 		m_keyboard[GLFW_KEY_S] = false;
 	}
 
-	if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+	if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && 
+		!m_keyboardPressed[GLFW_MOUSE_BUTTON_LEFT])
 	{
-		m_keyboard[GLFW_MOUSE_BUTTON_1] = true;
+		m_keyboard[GLFW_MOUSE_BUTTON_LEFT] = true;
 	}
-	else
+	else if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
 	{
-		m_keyboard[GLFW_MOUSE_BUTTON_1] = false;
+		m_keyboard[GLFW_MOUSE_BUTTON_LEFT] = false;
+		m_keyboardPressed[GLFW_MOUSE_BUTTON_LEFT] = false;
+	}
+
+	if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS &&
+		!m_keyboardPressed[GLFW_MOUSE_BUTTON_RIGHT])
+	{
+		m_keyboard[GLFW_MOUSE_BUTTON_RIGHT] = true;
+	}
+	else if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE)
+	{
+		m_keyboard[GLFW_MOUSE_BUTTON_RIGHT] = false;
+		m_keyboardPressed[GLFW_MOUSE_BUTTON_RIGHT] = false;
 	}
 }
 
@@ -166,9 +179,26 @@ void Application::onUpdate()
 {
 	updateCameraMove(m_keyboard);
 
-	if (m_keyboard[GLFW_MOUSE_BUTTON_1])
+	if (m_keyboard[GLFW_MOUSE_BUTTON_LEFT] && !m_keyboardPressed[GLFW_MOUSE_BUTTON_LEFT] ||
+		m_keyboard[GLFW_MOUSE_BUTTON_RIGHT] && !m_keyboardPressed[GLFW_MOUSE_BUTTON_RIGHT])
 	{
 		Ray ray = castRay();
 		Renderer::loadRayData(ray);
+
+		for (auto& chunk: m_chunks)
+		{
+			if (rayStartInChunk(chunk, ray))
+			{
+				RayType type = m_keyboard[GLFW_MOUSE_BUTTON_1] ? RayType::REMOVE : RayType::PLACE;
+				if (processRayInChunk(chunk, ray, type))
+				{
+					generateMesh(chunk);
+					loadChunkMesh(chunk);
+				}
+			}
+		}
+
+		m_keyboardPressed[GLFW_MOUSE_BUTTON_RIGHT] = true;
+		m_keyboardPressed[GLFW_MOUSE_BUTTON_LEFT] = true;
 	}
 }

@@ -36,6 +36,7 @@ namespace App
 
 		bool m_isRunning = false;
 		bool m_keyboard[1024];
+		bool m_keyboardPressed[1024];
 		GLFWwindow* m_window = nullptr;
 
 		std::map<const char*, Engine::Shader> m_shaders;
