@@ -81,66 +81,67 @@ void GameModule::generateMesh(Chunk& chunk)
 	}
 	else
 	{
-		delete chunk.mesh.vertices;
-		chunk.mesh.vertices = new Engine::Renderer::Vertex[nVertices];
+		memset(chunk.mesh.vertices, 0, nVertices * sizeof(Engine::Renderer::Vertex));
+		// delete chunk.mesh.vertices;
+		// chunk.mesh.vertices = new Engine::Renderer::Vertex[nVertices];
 	}
 	
 	uint32_t iFace = 0;
 	for (uint32_t iBlock = 0; iBlock < nBlocks; iBlock++)
 	{
 		Engine::Renderer::Vertex back[] = {
-			{glm::vec3(0, 0, 0), { 0, 0 }},
-			{glm::vec3(0, 1, 0), { 0, 1 }},
-			{glm::vec3(1, 0, 0), { 1, 0 }},
+			{{ 0, 0, 0 }, { 0, 0 }},
+			{{ 0, 1, 0 }, { 0, 1 }},
+			{{ 1, 0, 0 }, { 1, 0 }},
 
-			{glm::vec3(1, 0, 0), { 1, 0 }},
-			{glm::vec3(0, 1, 0), { 0, 1 }},
-			{glm::vec3(1, 1, 0), { 1, 1 }},
+			{{ 1, 0, 0 }, { 1, 0 }},
+			{{ 0, 1, 0 }, { 0, 1 }},
+			{{ 1, 1, 0 }, { 1, 1 }},
 		};
 		Engine::Renderer::Vertex front[] = {
-			{glm::vec3(0, 0, 1), { 0, 0 }},
-			{glm::vec3(1, 0, 1), { 1, 0 }},
-			{glm::vec3(0, 1, 1), { 0, 1 }},
+			{{ 0, 0, 1 }, { 0, 0 }},
+			{{ 1, 0, 1 }, { 1, 0 }},
+			{{ 0, 1, 1 }, { 0, 1 }},
 
-			{glm::vec3(1, 0, 1), { 1, 0 }},
-			{glm::vec3(1, 1, 1), { 1, 1 }},
-			{glm::vec3(0, 1, 1), { 0, 1 }},
+			{{ 1, 0, 1 }, { 1, 0 }},
+			{{ 1, 1, 1 }, { 1, 1 }},
+			{{ 0, 1, 1 }, { 0, 1 }},
 		};
 		Engine::Renderer::Vertex top[] = {
-			{glm::vec3(0, 1, 1), { 0, 0 }},
-			{glm::vec3(1, 1, 1), { 1, 0 }},
-			{glm::vec3(0, 1, 0), { 0, 1 }},
+			{{ 0, 1, 1 }, { 0, 0 }},
+			{{ 1, 1, 1 }, { 1, 0 }},
+			{{ 0, 1, 0 }, { 0, 1 }},
 
-			{glm::vec3(1, 1, 1), { 1, 0 }},
-			{glm::vec3(1, 1, 0), { 1, 1 }},
-			{glm::vec3(0, 1, 0), { 0, 1 }},
+			{{ 1, 1, 1 }, { 1, 0 }},
+			{{ 1, 1, 0 }, { 1, 1 }},
+			{{ 0, 1, 0 }, { 0, 1 }},
 		};
 		Engine::Renderer::Vertex bottom[] = {
-			{glm::vec3(0, 0, 1), { 0, 0 }},
-			{glm::vec3(0, 0, 0), { 0, 1 }},
-			{glm::vec3(1, 0, 1), { 1, 0 }},
+			{{ 0, 0, 1 }, { 0, 0 }},
+			{{ 0, 0, 0 }, { 0, 1 }},
+			{{ 1, 0, 1 }, { 1, 0 }},
 
-			{glm::vec3(1, 0, 0), { 1, 1 }},
-			{glm::vec3(1, 0, 1), { 1, 0 }},
-			{glm::vec3(0, 0, 0), { 0, 1 }},
+			{{ 1, 0, 0 }, { 1, 1 }},
+			{{ 1, 0, 1 }, { 1, 0 }},
+			{{ 0, 0, 0 }, { 0, 1 }},
 		};
 		Engine::Renderer::Vertex left[] = {
-			{glm::vec3(0, 0, 0), { 0, 0 }},
-			{glm::vec3(0, 0, 1), { 1, 0 }},
-			{glm::vec3(0, 1, 0), { 0, 1 }},
+			{{ 0, 0, 0 }, { 0, 0 }},
+			{{ 0, 0, 1 }, { 1, 0 }},
+			{{ 0, 1, 0 }, { 0, 1 }},
 
-			{glm::vec3(0, 0, 1), { 1, 0 }},
-			{glm::vec3(0, 1, 1), { 1, 1 }},
-			{glm::vec3(0, 1, 0), { 0, 1 }},
+			{{ 0, 0, 1 }, { 1, 0 }},
+			{{ 0, 1, 1 }, { 1, 1 }},
+			{{ 0, 1, 0 }, { 0, 1 }},
 		};
 		Engine::Renderer::Vertex right[] = {
-			{glm::vec3(1, 0, 1), { 0, 0 }},
-			{glm::vec3(1, 0, 0), { 1, 0 }},
-			{glm::vec3(1, 1, 1), { 0, 1 }},
+			{{ 1, 0, 1 }, { 0, 0 }},
+			{{ 1, 0, 0 }, { 1, 0 }},
+			{{ 1, 1, 1 }, { 0, 1 }},
 
-			{glm::vec3(1, 0, 0), { 1, 0 }},
-			{glm::vec3(1, 1, 0), { 1, 1 }},
-			{glm::vec3(1, 1, 1), { 0, 1 }}
+			{{ 1, 0, 0 }, { 1, 0 }},
+			{{ 1, 1, 0 }, { 1, 1 }},
+			{{ 1, 1, 1 }, { 0, 1 }}
 		};
 
 		auto iPos = chunk.blocks[iBlock].pos - chunk.pos;
@@ -284,7 +285,7 @@ bool GameModule::processRayInChunk(Chunk& chunk, const Engine::Ray& ray, RayType
 			}
 			else
 			{
-				iPos -= rayFrac * dir;
+				iPos -= g_rayDeltaMag * dir;
 				x = static_cast<uint32_t>(iPos.x);
 				y = static_cast<uint32_t>(iPos.y);
 				z = static_cast<uint32_t>(iPos.z);
