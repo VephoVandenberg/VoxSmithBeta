@@ -22,11 +22,6 @@ void Engine::Renderer::loadData(Mesh* mesh)
 	glEnableVertexAttribArray(1);
 }
 
-void Engine::Renderer::updateData(Mesh* mesh)
-{
-
-}
-
 void Engine::Renderer::renderMesh(const Mesh* mesh)
 {
 	glBindVertexArray(mesh->VAO);

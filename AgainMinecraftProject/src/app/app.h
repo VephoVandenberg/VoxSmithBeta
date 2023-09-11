@@ -7,6 +7,7 @@
 #include "../modules/chunk/chunk.h"
 
 #include <map>
+#include <unordered_map>
 #include <vector>
 
 struct GLFWwindow;
@@ -41,6 +42,24 @@ namespace App
 
 		std::map<const char*, Engine::Shader> m_shaders;
 		std::map<const char*, Engine::Texture> m_textures;
-		std::vector<GameModule::Chunk> m_chunks;
+
+#ifdef GLOBAL_BLOCKS
+		std::vector<GameModule::Block> m_blocks;
+#else
+		struct KeyFuncs
+		{
+			size_t operator()(const glm::vec3& v)const
+			{
+				return std::hash<int>()(v.x) ^ std::hash<int>()(v.y) ^ std::hash<int>()(v.z);
+			}
+
+			bool operator()(const glm::vec3& a, const glm::vec3& b)const
+			{
+				return a.x == b.x && a.z == b.z;
+			}
+		};
+
+		std::unordered_map<glm::vec3, GameModule::Chunk, KeyFuncs> m_chunks;
+#endif
 	};
 }

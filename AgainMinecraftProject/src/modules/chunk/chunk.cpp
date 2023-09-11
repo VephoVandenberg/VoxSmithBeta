@@ -82,11 +82,9 @@ void GameModule::generateMesh(Chunk& chunk)
 	else
 	{
 		memset(chunk.mesh.vertices, 0, nVertices * sizeof(Engine::Renderer::Vertex));
-		// delete chunk.mesh.vertices;
-		// chunk.mesh.vertices = new Engine::Renderer::Vertex[nVertices];
 	}
 	
-	uint32_t iFace = 0;
+	chunk.nFaces = 0;
 	for (uint32_t iBlock = 0; iBlock < nBlocks; iBlock++)
 	{
 		Engine::Renderer::Vertex back[] = {
@@ -151,15 +149,16 @@ void GameModule::generateMesh(Chunk& chunk)
 
 		if (chunk.blocks[iBlock].type == BlockType::AIR)
 		{
-			if (chunk.blocks[iTop].type != BlockType::AIR &&
+			if (iPos.y + 1 < g_chunkSizeY &&
+				chunk.blocks[iTop].type != BlockType::AIR &&
 				iPos.y < g_chunkSizeY - 1)
 			{
 				updateFacePos(bottom, chunk.blocks[iTop]);
 				std::copy(
 					bottom, bottom + g_vertexPerFace,
-					chunk.mesh.vertices + iFace * g_vertexPerCube
+					chunk.mesh.vertices + chunk.nFaces * g_vertexPerCube
 				);
-				iFace++;
+				chunk.nFaces++;
 			}
 
 			if (chunk.blocks[iFront].type != BlockType::AIR &&
@@ -168,9 +167,9 @@ void GameModule::generateMesh(Chunk& chunk)
 				updateFacePos(back, chunk.blocks[iFront]);
 				std::copy(
 					back, back + g_vertexPerFace,
-					chunk.mesh.vertices + iFace * g_vertexPerCube
+					chunk.mesh.vertices + chunk.nFaces * g_vertexPerCube
 				);
-				iFace++;
+				chunk.nFaces++;
 			}
 
 			if (chunk.blocks[iRight].type != BlockType::AIR &&
@@ -179,9 +178,9 @@ void GameModule::generateMesh(Chunk& chunk)
 				updateFacePos(left, chunk.blocks[iRight]);
 				std::copy(
 					left, left + g_vertexPerFace,
-					chunk.mesh.vertices + iFace * g_vertexPerCube
+					chunk.mesh.vertices + chunk.nFaces * g_vertexPerCube
 				);
-				iFace++;
+				chunk.nFaces++;
 			}
 		}
 		else
@@ -192,9 +191,9 @@ void GameModule::generateMesh(Chunk& chunk)
 				updateFacePos(top, chunk.blocks[iBlock]);
 				std::copy(
 					top, top + g_vertexPerFace,
-					chunk.mesh.vertices + iFace * g_vertexPerCube
+					chunk.mesh.vertices + chunk.nFaces * g_vertexPerCube
 				);
-				iFace++;
+				chunk.nFaces++;
 			}
 
 			if (chunk.blocks[iFront].type == BlockType::AIR &&
@@ -203,9 +202,9 @@ void GameModule::generateMesh(Chunk& chunk)
 				updateFacePos(front, chunk.blocks[iBlock]);
 				std::copy(
 					front, front + g_vertexPerFace,
-					chunk.mesh.vertices + iFace * g_vertexPerCube
+					chunk.mesh.vertices + chunk.nFaces * g_vertexPerCube
 				);
-				iFace++;
+				chunk.nFaces++;
 			}
 
 			if (chunk.blocks[iRight].type == BlockType::AIR &&
@@ -214,9 +213,9 @@ void GameModule::generateMesh(Chunk& chunk)
 				updateFacePos(right, chunk.blocks[iBlock]);
 				std::copy(
 					right, right + g_vertexPerFace,
-					chunk.mesh.vertices + iFace * g_vertexPerCube
+					chunk.mesh.vertices + chunk.nFaces * g_vertexPerCube
 				);
-				iFace++;
+				chunk.nFaces++;
 			}
 		}
 	}
@@ -238,16 +237,19 @@ void GameModule::drawChunk(const Chunk& chunk)
 	Engine::Renderer::renderMesh(&chunk.mesh);
 }
 
-void GameModule::checkNeighbourChunk(Chunk& chunk1, Chunk& chunk2)
-{
-
-}
 
 bool GameModule::rayStartInChunk(const Chunk& chunk, const Engine::Ray& ray)
 {
 	return 
 		chunk.pos.x <= ray.start.x && ray.start.x <= chunk.pos.x + g_chunkSizeX &&
 		chunk.pos.z <= ray.start.z && ray.start.z <= chunk.pos.z + g_chunkSizeZ;
+}
+
+bool GameModule::rayEndInChunk(const Chunk& chunk, const Engine::Ray& ray)
+{
+	return
+		chunk.pos.x <= ray.end.x && ray.end.x <= chunk.pos.x + g_chunkSizeX &&
+		chunk.pos.z <= ray.end.z && ray.end.z <= chunk.pos.z + g_chunkSizeZ;
 }
 
 bool GameModule::processRayInChunk(Chunk& chunk, const Engine::Ray& ray, RayType type)
@@ -260,10 +262,12 @@ bool GameModule::processRayInChunk(Chunk& chunk, const Engine::Ray& ray, RayType
 	uint32_t x;
 	uint32_t y;
 	uint32_t z;
+	glm::vec3 rayCurrPos;
 
 	for (float rayFrac = 0; rayFrac < rayLength; rayFrac += g_rayDeltaMag)
 	{
-		glm::vec3 iPos = ray.start + rayFrac * dir - chunk.pos;
+		rayCurrPos = ray.start + rayFrac * dir;
+		glm::vec3 iPos = rayCurrPos - chunk.pos;
 		
 		x = static_cast<uint32_t>(iPos.x);
 		y = static_cast<uint32_t>(iPos.y);
@@ -271,9 +275,10 @@ bool GameModule::processRayInChunk(Chunk& chunk, const Engine::Ray& ray, RayType
 
 		uint32_t iBlock = y * g_chunkSizeX * g_chunkSizeZ + z * g_chunkSizeX + x;
 
-		if (iBlock > nBlocks)
+		if (rayCurrPos.x < chunk.pos.x || rayCurrPos.x > chunk.pos.x + g_chunkSizeX ||
+			rayCurrPos.z < chunk.pos.z || rayCurrPos.z > chunk.pos.z + g_chunkSizeZ)
 		{
-			return false;
+			continue;
 		}
 
 		if (chunk.blocks[iBlock].type != BlockType::AIR)
@@ -299,12 +304,13 @@ bool GameModule::processRayInChunk(Chunk& chunk, const Engine::Ray& ray, RayType
 
 	if (type == RayType::PLACE)
 	{
-		uint32_t iBlock = y * g_chunkSizeX * g_chunkSizeZ + z * g_chunkSizeX + x;
-		
-		if (iBlock > nBlocks)
+		if (rayCurrPos.x < chunk.pos.x || rayCurrPos.x > chunk.pos.x + g_chunkSizeX ||
+			rayCurrPos.z < chunk.pos.z || rayCurrPos.z > chunk.pos.z + g_chunkSizeZ)
 		{
 			return false;
 		}
+
+		uint32_t iBlock = y * g_chunkSizeX * g_chunkSizeZ + z * g_chunkSizeX + x;
 		chunk.blocks[iBlock].type = BlockType::GRASS_DIRT;
 		return true;
 	}

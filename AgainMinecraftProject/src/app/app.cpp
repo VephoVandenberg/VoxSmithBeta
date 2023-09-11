@@ -21,10 +21,11 @@ const char* g_title = "Azamat's making Minecraft fucking again";
 constexpr size_t g_width = 1240;
 constexpr size_t g_height = 720;
 
-constexpr size_t numberOfChunksX = 1;
-constexpr size_t numberOfChunksZ = 1;
+constexpr size_t g_numberOfChunksX = 2;
+constexpr size_t g_numberOfChunksZ = 2;
 
-constexpr glm::vec3 g_chunkSize = { 8, 8, 8 };
+constexpr size_t g_chunkOffsetX = 16;
+constexpr size_t g_chunkOffsetZ = 16;
 
 Ray m_ray;
 Renderer::Buffer m_rayBuffer;
@@ -48,13 +49,14 @@ void Application::init()
 	initShaders();
 	initTextures();
 
-	for (uint32_t x = 0; x < numberOfChunksX; x++)
+	for (uint32_t x = 0; x < g_numberOfChunksX; x++)
 	{
-		for (uint32_t z = 0; z < numberOfChunksZ; z++)
+		for (uint32_t z = 0; z < g_numberOfChunksZ; z++)
 		{
-			m_chunks.emplace_back(generateChunk({ x, 0, z }));
-			generateMesh(m_chunks.back());
-			loadChunkMesh(m_chunks.back());
+			glm::vec3 pos = { x * g_chunkOffsetX, 0, z * g_chunkOffsetZ };
+			m_chunks[pos] = generateChunk(pos);
+			generateMesh(m_chunks[pos]);
+			loadChunkMesh(m_chunks[pos]);
 		}
 	}
 }
@@ -140,7 +142,7 @@ void Application::handleInput()
 		m_keyboard[GLFW_KEY_S] = false;
 	}
 
-	if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && 
+	if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS &&
 		!m_keyboardPressed[GLFW_MOUSE_BUTTON_LEFT])
 	{
 		m_keyboard[GLFW_MOUSE_BUTTON_LEFT] = true;
@@ -166,9 +168,9 @@ void Application::handleInput()
 void Application::onRender()
 {
 	setUniform4m(m_shaders[s_meshShader], "u_view", getCameraView());
-	for (const auto& chunk: m_chunks)
+	for (const auto& chunk : m_chunks)
 	{
-		drawChunk(chunk);
+		drawChunk(chunk.second);
 	}
 
 	setUniform4m(m_shaders[s_rayShader], "u_view", getCameraView());
@@ -185,15 +187,36 @@ void Application::onUpdate()
 		Ray ray = castRay();
 		Renderer::loadRayData(ray);
 
-		for (auto& chunk: m_chunks)
+		glm::vec3 rayChunkPos = {
+					g_chunkOffsetX * static_cast<int32_t>(ray.start.x / g_chunkOffsetX),
+					0,
+					g_chunkOffsetZ * static_cast<int32_t>(ray.start.z / g_chunkOffsetZ)
+		};
+		if (m_chunks.find(rayChunkPos) != m_chunks.end())
 		{
-			if (rayStartInChunk(chunk, ray))
+			if (rayStartInChunk(m_chunks[rayChunkPos], ray))
 			{
 				RayType type = m_keyboard[GLFW_MOUSE_BUTTON_1] ? RayType::REMOVE : RayType::PLACE;
-				if (processRayInChunk(chunk, ray, type))
+				if (processRayInChunk(m_chunks[rayChunkPos], ray, type))
 				{
-					generateMesh(chunk);
-					loadChunkMesh(chunk);
+					generateMesh(m_chunks[rayChunkPos]);
+					loadChunkMesh(m_chunks[rayChunkPos]);
+				}
+				else if (!rayEndInChunk(m_chunks[rayChunkPos], ray))
+				{
+					glm::vec3 pos = {
+						g_chunkOffsetX * static_cast<int32_t>(ray.end.x / g_chunkOffsetX),
+						0,
+						g_chunkOffsetZ * static_cast<int32_t>(ray.end.z / g_chunkOffsetZ)
+					};
+					if (m_chunks.find(pos) != m_chunks.end())
+					{
+						if (processRayInChunk(m_chunks[pos], ray, type))
+						{
+							generateMesh(m_chunks[pos]);
+							loadChunkMesh(m_chunks[pos]);
+						}	
+					}
 				}
 			}
 		}

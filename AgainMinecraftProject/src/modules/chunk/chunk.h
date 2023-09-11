@@ -19,6 +19,7 @@ namespace GameModule
 		glm::vec3 pos;
 		Block* blocks;
 		Engine::Renderer::Mesh mesh;
+		size_t nFaces;
 	};
 
 	enum class RayType
@@ -31,7 +32,7 @@ namespace GameModule
 	void loadChunkMesh(Chunk& chunk);
 	bool processRayInChunk(Chunk& chunk, const Engine::Ray& ray, RayType type = RayType::REMOVE);
 	bool rayStartInChunk(const Chunk& chunk, const Engine::Ray& ray);
-	void checkNeighbourChunk(Chunk& chunk1, Chunk& chunk2);
+	bool rayEndInChunk(const Chunk& chunk, const Engine::Ray& ray);
 	void generateMesh(Chunk& chunk);
 	void drawChunk(const Chunk& chunk);
 }

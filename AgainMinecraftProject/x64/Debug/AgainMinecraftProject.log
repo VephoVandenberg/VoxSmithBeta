@@ -1,17 +1,76 @@
-﻿  chunk.cpp
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(148,17): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+﻿  app.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.h(53,30): warning C4244: 'argument': conversion from 'const T' to 'const _Kty', possible loss of data
           with
           [
               T=float
           ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(149,19): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+          and
+          [
+              _Kty=int
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.h(53,54): warning C4244: 'argument': conversion from 'const T' to 'const _Kty', possible loss of data
           with
           [
               T=float
           ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(150,19): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+          and
+          [
+              _Kty=int
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.h(53,78): warning C4244: 'argument': conversion from 'const T' to 'const _Kty', possible loss of data
           with
           [
               T=float
           ]
+          and
+          [
+              _Kty=int
+          ]
+  mesh.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\mesh.cpp(28,59): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  main.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.h(53,30): warning C4244: 'argument': conversion from 'const T' to 'const _Kty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Kty=int
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.h(53,54): warning C4244: 'argument': conversion from 'const T' to 'const _Kty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Kty=int
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.h(53,78): warning C4244: 'argument': conversion from 'const T' to 'const _Kty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Kty=int
+          ]
+  chunk.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(146,17): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(147,19): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(148,19): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+          with
+          [
+              T=float
+          ]
+  Generating Code...
   AgainMinecraftProject.vcxproj -> D:\Working\AgainMinecraftProject\x64\Debug\AgainMinecraftProject.exe
