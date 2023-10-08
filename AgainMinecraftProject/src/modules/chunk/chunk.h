@@ -30,9 +30,11 @@ namespace GameModule
 
 	Chunk generateChunk(glm::vec3 pos);
 	void loadChunkMesh(Chunk& chunk);
-	bool processRayInChunk(Chunk& chunk, const Engine::Ray& ray, RayType type = RayType::REMOVE);
+	bool processRayInChunk(Chunk& chunk, Engine::Ray& ray, RayType type = RayType::REMOVE);
 	bool rayStartInChunk(const Chunk& chunk, const Engine::Ray& ray);
 	bool rayEndInChunk(const Chunk& chunk, const Engine::Ray& ray);
+	bool rayEndInChunkBorder(const Chunk& chunk, const Engine::Ray& ray);
+	void updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2);
 	void generateMesh(Chunk& chunk);
 	void drawChunk(const Chunk& chunk);
 }

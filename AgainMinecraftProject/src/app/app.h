@@ -4,10 +4,17 @@
 #include "../engine/texture/texture.h"
 #include "../engine/camera/camera.h"
 
-#include "../modules/chunk/chunk.h"
+#ifdef ECS
+#include "../modules/chunk/block.h"
 
-#include <map>
+#include <queue>
+#else
+#include "../modules/chunk/chunk.h"
+#endif
+
+
 #include <unordered_map>
+#include <map>
 #include <vector>
 
 struct GLFWwindow;
@@ -43,8 +50,14 @@ namespace App
 		std::map<const char*, Engine::Shader> m_shaders;
 		std::map<const char*, Engine::Texture> m_textures;
 
-#ifdef GLOBAL_BLOCKS
-		std::vector<GameModule::Block> m_blocks;
+#ifdef ECS
+		std::queue<int32_t> m_availableEntities;
+
+		std::unordered_map<int32_t, int32_t> m_entityToIndex;
+		std::unordered_map<int32_t, int32_t> m_indexToEntity;
+
+		std::vector<GameModule::Block> m_components;
+		uint32_t m_livingEntity = 0;
 #else
 		struct KeyFuncs
 		{

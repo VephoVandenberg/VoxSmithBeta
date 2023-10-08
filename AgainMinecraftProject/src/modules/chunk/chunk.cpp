@@ -252,7 +252,16 @@ bool GameModule::rayEndInChunk(const Chunk& chunk, const Engine::Ray& ray)
 		chunk.pos.z <= ray.end.z && ray.end.z <= chunk.pos.z + g_chunkSizeZ;
 }
 
-bool GameModule::processRayInChunk(Chunk& chunk, const Engine::Ray& ray, RayType type)
+bool GameModule::rayEndInChunkBorder(const Chunk& chunk, const Engine::Ray& ray)
+{
+	return
+		(chunk.pos.x + 1 >= ray.end.x && chunk.pos.x <= ray.end.x) || 
+		(chunk.pos.x + g_chunkSizeX - 1 <= ray.end.x && chunk.pos.x + g_chunkSizeX >= ray.end.x) ||
+		(chunk.pos.z + 1 >= ray.end.z && chunk.pos.z <= ray.end.z) ||
+		(chunk.pos.z + g_chunkSizeZ - 1 <= ray.end.z && chunk.pos.z + g_chunkSizeZ >= ray.end.z);
+}
+
+bool GameModule::processRayInChunk(Chunk& chunk, Engine::Ray& ray, RayType type)
 {
 	glm::vec3 dir = glm::normalize(ray.end - ray.start);
 
@@ -286,6 +295,7 @@ bool GameModule::processRayInChunk(Chunk& chunk, const Engine::Ray& ray, RayType
 			if (type == RayType::REMOVE)
 			{
 				chunk.blocks[iBlock].type = BlockType::AIR;
+				ray.end = rayCurrPos;
 				return true;
 			}
 			else
@@ -316,4 +326,110 @@ bool GameModule::processRayInChunk(Chunk& chunk, const Engine::Ray& ray, RayType
 	}
 
 	return false;
+}
+
+void GameModule::updateChunkNeighbourFace(Chunk& less, Chunk& more)
+{
+	if (less.pos.x < more.pos.x)
+	{
+		for (uint32_t y = 0; y < g_chunkSizeY; y++)
+		{
+			for (uint32_t z = 0; z < g_chunkSizeZ; z++)
+			{
+				Engine::Renderer::Vertex left[] = {
+					{{ 0, 0, 0 }, { 0, 0 }},
+					{{ 0, 0, 1 }, { 1, 0 }},
+					{{ 0, 1, 0 }, { 0, 1 }},
+
+					{{ 0, 0, 1 }, { 1, 0 }},
+					{{ 0, 1, 1 }, { 1, 1 }},
+					{{ 0, 1, 0 }, { 0, 1 }},
+				};
+				Engine::Renderer::Vertex right[] = {
+					{{ 1, 0, 1 }, { 0, 0 }},
+					{{ 1, 0, 0 }, { 1, 0 }},
+					{{ 1, 1, 1 }, { 0, 1 }},
+
+					{{ 1, 0, 0 }, { 1, 0 }},
+					{{ 1, 1, 0 }, { 1, 1 }},
+					{{ 1, 1, 1 }, { 0, 1 }}
+				};
+
+				uint32_t iPos1 = y * g_chunkSizeX * g_chunkSizeZ + z * g_chunkSizeX + g_chunkSizeX - 1;
+				uint32_t iPos2 = y * g_chunkSizeX * g_chunkSizeZ + z * g_chunkSizeX + 0;
+
+				if (less.blocks[iPos1].type == BlockType::AIR &&
+					more.blocks[iPos2].type != BlockType::AIR)
+				{
+					updateFacePos(left, more.blocks[iPos2]);
+					std::copy(
+						left, left + g_vertexPerFace,
+						more.mesh.vertices + more.nFaces * g_vertexPerCube
+					);
+					more.nFaces++;
+				}
+				else if (less.blocks[iPos1].type != BlockType::AIR &&
+					 more.blocks[iPos2].type == BlockType::AIR)
+				{
+					updateFacePos(right, less.blocks[iPos1]);
+					std::copy(
+						right, right + g_vertexPerFace,
+						less.mesh.vertices + less.nFaces * g_vertexPerCube
+					);
+					less.nFaces++;
+				}
+			}
+		}
+	}
+	else if (less.pos.z < more.pos.z)
+	{
+		for (uint32_t y = 0; y < g_chunkSizeY; y++)
+		{
+			for (uint32_t x = 0; x < g_chunkSizeX; x++)
+			{
+				Engine::Renderer::Vertex back[] = {
+					{{ 0, 0, 0 }, { 0, 0 }},
+					{{ 0, 1, 0 }, { 0, 1 }},
+					{{ 1, 0, 0 }, { 1, 0 }},
+
+					{{ 1, 0, 0 }, { 1, 0 }},
+					{{ 0, 1, 0 }, { 0, 1 }},
+					{{ 1, 1, 0 }, { 1, 1 }},
+				};
+				Engine::Renderer::Vertex front[] = {
+					{{ 0, 0, 1 }, { 0, 0 }},
+					{{ 1, 0, 1 }, { 1, 0 }},
+					{{ 0, 1, 1 }, { 0, 1 }},
+
+					{{ 1, 0, 1 }, { 1, 0 }},
+					{{ 1, 1, 1 }, { 1, 1 }},
+					{{ 0, 1, 1 }, { 0, 1 }},
+				};
+
+				uint32_t iPos1 = y * g_chunkSizeX * g_chunkSizeZ + (g_chunkSizeZ - 1) * g_chunkSizeX + x;
+				uint32_t iPos2 = y * g_chunkSizeX * g_chunkSizeZ + (0) * g_chunkSizeX + x;
+
+				if (less.blocks[iPos1].type == BlockType::AIR &&
+					more.blocks[iPos2].type != BlockType::AIR)
+				{
+					updateFacePos(back, more.blocks[iPos2]);
+					std::copy(
+						back, back + g_vertexPerFace,
+						more.mesh.vertices + more.nFaces * g_vertexPerCube
+					);
+					more.nFaces++;
+				}
+				else if (less.blocks[iPos1].type != BlockType::AIR &&
+					more.blocks[iPos2].type == BlockType::AIR)
+				{
+					updateFacePos(front, less.blocks[iPos1]);
+					std::copy(
+						front, front + g_vertexPerFace,
+						less.mesh.vertices + less.nFaces * g_vertexPerCube
+					);
+					less.nFaces++;
+				}
+			}
+		}
+	}
 }

@@ -24,12 +24,12 @@ constexpr float g_cubeVertices[] = {
 
 	// front
 	0, 0, 1, 	0, 0,
-	1, 0, 1,	1, 0,
 	0, 1, 1,	0, 1,
+	1, 0, 1,	1, 0,
 
 	1, 0, 1,	1, 0,
-	1, 1, 1,	1, 1,
 	0, 1, 1,	0, 1,
+	1, 1, 1,	1, 1,
 
 	// top
 	0, 1, 1, 	0, 0,
@@ -42,12 +42,12 @@ constexpr float g_cubeVertices[] = {
 
 	// bottom
 	0, 0, 1, 	0, 0,
-	1, 0, 1,	1, 0,
 	0, 0, 0,	0, 1,
+	1, 0, 1,	1, 0,
 
 	1, 0, 1,	1, 0,
-	1, 0, 0,	1, 1,
 	0, 0, 0,	0, 1,
+	1, 0, 0,	1, 1,
 
 	// left
 	0, 0, 0, 	0, 0,
@@ -70,9 +70,21 @@ constexpr float g_cubeVertices[] = {
 
 constexpr float g_lineWidth = 5.0f;
 
-void Engine::Renderer::loadCubeData(Buffer& buffer, const float* vertices, bool hasColor, bool hasTexture)
+void Engine::Renderer::loadCubeData()
 {
 	// This function might not be needed at all
+	glGenVertexArrays(1, &g_buffer.VAO);
+	glGenBuffers(1, &g_buffer.VBO);
+
+	glBindVertexArray(g_buffer.VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, g_buffer.VBO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_cubeVertices), g_cubeVertices, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 }
 
 void Engine::Renderer::loadRayData(const Ray& ray)

@@ -19,7 +19,7 @@ namespace Engine
 			uint32_t VBO;
 		};
 
-		void loadCubeData(Buffer& buffer, const float* vertices, bool hasColor, bool hasTexture);
+		void loadCubeData();
 		void loadRayData(const Ray& ray);
 
 		void render(const Type type);

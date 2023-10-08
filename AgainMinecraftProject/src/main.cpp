@@ -3,6 +3,7 @@
 /** TO DO LIST
 * Agenda
 * - ECS
+* - Implement ECS in this game by creating a simple game first
 * Later 
 * - Take into consideration having global blocks and construction of meshes from that blocks
 * - Investigate math behind coordinate systems and matrices
