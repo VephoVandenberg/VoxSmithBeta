@@ -86,6 +86,7 @@ void Application::init()
 		{
 			glm::vec3 pos = { x * g_chunkOffsetX, 0, z * g_chunkOffsetZ };
 			m_chunks[pos] = generateChunk(pos);
+			initMeshData(m_chunks[pos]);
 			generateMesh(m_chunks[pos]);
 			loadChunkMesh(m_chunks[pos]);
 		}
@@ -227,115 +228,133 @@ void Application::onUpdate()
 	if (m_keyboard[GLFW_MOUSE_BUTTON_LEFT] && !m_keyboardPressed[GLFW_MOUSE_BUTTON_LEFT] ||
 		m_keyboard[GLFW_MOUSE_BUTTON_RIGHT] && !m_keyboardPressed[GLFW_MOUSE_BUTTON_RIGHT])
 	{
+#ifdef _DEBUG
 		Ray ray = castRay();
 		Renderer::loadRayData(ray);
+#endif
 
 #ifdef ECS
 #else
-		glm::vec3 rayChunkPos = {
+		auto type = m_keyboard[GLFW_MOUSE_BUTTON_LEFT] ? RayType::REMOVE : RayType::PLACE;
+		glm::vec3 rayStartChunk = {
 			g_chunkOffsetX * static_cast<int32_t>(ray.start.x / g_chunkOffsetX),
 			0,
 			g_chunkOffsetZ * static_cast<int32_t>(ray.start.z / g_chunkOffsetZ)
 		};
-		// Still could be rewritten
-		if (m_chunks.find(rayChunkPos) != m_chunks.end())
+		glm::vec3 rayEndChunk = {
+			g_chunkOffsetX * static_cast<int32_t>(ray.end.x / g_chunkOffsetX),
+			0,
+			g_chunkOffsetZ * static_cast<int32_t>(ray.end.z / g_chunkOffsetZ)
+		};
+		
+		if (m_chunks.find(rayStartChunk) == m_chunks.end() ||
+			m_chunks.find(rayEndChunk) == m_chunks.end())
 		{
-			if (rayStartInChunk(m_chunks[rayChunkPos], ray))
+			return;
+		}
+				
+		if (processRayInChunk(m_chunks[rayStartChunk], ray, type))
+		{
+			glm::vec3 chunkToBorderX = rayStartChunk;
+			if (rayEndInBorderX(m_chunks[rayStartChunk], ray))
 			{
-				RayType type = m_keyboard[GLFW_MOUSE_BUTTON_1] ? RayType::REMOVE : RayType::PLACE;
-				if (processRayInChunk(m_chunks[rayChunkPos], ray, type))
+				int32_t offset =
+					rayEndInBorderXPos(m_chunks[rayStartChunk], ray) ?
+					static_cast<int32_t>(g_chunkOffsetX) : -static_cast<int32_t>(g_chunkOffsetX);
+				chunkToBorderX.x += offset;
+
+				if (m_chunks.find(chunkToBorderX) != m_chunks.end())
 				{
-					generateMesh(m_chunks[rayChunkPos]);
+					auto& less =
+						chunkToBorderX.x < rayStartChunk.x ?
+						m_chunks[chunkToBorderX] : m_chunks[rayStartChunk];
+					auto& more =
+						chunkToBorderX.x > rayStartChunk.x ?
+						m_chunks[chunkToBorderX] : m_chunks[rayStartChunk];
 
-					if (rayEndInChunkBorder(m_chunks[rayChunkPos], ray) || 
-						!rayEndInChunk(m_chunks[rayChunkPos], ray))
-					{
-						int32_t xOffset = 0;
-						if (m_chunks[rayChunkPos].pos.x + 1 >= ray.end.x && m_chunks[rayChunkPos].pos.x <= ray.end.x)
-						{
-							xOffset = -1;
-						}
-						else if (m_chunks[rayChunkPos].pos.x + g_chunkOffsetX - 1 <= ray.end.x &&
-							m_chunks[rayChunkPos].pos.x + g_chunkOffsetX >= ray.end.x)
-						{
-							xOffset = 1;
-						}
-
-						int32_t zOffset = 0;
-						if (m_chunks[rayChunkPos].pos.z + 1 >= ray.end.z && m_chunks[rayChunkPos].pos.z <= ray.end.z)
-						{
-							zOffset = -1;
-						}
-						else if (m_chunks[rayChunkPos].pos.z + g_chunkOffsetZ - 1 <= ray.end.z &&
-							m_chunks[rayChunkPos].pos.z + g_chunkOffsetZ >= ray.end.z)
-						{
-							zOffset = 1;
-						}
-
-						glm::vec3 pos = {
-							g_chunkOffsetX * static_cast<int32_t>(ray.end.x / g_chunkOffsetX) + 
-								xOffset * g_chunkOffsetX,
-							0,
-							g_chunkOffsetZ * static_cast<int32_t>(ray.end.z / g_chunkOffsetZ) + 
-								zOffset * g_chunkOffsetZ
-						};
-						if (m_chunks.find(pos) != m_chunks.end())
-						{
-							generateMesh(m_chunks[pos]);
-
-							auto less =
-								pos.x < rayChunkPos.x || pos.z < rayChunkPos.z ?
-								m_chunks[pos] : m_chunks[rayChunkPos];
-							auto more =
-								pos.x < rayChunkPos.x || pos.z < rayChunkPos.z ?
-								m_chunks[rayChunkPos] : m_chunks[pos];
-
-							updateChunkNeighbourFace(less, more);
-
-							loadChunkMesh(m_chunks[pos]);
-						}
-					}
-
-					loadChunkMesh(m_chunks[rayChunkPos]);
-				}
-				else if (!rayEndInChunk(m_chunks[rayChunkPos], ray))
-				{
-					glm::vec3 pos = {
-						g_chunkOffsetX * static_cast<int32_t>(ray.end.x / g_chunkOffsetX),
-						0,
-						g_chunkOffsetZ * static_cast<int32_t>(ray.end.z / g_chunkOffsetZ)
-					};
-					if (m_chunks.find(pos) != m_chunks.end())
-					{
-						if (processRayInChunk(m_chunks[pos], ray, type))
-						{
-							generateMesh(m_chunks[pos]);
-							if (rayEndInChunkBorder(m_chunks[pos], ray))
-							{
-								generateMesh(m_chunks[rayChunkPos]);
-							}
-
-							auto less =
-								pos.x < rayChunkPos.x || pos.z < rayChunkPos.z ?
-								m_chunks[pos] : m_chunks[rayChunkPos];
-							auto more =
-								pos.x < rayChunkPos.x || pos.z < rayChunkPos.z ?
-								m_chunks[rayChunkPos] : m_chunks[pos];
-
-							updateChunkNeighbourFace(less, more);
-
-							if (rayEndInChunkBorder(m_chunks[pos], ray))
-							{
-								loadChunkMesh(m_chunks[rayChunkPos]);
-							}
-							loadChunkMesh(m_chunks[pos]);
-						}
-					}
+					updateChunkNeighbourFace(less, more);
+					generateMesh(m_chunks[chunkToBorderX]);
+					loadChunkMesh(m_chunks[chunkToBorderX]);
 				}
 			}
-		}
-#endif
 
+			glm::vec3 chunkToBorderZ = rayStartChunk;
+			if (rayEndInBorderZ(m_chunks[rayStartChunk], ray))
+			{
+				int32_t offset =
+					rayEndInBorderZPos(m_chunks[rayStartChunk], ray) ?
+					static_cast<int32_t>(g_chunkOffsetZ) : -static_cast<int32_t>(g_chunkOffsetZ);
+				chunkToBorderZ.z += offset;
+
+				if (m_chunks.find(chunkToBorderZ) != m_chunks.end())
+				{
+					auto& less =
+						chunkToBorderZ.z < rayStartChunk.z ?
+						m_chunks[chunkToBorderZ] : m_chunks[rayStartChunk];
+					auto& more =
+						chunkToBorderZ.z > rayStartChunk.z ?
+						m_chunks[chunkToBorderZ] : m_chunks[rayStartChunk];
+
+					updateChunkNeighbourFace(less, more);
+					generateMesh(m_chunks[chunkToBorderZ]);
+					loadChunkMesh(m_chunks[chunkToBorderZ]);
+				}
+			}
+			generateMesh(m_chunks[rayStartChunk]);
+			loadChunkMesh(m_chunks[rayStartChunk]);
+		}
+		else if (processRayInChunk(m_chunks[rayEndChunk], ray, type))
+		{
+ 			glm::vec3 endChunkBorderX = rayEndChunk;
+			if (rayEndInBorderX(m_chunks[endChunkBorderX], ray))
+			{
+				int32_t offset =
+					rayEndInBorderXPos(m_chunks[rayEndChunk], ray) ?
+					static_cast<int32_t>(g_chunkOffsetX) : -static_cast<int32_t>(g_chunkOffsetX);
+				endChunkBorderX.x += offset;
+
+				if (m_chunks.find(endChunkBorderX) != m_chunks.end())
+				{
+					auto& less =
+						endChunkBorderX.x < rayEndChunk.x ?
+						m_chunks[endChunkBorderX] : m_chunks[rayEndChunk];
+					auto& more =
+						endChunkBorderX.x > rayEndChunk.x ?
+						m_chunks[endChunkBorderX] : m_chunks[rayEndChunk];
+
+					updateChunkNeighbourFace(less, more);
+					generateMesh(m_chunks[endChunkBorderX]);
+					loadChunkMesh(m_chunks[endChunkBorderX]);
+				}
+			}
+
+			glm::vec3 endChunkBorderZ = rayEndChunk;
+			if (rayEndInBorderZ(m_chunks[endChunkBorderZ], ray))
+			{
+				int32_t offset = 
+					rayEndInBorderZPos(m_chunks[rayEndChunk], ray) ?
+					static_cast<int32_t>(g_chunkOffsetZ) : -static_cast<int32_t>(g_chunkOffsetZ);
+				endChunkBorderZ.z += offset;
+
+				if (m_chunks.find(endChunkBorderZ) != m_chunks.end())
+				{
+					auto& less =
+						endChunkBorderZ.z < rayEndChunk.z ?
+						m_chunks[endChunkBorderZ] : m_chunks[rayEndChunk];
+					auto& more =
+						endChunkBorderZ.z > rayEndChunk.z ?
+						m_chunks[endChunkBorderZ] : m_chunks[rayEndChunk];
+
+					updateChunkNeighbourFace(less, more);
+					generateMesh(m_chunks[endChunkBorderZ]);
+					loadChunkMesh(m_chunks[endChunkBorderZ]);
+				}
+			}
+			generateMesh(m_chunks[rayEndChunk]);
+			loadChunkMesh(m_chunks[rayEndChunk]);
+		}
+				
+#endif
 		m_keyboardPressed[GLFW_MOUSE_BUTTON_RIGHT] = true;
 		m_keyboardPressed[GLFW_MOUSE_BUTTON_LEFT] = true;
 	}

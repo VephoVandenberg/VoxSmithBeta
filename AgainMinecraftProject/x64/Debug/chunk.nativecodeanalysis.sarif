@@ -33,177 +33,9 @@
           ]
         },
         {
-          "ruleId": "C26451",
-          "message": {
-            "text": "Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
-                },
-                "region": {
-                  "startLine": 194,
-                  "startColumn": 28,
-                  "endLine": 194,
-                  "endColumn": 36
-                }
-              },
-              "logicalLocations": [
-                {
-                  "fullyQualifiedName": "GameModule::generateMesh",
-                  "decoratedName": "?generateMesh@GameModule@@YAXAEAUChunk@1@@Z",
-                  "kind": "function"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "ruleId": "C26451",
-          "message": {
-            "text": "Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
-                },
-                "region": {
-                  "startLine": 205,
-                  "startColumn": 28,
-                  "endLine": 205,
-                  "endColumn": 36
-                }
-              },
-              "logicalLocations": [
-                {
-                  "fullyQualifiedName": "GameModule::generateMesh",
-                  "decoratedName": "?generateMesh@GameModule@@YAXAEAUChunk@1@@Z",
-                  "kind": "function"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "ruleId": "C26451",
-          "message": {
-            "text": "Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
-                },
-                "region": {
-                  "startLine": 216,
-                  "startColumn": 28,
-                  "endLine": 216,
-                  "endColumn": 36
-                }
-              },
-              "logicalLocations": [
-                {
-                  "fullyQualifiedName": "GameModule::generateMesh",
-                  "decoratedName": "?generateMesh@GameModule@@YAXAEAUChunk@1@@Z",
-                  "kind": "function"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "ruleId": "C26451",
-          "message": {
-            "text": "Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
-                },
-                "region": {
-                  "startLine": 159,
-                  "startColumn": 28,
-                  "endLine": 159,
-                  "endColumn": 36
-                }
-              },
-              "logicalLocations": [
-                {
-                  "fullyQualifiedName": "GameModule::generateMesh",
-                  "decoratedName": "?generateMesh@GameModule@@YAXAEAUChunk@1@@Z",
-                  "kind": "function"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "ruleId": "C26451",
-          "message": {
-            "text": "Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
-                },
-                "region": {
-                  "startLine": 170,
-                  "startColumn": 28,
-                  "endLine": 170,
-                  "endColumn": 36
-                }
-              },
-              "logicalLocations": [
-                {
-                  "fullyQualifiedName": "GameModule::generateMesh",
-                  "decoratedName": "?generateMesh@GameModule@@YAXAEAUChunk@1@@Z",
-                  "kind": "function"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "ruleId": "C26451",
-          "message": {
-            "text": "Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
-                },
-                "region": {
-                  "startLine": 181,
-                  "startColumn": 28,
-                  "endLine": 181,
-                  "endColumn": 36
-                }
-              },
-              "logicalLocations": [
-                {
-                  "fullyQualifiedName": "GameModule::generateMesh",
-                  "decoratedName": "?generateMesh@GameModule@@YAXAEAUChunk@1@@Z",
-                  "kind": "function"
-                }
-              ]
-            }
-          ]
-        },
-        {
           "ruleId": "C6001",
           "message": {
-            "text": "Using uninitialized memory 'y'."
+            "text": "Using uninitialized memory 'rayCurrPos'."
           },
           "locations": [
             {
@@ -212,16 +44,16 @@
                   "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                 },
                 "region": {
-                  "startLine": 301,
-                  "startColumn": 21,
-                  "endLine": 301,
-                  "endColumn": 21
+                  "startLine": 328,
+                  "startColumn": 7,
+                  "endLine": 328,
+                  "endColumn": 7
                 }
               },
               "logicalLocations": [
                 {
                   "fullyQualifiedName": "GameModule::processRayInChunk",
-                  "decoratedName": "?processRayInChunk@GameModule@@YA_NAEAUChunk@1@AEBURay@Engine@@W4RayType@1@@Z",
+                  "decoratedName": "?processRayInChunk@GameModule@@YA_NAEAUChunk@1@AEAURay@Engine@@W4RayType@1@@Z",
                   "kind": "function"
                 }
               ]
@@ -239,7 +71,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 254,
+                            "startLine": 277,
                             "startColumn": 12
                           }
                         }
@@ -253,7 +85,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 256,
+                            "startLine": 279,
                             "startColumn": 7
                           }
                         }
@@ -267,7 +99,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 257,
+                            "startLine": 280,
                             "startColumn": 7
                           }
                         }
@@ -281,7 +113,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 259,
+                            "startLine": 282,
                             "startColumn": 11
                           }
                         }
@@ -295,12 +127,40 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 260,
+                            "startLine": 283,
                             "startColumn": 11
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 284,
+                            "startColumn": 11
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 285,
+                            "startColumn": 12
                           }
                         },
                         "message": {
-                          "text": "'y' is not initialized"
+                          "text": "'rayCurrPos' is not initialized"
                         }
                       },
                       "kinds": [
@@ -315,21 +175,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 261,
-                            "startColumn": 11
-                          }
-                        }
-                      },
-                      "importance": "unimportant"
-                    },
-                    {
-                      "location": {
-                        "physicalLocation": {
-                          "artifactLocation": {
-                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
-                          },
-                          "region": {
-                            "startLine": 263,
+                            "startLine": 287,
                             "startColumn": 13
                           }
                         }
@@ -343,7 +189,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 263,
+                            "startLine": 287,
                             "startColumn": 34
                           }
                         },
@@ -363,7 +209,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 299,
+                            "startLine": 326,
                             "startColumn": 11
                           }
                         },
@@ -383,7 +229,79 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 301,
+                            "startLine": 329,
+                            "startColumn": 31
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 328,
+                            "startColumn": 7
+                          }
+                        },
+                        "message": {
+                          "text": "'rayCurrPos' is used, but may not have been initialized"
+                        }
+                      },
+                      "kinds": [
+                        "usage"
+                      ],
+                      "importance": "essential"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C6001",
+          "message": {
+            "text": "Using uninitialized memory 'y'."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                },
+                "region": {
+                  "startLine": 334,
+                  "startColumn": 21,
+                  "endLine": 334,
+                  "endColumn": 21
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::processRayInChunk",
+                  "decoratedName": "?processRayInChunk@GameModule@@YA_NAEAUChunk@1@AEAURay@Engine@@W4RayType@1@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 277,
                             "startColumn": 12
                           }
                         }
@@ -397,7 +315,213 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 301,
+                            "startLine": 279,
+                            "startColumn": 7
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 280,
+                            "startColumn": 7
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 282,
+                            "startColumn": 11
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 283,
+                            "startColumn": 11
+                          }
+                        },
+                        "message": {
+                          "text": "'y' is not initialized"
+                        }
+                      },
+                      "kinds": [
+                        "declaration"
+                      ],
+                      "importance": "essential"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 284,
+                            "startColumn": 11
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 285,
+                            "startColumn": 12
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 287,
+                            "startColumn": 13
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 287,
+                            "startColumn": 34
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this loop, (assume 'rayFrac<rayLength' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ],
+                      "importance": "important"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 326,
+                            "startColumn": 11
+                          }
+                        },
+                        "message": {
+                          "text": "Enter this branch, (assume 'type==PLACE')"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ],
+                      "importance": "important"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 329,
+                            "startColumn": 31
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ],
+                      "importance": "important"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 334,
+                            "startColumn": 12
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 335,
+                            "startColumn": 29
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 336,
+                            "startColumn": 3
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 334,
                             "startColumn": 21
                           }
                         },
@@ -428,16 +552,16 @@
                   "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                 },
                 "region": {
-                  "startLine": 301,
+                  "startLine": 334,
                   "startColumn": 55,
-                  "endLine": 301,
+                  "endLine": 334,
                   "endColumn": 55
                 }
               },
               "logicalLocations": [
                 {
                   "fullyQualifiedName": "GameModule::processRayInChunk",
-                  "decoratedName": "?processRayInChunk@GameModule@@YA_NAEAUChunk@1@AEBURay@Engine@@W4RayType@1@@Z",
+                  "decoratedName": "?processRayInChunk@GameModule@@YA_NAEAUChunk@1@AEAURay@Engine@@W4RayType@1@@Z",
                   "kind": "function"
                 }
               ]
@@ -455,7 +579,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 254,
+                            "startLine": 277,
                             "startColumn": 12
                           }
                         }
@@ -469,7 +593,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 256,
+                            "startLine": 279,
                             "startColumn": 7
                           }
                         }
@@ -483,7 +607,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 257,
+                            "startLine": 280,
                             "startColumn": 7
                           }
                         }
@@ -497,7 +621,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 259,
+                            "startLine": 282,
                             "startColumn": 11
                           }
                         }
@@ -511,7 +635,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 260,
+                            "startLine": 283,
                             "startColumn": 11
                           }
                         }
@@ -525,7 +649,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 261,
+                            "startLine": 284,
                             "startColumn": 11
                           }
                         },
@@ -545,7 +669,21 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 263,
+                            "startLine": 285,
+                            "startColumn": 12
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 287,
                             "startColumn": 13
                           }
                         }
@@ -559,7 +697,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 263,
+                            "startLine": 287,
                             "startColumn": 34
                           }
                         },
@@ -579,7 +717,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 299,
+                            "startLine": 326,
                             "startColumn": 11
                           }
                         },
@@ -599,7 +737,27 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 301,
+                            "startLine": 329,
+                            "startColumn": 31
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ],
+                      "importance": "important"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 334,
                             "startColumn": 12
                           }
                         }
@@ -613,7 +771,35 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 301,
+                            "startLine": 335,
+                            "startColumn": 29
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 336,
+                            "startColumn": 3
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 334,
                             "startColumn": 55
                           }
                         },
@@ -644,16 +830,16 @@
                   "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                 },
                 "region": {
-                  "startLine": 301,
+                  "startLine": 334,
                   "startColumn": 74,
-                  "endLine": 301,
+                  "endLine": 334,
                   "endColumn": 74
                 }
               },
               "logicalLocations": [
                 {
                   "fullyQualifiedName": "GameModule::processRayInChunk",
-                  "decoratedName": "?processRayInChunk@GameModule@@YA_NAEAUChunk@1@AEBURay@Engine@@W4RayType@1@@Z",
+                  "decoratedName": "?processRayInChunk@GameModule@@YA_NAEAUChunk@1@AEAURay@Engine@@W4RayType@1@@Z",
                   "kind": "function"
                 }
               ]
@@ -671,7 +857,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 254,
+                            "startLine": 277,
                             "startColumn": 12
                           }
                         }
@@ -685,7 +871,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 256,
+                            "startLine": 279,
                             "startColumn": 7
                           }
                         }
@@ -699,7 +885,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 257,
+                            "startLine": 280,
                             "startColumn": 7
                           }
                         }
@@ -713,7 +899,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 259,
+                            "startLine": 282,
                             "startColumn": 11
                           }
                         },
@@ -733,7 +919,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 260,
+                            "startLine": 283,
                             "startColumn": 11
                           }
                         }
@@ -747,7 +933,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 261,
+                            "startLine": 284,
                             "startColumn": 11
                           }
                         }
@@ -761,7 +947,21 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 263,
+                            "startLine": 285,
+                            "startColumn": 12
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 287,
                             "startColumn": 13
                           }
                         }
@@ -775,7 +975,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 263,
+                            "startLine": 287,
                             "startColumn": 34
                           }
                         },
@@ -795,7 +995,7 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 299,
+                            "startLine": 326,
                             "startColumn": 11
                           }
                         },
@@ -815,7 +1015,27 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 301,
+                            "startLine": 329,
+                            "startColumn": 31
+                          }
+                        },
+                        "message": {
+                          "text": "Skip this branch, (assume '<branch condition>' is false)"
+                        }
+                      },
+                      "kinds": [
+                        "branch"
+                      ],
+                      "importance": "important"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 334,
                             "startColumn": 12
                           }
                         }
@@ -829,7 +1049,35 @@
                             "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                           },
                           "region": {
-                            "startLine": 301,
+                            "startLine": 335,
+                            "startColumn": 29
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 336,
+                            "startColumn": 3
+                          }
+                        }
+                      },
+                      "importance": "unimportant"
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                          },
+                          "region": {
+                            "startLine": 334,
                             "startColumn": 74
                           }
                         },
@@ -872,7 +1120,7 @@
             "resultFile"
           ],
           "hashes": {
-            "sha-256": "e9cff206270a1b8c016fe6af5bbd4969d27c8d5fba6769aedf80fa756644d8dc"
+            "sha-256": "8f12575ebf5c8e4489ad162fd9047d8a50df062ec83999673a5fcde80d046475"
           }
         },
         {
@@ -1944,7 +2192,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/renderer/mesh.h"
           },
           "hashes": {
-            "sha-256": "d3ec4a1f01d495ee9f7ad631b213675b8e581b9848cab687968557cf0fdefabd"
+            "sha-256": "96eac4fc8729dfcb195121f25226cd0479f56f8647ba2492ef1e136d8fd80b4e"
           }
         },
         {
@@ -1968,7 +2216,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/modules/chunk/chunk.h"
           },
           "hashes": {
-            "sha-256": "a095a41d49139dab8c5041535ae9a8f3199044910c917864cc901a7149244b2e"
+            "sha-256": "050fdc39393461cc285d8e189e67a1609f03a979f1d213b50356d8bc156344a2"
           }
         }
       ]
