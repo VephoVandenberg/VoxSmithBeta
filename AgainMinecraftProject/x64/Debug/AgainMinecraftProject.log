@@ -1,1 +1,100 @@
-﻿  AgainMinecraftProject.vcxproj -> D:\Working\AgainMinecraftProject\x64\Debug\AgainMinecraftProject.exe
+﻿  main.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.h(66,30): warning C4244: 'argument': conversion from 'const T' to 'const _Kty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Kty=int
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.h(66,54): warning C4244: 'argument': conversion from 'const T' to 'const _Kty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Kty=int
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.h(66,78): warning C4244: 'argument': conversion from 'const T' to 'const _Kty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Kty=int
+          ]
+  app.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.h(66,30): warning C4244: 'argument': conversion from 'const T' to 'const _Kty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Kty=int
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.h(66,54): warning C4244: 'argument': conversion from 'const T' to 'const _Kty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Kty=int
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.h(66,78): warning C4244: 'argument': conversion from 'const T' to 'const _Kty', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              _Kty=int
+          ]
+  camera.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\camera\camera.cpp(86,21): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\camera\camera.cpp(87,21): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\camera\camera.cpp(91,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\camera\camera.cpp(92,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\camera\camera.cpp(93,20): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\camera\camera.cpp(94,20): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
+  block_renderer.cpp
+  mesh.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\mesh.cpp(28,59): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  shader.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\shader\shader.cpp(86,31): warning C4267: 'argument': conversion from 'size_t' to 'GLuint', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\shader\shader.cpp(87,31): warning C4267: 'argument': conversion from 'size_t' to 'GLuint', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\shader\shader.cpp(88,25): warning C4267: 'argument': conversion from 'size_t' to 'GLuint', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\shader\shader.cpp(89,51): warning C4267: 'argument': conversion from 'size_t' to 'GLuint', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\shader\shader.cpp(103,24): warning C4267: 'argument': conversion from 'size_t' to 'GLuint', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\shader\shader.cpp(109,53): warning C4267: 'argument': conversion from 'size_t' to 'GLuint', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\shader\shader.cpp(115,54): warning C4267: 'argument': conversion from 'size_t' to 'GLuint', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\shader\shader.cpp(121,60): warning C4267: 'argument': conversion from 'size_t' to 'GLuint', possible loss of data
+  texture.cpp
+  window.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\window\window.cpp(17,78): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\window\window.cpp(26,32): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  chunk.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(146,17): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(147,19): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(148,19): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+          with
+          [
+              T=float
+          ]
+  Generating Code...
+  glad.c
+  LINK : D:\Working\AgainMinecraftProject\x64\Debug\AgainMinecraftProject.exe not found or not built by the last incremental link; performing full link
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  AgainMinecraftProject.vcxproj -> D:\Working\AgainMinecraftProject\x64\Debug\AgainMinecraftProject.exe
