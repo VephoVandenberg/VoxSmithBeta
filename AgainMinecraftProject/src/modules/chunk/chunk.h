@@ -3,27 +3,23 @@
 #include <glm/glm.hpp>
 #include <stdint.h>
 
-#include "block.h"
+#include "../../engine/renderer/mesh.h"
 
 namespace Engine
 {
 	struct Ray;
-
-	namespace Renderer 
-	{
-		struct Mesh;
-	}
 }
 
 namespace GameModule
 {
+	struct Block;
+
 	struct Chunk
 	{
 		glm::vec3 pos;
-		Block* blocks = nullptr;
-		Face* faces = nullptr;
-		size_t nFaces;
+		Block* blocks;
 		Engine::Renderer::Mesh mesh;
+		size_t nFaces;
 	};
 
 	enum class RayType
@@ -32,25 +28,14 @@ namespace GameModule
 		PLACE
 	};
 
-	Chunk generateChunk(const glm::vec3 pos);
-	void deleteChunk(Chunk& chunk);
-	void initMeshData(Chunk& chunk);
-	void generateMesh(Chunk& chunk);
+	Chunk generateChunk(glm::vec3 pos);
 	void loadChunkMesh(Chunk& chunk);
-
-	void updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2);
 	bool processRayInChunk(Chunk& chunk, Engine::Ray& ray, RayType type = RayType::REMOVE);
-
 	bool rayStartInChunk(const Chunk& chunk, const Engine::Ray& ray);
 	bool rayEndInChunk(const Chunk& chunk, const Engine::Ray& ray);
-	bool rayEndInBorderX(const Chunk& chunk, const Engine::Ray& ray);
-	bool rayEndInBorderZ(const Chunk& chunk, const Engine::Ray& ray);
-	bool rayEndInBorderXPos(const Chunk& chunk, const Engine::Ray& ray);
-	bool rayEndInBorderZPos(const Chunk& chunk, const Engine::Ray& ray);
-	bool rayEndInBorderXNeg(const Chunk& chunk, const Engine::Ray& ray);
-	bool rayEndInBorderZNeg(const Chunk& chunk, const Engine::Ray& ray);
-
-
+	bool rayEndInChunkBorder(const Chunk& chunk, const Engine::Ray& ray);
+	void updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2);
+	void generateMesh(Chunk& chunk);
 	void drawChunk(const Chunk& chunk);
 }
  

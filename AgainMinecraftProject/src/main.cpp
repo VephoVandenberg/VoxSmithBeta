@@ -2,8 +2,10 @@
 
 /** TO DO LIST
 * Agenda
-* - Make refactoring over some code in raycasting in App and chunk.cpp
+* - ECS
+* - Implement ECS in this game by creating a simple game first
 * Later 
+* - Take into consideration having global blocks and construction of meshes from that blocks
 * - Investigate math behind coordinate systems and matrices
 * Works for now but might be improved
 * - Results are pretty solid in block editing but some outline must be taken into consideration

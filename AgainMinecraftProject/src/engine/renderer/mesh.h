@@ -18,7 +18,7 @@ namespace Engine
 			uint32_t VBO;
 
 			size_t size;
-			Vertex* vertices = nullptr;
+			Vertex* vertices;
 		};
 
 		void loadData(Mesh* mesh);
