@@ -4,6 +4,8 @@
 
 #include "../../engine/renderer/mesh.h"
 
+constexpr uint32_t g_facePerCube = 6;
+
 namespace GameModule
 {
 	enum class BlockType
@@ -16,27 +18,27 @@ namespace GameModule
 		SNOW,
 	};
 
-	enum class FaceType 
-	{
-		FRONT,
-		BACK,
-		TOP,
-		BOTTOM,
-		LEFT,
-		RIGHT
-	};
-
 	struct Block
 	{
-		BlockType type;
-		glm::vec3 pos;
+		BlockType	type;
+		glm::vec3	pos;
 	};
 
 	struct Face
 	{
-		int32_t blockID;
-		FaceType type;
-		Engine::Renderer::Vertex vertices[6];
+		enum class FaceType
+		{
+			FRONT = 0,
+			BACK,
+			TOP,
+			BOTTOM,
+			LEFT,
+			RIGHT
+		} type;
+
+		int32_t						blockID;
+		Engine::Renderer::Vertex	vertices[6];
 	};
 
 }
+

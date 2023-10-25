@@ -34,4 +34,5 @@ namespace Engine
 	
 	Ray castRay();
 	glm::mat4 getCameraView();
+	glm::vec3 getCameraPos();
 }

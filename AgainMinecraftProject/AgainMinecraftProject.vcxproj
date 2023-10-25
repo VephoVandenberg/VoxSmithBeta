@@ -141,6 +141,7 @@
     <ClCompile Include="src\engine\texture\texture.cpp" />
     <ClCompile Include="src\engine\window\window.cpp" />
     <ClCompile Include="src\modules\chunk\chunk.cpp" />
+    <ClCompile Include="src\modules\world\world.cpp" />
     <ClCompile Include="vendor\GLAD\src\glad.c" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +157,7 @@
     <ClInclude Include="src\engine\window\window.h" />
     <ClInclude Include="src\modules\chunk\block.h" />
     <ClInclude Include="src\modules\chunk\chunk.h" />
+    <ClInclude Include="src\modules\world\world.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\mesh_shader.frag" />

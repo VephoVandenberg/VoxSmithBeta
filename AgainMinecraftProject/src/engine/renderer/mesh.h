@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include <glm/glm.hpp>
 
 namespace Engine
@@ -17,8 +19,8 @@ namespace Engine
 			uint32_t VAO;
 			uint32_t VBO;
 
-			size_t size;
-			Vertex* vertices = nullptr;
+			size_t capacity;
+			std::vector<Vertex> vertices;
 		};
 
 		void loadData(Mesh* mesh);

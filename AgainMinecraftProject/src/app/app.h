@@ -16,6 +16,8 @@
 #include <unordered_map>
 #include <map>
 #include <vector>
+#include <mutex>
+#include <thread>
 
 struct GLFWwindow;
 
@@ -27,12 +29,12 @@ namespace App
 		Application();
 		~Application();
 
-		void run();
-		
 		Application(const Application&) = delete;
 		Application(Application&&) = delete;
 		Application& operator=(const Application&) = delete;
 		Application& operator=(Application&&) = delete;
+
+		void run();
 
 	private:
 		void init();
@@ -41,14 +43,19 @@ namespace App
 		void onRender();
 		void onUpdate();
 		void handleInput();
+		void updateTerrain();
+		void processRay(Engine::Ray ray);
 
-		bool m_isRunning = false;
-		bool m_keyboard[1024];
-		bool m_keyboardPressed[1024];
-		GLFWwindow* m_window = nullptr;
+		bool									m_isRunning = false;
+		bool									m_keyboard[1024];
+		bool									m_keyboardPressed[1024];
+		GLFWwindow*								m_window = nullptr;
 
-		std::map<const char*, Engine::Shader> m_shaders;
-		std::map<const char*, Engine::Texture> m_textures;
+		glm::ivec3								m_minBorder;
+		glm::ivec3								m_maxBorder;
+
+		std::map<const char*, Engine::Shader>	m_shaders;
+		std::map<const char*, Engine::Texture>	m_textures;
 
 #ifdef ECS
 		std::queue<int32_t> m_availableEntities;
@@ -61,18 +68,19 @@ namespace App
 #else
 		struct KeyFuncs
 		{
-			size_t operator()(const glm::vec3& v)const
+			size_t operator()(const glm::ivec3& v)const
 			{
 				return std::hash<int>()(v.x) ^ std::hash<int>()(v.y) ^ std::hash<int>()(v.z);
 			}
 
-			bool operator()(const glm::vec3& a, const glm::vec3& b)const
+			bool operator()(const glm::ivec3& a, const glm::vec3& b)const
 			{
 				return a.x == b.x && a.z == b.z;
 			}
 		};
 
-		std::unordered_map<glm::vec3, GameModule::Chunk, KeyFuncs> m_chunks;
+		std::unordered_map<glm::ivec3, GameModule::Chunk, KeyFuncs> m_chunks;
+		std::vector<std::thread> m_threads;
 #endif
 	};
 }
