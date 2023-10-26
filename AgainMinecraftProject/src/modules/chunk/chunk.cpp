@@ -37,7 +37,7 @@ constexpr uint32_t g_vertexPerFace = 6;
 
 constexpr float g_rayDeltaMag = 0.1f;
 
-constexpr Vertex back[] = {
+constexpr Vertex back[6] = {
 	{{ 0, 0, 0 }, { 0, 0 }},
 	{{ 0, 1, 0 }, { 0, 1 }},
 	{{ 1, 0, 0 }, { 1, 0 }},
@@ -47,7 +47,7 @@ constexpr Vertex back[] = {
 	{{ 1, 1, 0 }, { 1, 1 }},
 };
 
-constexpr Vertex front[] = {
+constexpr Vertex front[6] = {
 	{{ 0, 0, 1 }, { 0, 0 }},
 	{{ 1, 0, 1 }, { 1, 0 }},
 	{{ 0, 1, 1 }, { 0, 1 }},
@@ -57,7 +57,7 @@ constexpr Vertex front[] = {
 	{{ 0, 1, 1 }, { 0, 1 }},
 };
 
-constexpr Vertex top[] = {
+constexpr Vertex top[6] = {
 	{{ 0, 1, 1 }, { 0, 0 }},
 	{{ 1, 1, 1 }, { 1, 0 }},
 	{{ 0, 1, 0 }, { 0, 1 }},
@@ -67,7 +67,7 @@ constexpr Vertex top[] = {
 	{{ 0, 1, 0 }, { 0, 1 }},
 };
 
-constexpr Vertex bottom[] = {
+constexpr Vertex bottom[6] = {
 	{{ 0, 0, 1 }, { 0, 0 }},
 	{{ 0, 0, 0 }, { 0, 1 }},
 	{{ 1, 0, 1 }, { 1, 0 }},
@@ -77,7 +77,7 @@ constexpr Vertex bottom[] = {
 	{{ 0, 0, 0 }, { 0, 1 }},
 };
 
-constexpr Vertex left[] = {
+constexpr Vertex left[6] = {
 	{{ 0, 0, 0 }, { 0, 0 }},
 	{{ 0, 0, 1 }, { 1, 0 }},
 	{{ 0, 1, 0 }, { 0, 1 }},
@@ -87,7 +87,7 @@ constexpr Vertex left[] = {
 	{{ 0, 1, 0 }, { 0, 1 }},
 };
 
-constexpr Vertex right[] = {
+constexpr Vertex right[6] = {
 	{{ 1, 0, 1 }, { 0, 0 }},
 	{{ 1, 0, 0 }, { 1, 0 }},
 	{{ 1, 1, 1 }, { 0, 1 }},
@@ -95,6 +95,16 @@ constexpr Vertex right[] = {
 	{{ 1, 0, 0 }, { 1, 0 }},
 	{{ 1, 1, 0 }, { 1, 1 }},
 	{{ 1, 1, 1 }, { 0, 1 }}
+};
+
+using FaceMap = std::unordered_map<Face::FaceType, const Engine::Renderer::Vertex*, EnumHash>;
+FaceMap g_faces = {
+	{Face::FaceType::TOP,		top},
+	{Face::FaceType::BOTTOM,	bottom},
+	{Face::FaceType::FRONT,		front},
+	{Face::FaceType::BACK,		back},
+	{Face::FaceType::RIGHT,		right},
+	{Face::FaceType::LEFT,		left},
 };
 
 Chunk GameModule::generateChunk(const glm::ivec3 pos)
@@ -115,7 +125,7 @@ Chunk GameModule::generateChunk(const glm::ivec3 pos)
 				chunk.blocks.push_back({
 					y < g_chunkSizeY / 2 ? BlockType::GRASS_DIRT : BlockType::AIR,
 					chunk.pos + glm::vec3(x, y, z)
-					});
+				});
 			}
 		}
 	}
@@ -131,10 +141,10 @@ void updateFacePos(Vertex* vertices, const Block& block)
 	}
 }
 
-void GameModule::setBlockFace(Chunk& chunk, uint32_t id, const Vertex* face, Face::FaceType type)
+void GameModule::setBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type)
 {
 	Vertex vertices[g_vertexPerFace];
-	std::copy(face, face + g_vertexPerFace, vertices);
+	std::copy(g_faces[type], g_faces[type] + g_vertexPerFace, vertices);
 	updateFacePos(vertices, chunk.blocks[id]);
 
 	Face face_;
@@ -176,9 +186,9 @@ void GameModule::initMeshData(Chunk& chunk)
 			bool frontSolid = iPos.z < g_chunkSizeZ - 1 && chunk.blocks[iFront].type != BlockType::AIR;
 			bool rightSolid = iPos.x < g_chunkSizeX - 1 && chunk.blocks[iRight].type != BlockType::AIR;
 
-			if (topSolid)	{ setBlockFace(chunk, iTop, bottom, Face::FaceType::BOTTOM); }
-			if (frontSolid) { setBlockFace(chunk, iFront, back, Face::FaceType::BACK); }
-			if (rightSolid) { setBlockFace(chunk, iRight, left, Face::FaceType::LEFT); }
+			if (topSolid)	{ setBlockFace(chunk, iTop,	 Face::FaceType::BOTTOM); }
+			if (frontSolid) { setBlockFace(chunk, iFront, Face::FaceType::BACK); }
+			if (rightSolid) { setBlockFace(chunk, iRight, Face::FaceType::LEFT); }
 		}
 		else
 		{
@@ -186,9 +196,9 @@ void GameModule::initMeshData(Chunk& chunk)
 			bool frontTrans = iPos.z < g_chunkSizeZ - 1 && chunk.blocks[iFront].type == BlockType::AIR;
 			bool rightTrans = iPos.x < g_chunkSizeX - 1 && chunk.blocks[iRight].type == BlockType::AIR;
 
-			if (topTrans)	{ setBlockFace(chunk, iBlock, top, Face::FaceType::TOP); }
-			if (frontTrans) { setBlockFace(chunk, iBlock, front, Face::FaceType::FRONT); }
-			if (rightTrans) { setBlockFace(chunk, iBlock, right, Face::FaceType::RIGHT); }
+			if (topTrans)	{ setBlockFace(chunk, iBlock, Face::FaceType::TOP); }
+			if (frontTrans) { setBlockFace(chunk, iBlock, Face::FaceType::FRONT); }
+			if (rightTrans) { setBlockFace(chunk, iBlock, Face::FaceType::RIGHT); }
 		}
 	}
 	chunk.mesh.capacity = g_nBlocks * g_vertexPerCube * sizeof(Vertex);
@@ -230,7 +240,8 @@ void GameModule::drawChunk(const Chunk& chunk)
 	renderMesh(&chunk.mesh);
 }
 
-void GameModule::addBlock(Chunk& chunk, const glm::ivec3 iPos)
+/*
+void addBlock(Chunk& chunk, const glm::ivec3 iPos)
 {
 	uint32_t iTop		= g_chunkSizeX * ((iPos.y + 1) * g_chunkSizeZ + iPos.z) + iPos.x;
 	uint32_t iBottom	= g_chunkSizeX * ((iPos.y - 1) * g_chunkSizeZ + iPos.z) + iPos.x;
@@ -308,7 +319,7 @@ void GameModule::addBlock(Chunk& chunk, const glm::ivec3 iPos)
 	}
 }
 
-void GameModule::removeBlock(Chunk& chunk, glm::ivec3 iPos)
+void removeBlock(Chunk& chunk, glm::ivec3 iPos)
 {
 	// Remove block faces
 	uint32_t id = g_chunkSizeX * (iPos.y * g_chunkSizeZ + iPos.z) + iPos.x;
@@ -343,7 +354,7 @@ void GameModule::removeBlock(Chunk& chunk, glm::ivec3 iPos)
 	if (rightSolid)		{ setBlockFace(chunk, iRight, left, Face::FaceType::LEFT); }
 	if (leftSolid)		{ setBlockFace(chunk, iLeft, right, Face::FaceType::RIGHT); }
 }
-
+*/
 void GameModule::updateChunkNeighbourFace(Chunk& less, Chunk& more)
 {
 	if (less.pos.x < more.pos.x)
@@ -358,12 +369,12 @@ void GameModule::updateChunkNeighbourFace(Chunk& less, Chunk& more)
 				if (less.blocks[iPos1].type == BlockType::AIR &&
 					more.blocks[iPos2].type != BlockType::AIR)
 				{
-					setBlockFace(more, iPos2, left, Face::FaceType::LEFT);
+					setBlockFace(more, iPos2, Face::FaceType::LEFT);
 				}
 				else if (less.blocks[iPos1].type != BlockType::AIR &&
 					more.blocks[iPos2].type == BlockType::AIR)
 				{
-					setBlockFace(less, iPos1, right, Face::FaceType::RIGHT);
+					setBlockFace(less, iPos1, Face::FaceType::RIGHT);
 				}
 			}
 		}
@@ -380,12 +391,12 @@ void GameModule::updateChunkNeighbourFace(Chunk& less, Chunk& more)
 				if (less.blocks[iPos1].type == BlockType::AIR &&
 					more.blocks[iPos2].type != BlockType::AIR)
 				{
-					setBlockFace(more, iPos2, back, Face::FaceType::BACK);
+					setBlockFace(more, iPos2, Face::FaceType::BACK);
 				}
 				else if (less.blocks[iPos1].type != BlockType::AIR &&
 					more.blocks[iPos2].type == BlockType::AIR)
 				{
-					setBlockFace(less, iPos1, front, Face::FaceType::FRONT);
+					setBlockFace(less, iPos1, Face::FaceType::FRONT);
 				}
 			}
 		}

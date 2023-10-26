@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 
+#include <unordered_map>
+
 #include "../../engine/renderer/mesh.h"
 
 constexpr uint32_t g_facePerCube = 6;
@@ -40,5 +42,10 @@ namespace GameModule
 		Engine::Renderer::Vertex	vertices[6];
 	};
 
+	struct EnumHash
+	{
+		template <typename T>
+		size_t operator()(T t) const { return static_cast<size_t>(t); }
+	};
 }
 

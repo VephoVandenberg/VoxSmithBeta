@@ -12,7 +12,6 @@
 #include "../modules/chunk/chunk.h"
 #endif
 
-
 #include <unordered_map>
 #include <map>
 #include <vector>
@@ -45,7 +44,9 @@ namespace App
 		void handleInput();
 		void updateTerrain();
 		void processRay(Engine::Ray ray);
-
+		void addBlock(glm::vec3 rayPosFrac);
+		void removeBlock(glm::vec3 rayPosFrac);
+		
 		bool									m_isRunning = false;
 		bool									m_keyboard[1024];
 		bool									m_keyboardPressed[1024];
@@ -58,13 +59,6 @@ namespace App
 		std::map<const char*, Engine::Texture>	m_textures;
 
 #ifdef ECS
-		std::queue<int32_t> m_availableEntities;
-
-		std::unordered_map<int32_t, int32_t> m_entityToIndex;
-		std::unordered_map<int32_t, int32_t> m_indexToEntity;
-
-		std::vector<GameModule::Block> m_components;
-		uint32_t m_livingEntity = 0;
 #else
 		struct KeyFuncs
 		{

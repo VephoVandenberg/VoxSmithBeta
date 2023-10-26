@@ -20,6 +20,7 @@ namespace GameModule
 
 	struct Chunk
 	{
+		bool updated = false;
 		glm::vec3 pos;
 		std::vector<Block>		blocks = {};
 		std::vector<Face>		faces = {};
@@ -37,9 +38,9 @@ namespace GameModule
 	void	generateMesh(Chunk& chunk);
 	void	loadChunkMesh(Chunk& chunk);
 	
-	void	addBlock(Chunk& chunk, const glm::ivec3 iPos);
-	void	removeBlock(Chunk& chunk, const glm::ivec3 iPos);
-	void	setBlockFace(Chunk& chunk, uint32_t id, const Engine::Renderer::Vertex* face, Face::FaceType type);
+	// void	addBlock(Chunk& chunk, const glm::ivec3 iPos);
+	// void	removeBlock(Chunk& chunk, const glm::ivec3 iPos);
+	void	setBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type);
 	void	removeBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type);
 
 	void	updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2);
