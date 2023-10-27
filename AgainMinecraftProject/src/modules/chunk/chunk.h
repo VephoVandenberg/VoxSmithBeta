@@ -37,23 +37,11 @@ namespace GameModule
 	void	initMeshData(Chunk& chunk);
 	void	generateMesh(Chunk& chunk);
 	void	loadChunkMesh(Chunk& chunk);
-	
-	// void	addBlock(Chunk& chunk, const glm::ivec3 iPos);
-	// void	removeBlock(Chunk& chunk, const glm::ivec3 iPos);
+
 	void	setBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type);
 	void	removeBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type);
 
 	void	updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2);
-	//bool	processRayInChunk(Chunk& chunk, Engine::Ray& ray, RayType type = RayType::REMOVE);
-
-	bool	rayStartInChunk(const Chunk& chunk, const Engine::Ray& ray);
-	bool	rayEndInChunk(const Chunk& chunk, const Engine::Ray& ray);
-	bool	rayEndInBorderX(const Chunk& chunk, const Engine::Ray& ray);
-	bool	rayEndInBorderZ(const Chunk& chunk, const Engine::Ray& ray);
-	bool	rayEndInBorderXPos(const Chunk& chunk, const Engine::Ray& ray);
-	bool	rayEndInBorderZPos(const Chunk& chunk, const Engine::Ray& ray);
-	bool	rayEndInBorderXNeg(const Chunk& chunk, const Engine::Ray& ray);
-	bool	rayEndInBorderZNeg(const Chunk& chunk, const Engine::Ray& ray);
 
 	void	drawChunk(const Chunk& chunk);
 }

@@ -42,24 +42,31 @@ namespace App
 		void onRender();
 		void onUpdate();
 		void handleInput();
+		// all that down might be added to world
 		void updateTerrain();
 		void processRay(Engine::Ray ray);
 		void addBlock(glm::vec3 rayPosFrac);
 		void removeBlock(glm::vec3 rayPosFrac);
+		void updateBlock(glm::vec3 rayPosFrac, GameModule::RayType type);
+		//
 		
 		bool									m_isRunning = false;
 		bool									m_keyboard[1024];
 		bool									m_keyboardPressed[1024];
 		GLFWwindow*								m_window = nullptr;
 
+		// Move to world
 		glm::ivec3								m_minBorder;
 		glm::ivec3								m_maxBorder;
+		//
 
 		std::map<const char*, Engine::Shader>	m_shaders;
 		std::map<const char*, Engine::Texture>	m_textures;
 
 #ifdef ECS
 #else
+		// For certain could be added to world
+		// Also take into consideratin changing the keys
 		struct KeyFuncs
 		{
 			size_t operator()(const glm::ivec3& v)const

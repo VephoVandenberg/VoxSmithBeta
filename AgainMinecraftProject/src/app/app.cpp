@@ -4,6 +4,7 @@
 #include <functional>
 #include <mutex>
 #include <thread>
+#include <algorithm>
 
 #include "../engine/window/window.h"
 #include "../engine/shader/shader_list.h"
@@ -29,8 +30,8 @@ const char* g_title = "Azamat's making Minecraft fucking again";
 constexpr size_t g_width = 1240;
 constexpr size_t g_height = 720;
 
-constexpr size_t g_numberOfChunksX = 2;
-constexpr size_t g_numberOfChunksZ = 2;
+constexpr size_t g_numberOfChunksX = 8;
+constexpr size_t g_numberOfChunksZ = 8;
 
 constexpr int32_t g_chunkOffsetX = 16;
 constexpr int32_t g_chunkOffsetZ = 16;
@@ -67,16 +68,16 @@ void Application::init()
 
 #ifdef ECS
 #else
-	for (int32_t x = 0; x < g_numberOfChunksX - 1; x++)
+	for (int32_t x = 0; x < g_numberOfChunksX; x++)
 	{
 		for (int32_t z = 0; z < g_numberOfChunksZ; z++)
 		{
 			glm::ivec3 pos = { x * g_chunkOffsetX, 0, z * g_chunkOffsetZ };
 			m_chunks[pos] = generateChunk(pos);
 			initMeshData(m_chunks[pos]);
-			generateMesh(m_chunks[pos]);
-			loadChunkMesh(m_chunks[pos]);
-			m_chunks[pos].updated = true;
+			//generateMesh(m_chunks[pos]);
+			//loadChunkMesh(m_chunks[pos]);
+			//m_chunks[pos].updated = true;
 		}
 	}
 #endif
@@ -284,6 +285,11 @@ void Application::updateTerrain()
 
 void Application::addBlock(glm::vec3 rayPosFrac)
 {
+
+}
+
+void Application::updateBlock(glm::vec3 rayPosFrac, RayType type)
+{
 	auto getChunkPos = [](const glm::vec3 pos) {
 		return glm::ivec3(
 			static_cast<int32_t>(pos.x) / g_chunkOffsetX * g_chunkOffsetX,
@@ -292,102 +298,78 @@ void Application::addBlock(glm::vec3 rayPosFrac)
 		);
 	};
 
-	glm::ivec3 currBlock	= static_cast<glm::ivec3>(rayPosFrac);
+	glm::ivec3 currBlock = static_cast<glm::ivec3>(rayPosFrac);
 
-	glm::ivec3 rightBlock	= { currBlock.x + 1,	currBlock.y,		currBlock.z };
-	glm::ivec3 leftBlock	= { currBlock.x - 1,	currBlock.y,		currBlock.z };
-	glm::ivec3 topBlock		= { currBlock.x,		currBlock.y + 1,	currBlock.z };
-	glm::ivec3 bottomBlock	= { currBlock.x,		currBlock.y - 1,	currBlock.z };
-	glm::ivec3 frontBlock	= { currBlock.x,		currBlock.y,		currBlock.z + 1 };
-	glm::ivec3 backBlock	= { currBlock.x,		currBlock.y,		currBlock.z - 1 };
+	glm::ivec3 rightBlock = { currBlock.x + 1,	currBlock.y,		currBlock.z };
+	glm::ivec3 leftBlock = { currBlock.x - 1,	currBlock.y,		currBlock.z };
+	glm::ivec3 frontBlock = { currBlock.x,		currBlock.y,		currBlock.z + 1 };
+	glm::ivec3 backBlock = { currBlock.x,		currBlock.y,		currBlock.z - 1 };
 
-	glm::ivec3 iPosCurr		= currBlock		- getChunkPos(currBlock);
-	glm::ivec3 iPosRight	= rightBlock	- getChunkPos(rightBlock);
-	glm::ivec3 iPosLeft		= leftBlock		- getChunkPos(leftBlock);
-	glm::ivec3 iPosTop		= topBlock		- getChunkPos(topBlock);
-	glm::ivec3 iPosBottom	= bottomBlock	- getChunkPos(bottomBlock);
-	glm::ivec3 iPosFront	= frontBlock	- getChunkPos(frontBlock);
-	glm::ivec3 iPosBack		= backBlock		- getChunkPos(backBlock);
+	glm::ivec3 iPosCurr = currBlock - getChunkPos(currBlock);
+	glm::ivec3 iPosRight = rightBlock - getChunkPos(rightBlock);
+	glm::ivec3 iPosLeft = leftBlock - getChunkPos(leftBlock);
+	glm::ivec3 iPosFront = frontBlock - getChunkPos(frontBlock);
+	glm::ivec3 iPosBack = backBlock - getChunkPos(backBlock);
 
-	uint32_t iRight		= g_chunkOffsetX * (g_chunkOffsetZ * iPosRight.y	+ iPosRight.z)	+ iPosRight.x;
-	uint32_t iLeft		= g_chunkOffsetX * (g_chunkOffsetZ * iPosLeft.y		+ iPosLeft.z)	+ iPosLeft.x;
-	uint32_t iTop		= g_chunkOffsetX * (g_chunkOffsetZ * iPosTop.y		+ iPosTop.z)	+ iPosTop.x;
-	uint32_t iBottom	= g_chunkOffsetX * (g_chunkOffsetZ * iPosBottom.y	+ iPosBottom.z) + iPosBottom.x;	
-	uint32_t iFront		= g_chunkOffsetX * (g_chunkOffsetZ * iPosFront.y	+ iPosFront.z)	+ iPosFront.x;
-	uint32_t iBack		= g_chunkOffsetX * (g_chunkOffsetZ * iPosBack.y		+ iPosBack.z)	+ iPosBack.x;
-	uint32_t iCurr		= g_chunkOffsetX * (g_chunkOffsetZ * iPosCurr.y		+ iPosCurr.z)	+ iPosCurr.x;
+	uint32_t iCurr = g_chunkOffsetX * (g_chunkOffsetZ * iPosCurr.y + iPosCurr.z) + iPosCurr.x;
+	uint32_t iTop = g_chunkOffsetX * (g_chunkOffsetZ * (iPosCurr.y + 1) + iPosCurr.z) + iPosCurr.x;
+	uint32_t iBottom = g_chunkOffsetX * (g_chunkOffsetZ * (iPosCurr.y - 1) + iPosCurr.z) + iPosCurr.x;
 
-	bool rightSolid		= m_chunks[getChunkPos(rightBlock)].blocks[iRight].type		!= BlockType::AIR;
-	bool leftSolid		= m_chunks[getChunkPos(leftBlock)].blocks[iLeft].type		!= BlockType::AIR;
-	bool topSolid		= m_chunks[getChunkPos(topBlock)].blocks[iTop].type			!= BlockType::AIR;
-	bool bottomSolid	= m_chunks[getChunkPos(bottomBlock)].blocks[iBottom].type	!= BlockType::AIR;
-	bool frontSolid		= m_chunks[getChunkPos(frontBlock)].blocks[iFront].type		!= BlockType::AIR;
-	bool backSolid		= m_chunks[getChunkPos(backBlock)].blocks[iBack].type		!= BlockType::AIR;
+	uint32_t iRight = g_chunkOffsetX * (g_chunkOffsetZ * iPosRight.y + iPosRight.z) + iPosRight.x;
+	uint32_t iLeft = g_chunkOffsetX * (g_chunkOffsetZ * iPosLeft.y + iPosLeft.z) + iPosLeft.x;
+	uint32_t iFront = g_chunkOffsetX * (g_chunkOffsetZ * iPosFront.y + iPosFront.z) + iPosFront.x;
+	uint32_t iBack = g_chunkOffsetX * (g_chunkOffsetZ * iPosBack.y + iPosBack.z) + iPosBack.x;
 
-	if (rightSolid)	
-	{ 
-		removeBlockFace(m_chunks[getChunkPos(rightBlock)], iRight, Face::FaceType::LEFT);
-		m_chunks[getChunkPos(rightBlock)].updated = false;
+	bool rightSolid = m_chunks[getChunkPos(rightBlock)].blocks[iRight].type != BlockType::AIR;
+	bool leftSolid = m_chunks[getChunkPos(leftBlock)].blocks[iLeft].type != BlockType::AIR;
+	bool topSolid = m_chunks[getChunkPos(currBlock)].blocks[iTop].type != BlockType::AIR;
+	bool bottomSolid = m_chunks[getChunkPos(currBlock)].blocks[iBottom].type != BlockType::AIR;
+	bool frontSolid = m_chunks[getChunkPos(frontBlock)].blocks[iFront].type != BlockType::AIR;
+	bool backSolid = m_chunks[getChunkPos(backBlock)].blocks[iBack].type != BlockType::AIR;
+
+	if (type == RayType::REMOVE)
+	{
+		auto& curr = m_chunks[getChunkPos(currBlock)];
+		m_chunks[getChunkPos(currBlock)].blocks[iCurr].type = BlockType::AIR;
+
+		curr.faces.erase(
+			std::remove_if(
+			curr.faces.begin(), curr.faces.end(),
+			[&](const Face& face) {
+				return face.blockID == iCurr;
+			}), 
+			curr.faces.end()
+		);
+		curr.updated = false;
+
+		if (rightSolid)		{ setBlockFace(m_chunks[getChunkPos(rightBlock)],	iRight, Face::FaceType::LEFT); }
+		if (leftSolid)		{ setBlockFace(m_chunks[getChunkPos(leftBlock)],	iLeft, Face::FaceType::RIGHT); }
+		if (topSolid)		{ setBlockFace(m_chunks[getChunkPos(currBlock)],	iTop, Face::FaceType::BOTTOM); }
+		if (bottomSolid)	{ setBlockFace(m_chunks[getChunkPos(currBlock)],	iBottom, Face::FaceType::TOP); }
+		if (frontSolid)		{ setBlockFace(m_chunks[getChunkPos(frontBlock)],	iFront, Face::FaceType::BACK); }
+		if (backSolid)		{ setBlockFace(m_chunks[getChunkPos(backBlock)],	iBack, Face::FaceType::FRONT); }
 	}
 	else
 	{
-		setBlockFace(m_chunks[getChunkPos(currBlock)], iCurr, Face::FaceType::RIGHT);
-		m_chunks[getChunkPos(currBlock)].updated = false;
-	}
+		m_chunks[getChunkPos(currBlock)].blocks[iCurr].type = BlockType::GRASS_DIRT;
 
-	if (leftSolid)
-	{ 
-		removeBlockFace(m_chunks[getChunkPos(leftBlock)], iLeft, Face::FaceType::RIGHT);
-		m_chunks[getChunkPos(leftBlock)].updated = false;
-	}
-	else
-	{
-		setBlockFace(m_chunks[getChunkPos(currBlock)], iCurr, Face::FaceType::LEFT);
-		m_chunks[getChunkPos(currBlock)].updated = false;
-	}
+		if (rightSolid) { removeBlockFace(m_chunks[getChunkPos(rightBlock)], iRight, Face::FaceType::LEFT); }
+		else { setBlockFace(m_chunks[getChunkPos(currBlock)], iCurr, Face::FaceType::RIGHT); }
 
-	if (topSolid) 
-	{ 
-		removeBlockFace(m_chunks[getChunkPos(topBlock)], iTop, Face::FaceType::BOTTOM);
-		m_chunks[getChunkPos(topBlock)].updated = false;
-	}
-	else
-	{
-		setBlockFace(m_chunks[getChunkPos(currBlock)], iCurr, Face::FaceType::TOP);
-		m_chunks[getChunkPos(currBlock)].updated = false;
-	}
+		if (leftSolid) { removeBlockFace(m_chunks[getChunkPos(leftBlock)], iLeft, Face::FaceType::RIGHT); }
+		else { setBlockFace(m_chunks[getChunkPos(currBlock)], iCurr, Face::FaceType::LEFT); }
 
-	if (bottomSolid) 
-	{ 
-		removeBlockFace(m_chunks[getChunkPos(bottomBlock)],	iBottom, Face::FaceType::TOP);
-		m_chunks[getChunkPos(bottomBlock)].updated = false;
-	}
-	else
-	{
-		setBlockFace(m_chunks[getChunkPos(currBlock)], iCurr, Face::FaceType::BOTTOM);
-		m_chunks[getChunkPos(currBlock)].updated = false;
-	}
+		if (topSolid) { removeBlockFace(m_chunks[getChunkPos(currBlock)], iTop, Face::FaceType::BOTTOM); }
+		else { setBlockFace(m_chunks[getChunkPos(currBlock)], iCurr, Face::FaceType::TOP); }
 
-	if (frontSolid)		
-	{ 
-		removeBlockFace(m_chunks[getChunkPos(frontBlock)], iFront, Face::FaceType::BACK);
-		m_chunks[getChunkPos(frontBlock)].updated = false;
-	}
-	else
-	{
-		setBlockFace(m_chunks[getChunkPos(currBlock)], iCurr, Face::FaceType::FRONT);
-		m_chunks[getChunkPos(currBlock)].updated = false;
-	}
+		if (bottomSolid) { removeBlockFace(m_chunks[getChunkPos(currBlock)], iBottom, Face::FaceType::TOP); }
+		else { setBlockFace(m_chunks[getChunkPos(currBlock)], iCurr, Face::FaceType::BOTTOM); }
 
-	if (backSolid)		
-	{ 
-		removeBlockFace(m_chunks[getChunkPos(backBlock)], iBack, Face::FaceType::FRONT);
-		m_chunks[getChunkPos(backBlock)].updated = false;
-	}
-	else
-	{
-		setBlockFace(m_chunks[getChunkPos(currBlock)], iCurr, Face::FaceType::BACK);
-		m_chunks[getChunkPos(currBlock)].updated = false;
+		if (frontSolid) { removeBlockFace(m_chunks[getChunkPos(frontBlock)], iFront, Face::FaceType::BACK); }
+		else { setBlockFace(m_chunks[getChunkPos(currBlock)], iCurr, Face::FaceType::FRONT); }
+
+		if (backSolid) { removeBlockFace(m_chunks[getChunkPos(backBlock)], iBack, Face::FaceType::FRONT); }
+		else { setBlockFace(m_chunks[getChunkPos(currBlock)], iCurr, Face::FaceType::BACK); }
 	}
 }
 
@@ -427,21 +409,15 @@ void Application::processRay(Engine::Ray ray)
 
 		if (m_chunks[currChunkPos].blocks[id].type != BlockType::AIR)
 		{
-			if (type == RayType::REMOVE)
-			{
-				hit = true;
-				break;
-			}
-			else
+			if (type == RayType::PLACE)
 			{
 				currPos -= dl * dir;
 				iPos = static_cast<glm::ivec3>(currPos) - currChunkPos;
-				uint32_t id = g_chunkOffsetX * (g_chunkOffsetX * iPos.y + iPos.z) + iPos.x;
-				m_chunks[currChunkPos].blocks[id].type = BlockType::GRASS_DIRT;
-				addBlock(currPos);
-				hit = true;
-				break;
 			}
+
+			updateBlock(currPos, type);
+			hit = true;
+			break;
 		}
 	}
 	
@@ -451,7 +427,7 @@ void Application::processRay(Engine::Ray ray)
 		{
 			uint32_t id = g_chunkOffsetX * (iPos.y * g_chunkOffsetZ + iPos.z) + iPos.x;
 			m_chunks[currChunkPos].blocks[id].type = BlockType::GRASS_DIRT;
-			addBlock(currPos);
+			updateBlock(currPos, type);
 		}
 	}
 }

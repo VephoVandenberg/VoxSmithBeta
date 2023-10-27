@@ -7,10 +7,10 @@
 *	 that means we are loading up faces
 *	 to the array with the correspoding vertices, also we store the block ID(index),
 *	 and type of face that will be drawn.
-* 3. Check the neighbour chunks if there are block faces that need to be rendered.
+* 3. (This step might not be needed because we will move the chunk generation into the world struct)
+	  Check the neighbour chunks if there are block faces that need to be rendered.
 * 4. Sort the faces array by block id, then generate the mesh.
 */
-
 
 #include <algorithm>
 #include <glm/glm.hpp>
@@ -143,6 +143,7 @@ void updateFacePos(Vertex* vertices, const Block& block)
 
 void GameModule::setBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type)
 {
+	chunk.updated = false;
 	Vertex vertices[g_vertexPerFace];
 	std::copy(g_faces[type], g_faces[type] + g_vertexPerFace, vertices);
 	updateFacePos(vertices, chunk.blocks[id]);
@@ -157,13 +158,15 @@ void GameModule::setBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type)
 
 void GameModule::removeBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type)
 {
-	auto itDel = std::remove_if(
-		chunk.faces.begin(), chunk.faces.end(),
-		[&](const Face& face) {
-			return face.blockID == id && face.type == type;
-		}
+	chunk.updated = false;
+	chunk.faces.erase(
+		std::remove_if(
+			chunk.faces.begin(), chunk.faces.end(),
+			[&](const Face& face) {
+				return face.blockID == id && face.type == type;
+			}),
+		chunk.faces.end()
 	);
-	chunk.faces.erase(itDel, chunk.faces.end());
 }
 
 void GameModule::initMeshData(Chunk& chunk)
@@ -240,121 +243,6 @@ void GameModule::drawChunk(const Chunk& chunk)
 	renderMesh(&chunk.mesh);
 }
 
-/*
-void addBlock(Chunk& chunk, const glm::ivec3 iPos)
-{
-	uint32_t iTop		= g_chunkSizeX * ((iPos.y + 1) * g_chunkSizeZ + iPos.z) + iPos.x;
-	uint32_t iBottom	= g_chunkSizeX * ((iPos.y - 1) * g_chunkSizeZ + iPos.z) + iPos.x;
-	uint32_t iFront		= g_chunkSizeX * (iPos.y * g_chunkSizeZ + iPos.z + 1) + iPos.x;
-	uint32_t iBack		= g_chunkSizeX * (iPos.y * g_chunkSizeZ + iPos.z - 1) + iPos.x;
-	uint32_t iRight		= g_chunkSizeX * (iPos.y * g_chunkSizeZ + iPos.z) + iPos.x + 1;
-	uint32_t iLeft		= g_chunkSizeX * (iPos.y * g_chunkSizeZ + iPos.z) + iPos.x - 1;
-	uint32_t id			= g_chunkSizeX * (iPos.y * g_chunkSizeZ + iPos.z) + iPos.x;
-
-	if (iPos.y < g_chunkSizeY - 1)
-	{
-		if (chunk.blocks[iTop].type == BlockType::AIR)
-		{
-			setBlockFace(chunk, id, top, Face::FaceType::TOP);
-		}
-		else
-		{
-			removeBlockFace(chunk, iTop, Face::FaceType::BOTTOM);			
-		}
-	}
-	if (iPos.y >= 0)
-	{
-		if (chunk.blocks[iBottom].type == BlockType::AIR)
-		{
-			setBlockFace(chunk, id, bottom, Face::FaceType::BOTTOM);
-		}
-		else
-		{
-			removeBlockFace(chunk, iBottom, Face::FaceType::TOP);
-		}
-	}
-	if (iPos.z < g_chunkSizeZ - 1)
-	{
-		if (chunk.blocks[iFront].type == BlockType::AIR)
-		{
-			setBlockFace(chunk, id, front, Face::FaceType::FRONT);
-		}
-		else
-		{
-			removeBlockFace(chunk, iFront, Face::FaceType::BACK);
-		}
-	}
-	if (iPos.z >= 0)
-	{
-		if (chunk.blocks[iBack].type == BlockType::AIR)
-		{
-			setBlockFace(chunk, id, back, Face::FaceType::BACK);
-		}
-		else
-		{
-			removeBlockFace(chunk, iBack, Face::FaceType::FRONT);
-		}
-	}
-	if (iPos.x < g_chunkSizeX - 1)
-	{
-		if (chunk.blocks[iRight].type == BlockType::AIR)
-		{
-			setBlockFace(chunk, id, right, Face::FaceType::RIGHT);
-		}
-		else
-		{
-			removeBlockFace(chunk, iRight, Face::FaceType::LEFT);
-		}
-	}
-	if (iPos.x >= 0)
-	{
-		if (chunk.blocks[iLeft].type == BlockType::AIR)
-		{
-			setBlockFace(chunk, id, left, Face::FaceType::LEFT);
-		}
-		else
-		{
-			removeBlockFace(chunk, iLeft, Face::FaceType::RIGHT);
-		}
-	}
-}
-
-void removeBlock(Chunk& chunk, glm::ivec3 iPos)
-{
-	// Remove block faces
-	uint32_t id = g_chunkSizeX * (iPos.y * g_chunkSizeZ + iPos.z) + iPos.x;
-	
-	auto deleteStart = std::remove_if(
-		chunk.faces.begin(), chunk.faces.end(),
-		[&](Face& face) {
-			return face.blockID == id;
-		}
-	);
-	chunk.faces.erase(deleteStart, chunk.faces.end());
-	
-	// Add block's neighbours faces
-	uint32_t iTop		= g_chunkSizeX * ((iPos.y + 1) * g_chunkSizeZ + iPos.z) + iPos.x;
-	uint32_t iBottom	= g_chunkSizeX * ((iPos.y - 1) * g_chunkSizeZ + iPos.z) + iPos.x;
-	uint32_t iFront		= g_chunkSizeX * (iPos.y * g_chunkSizeZ + iPos.z + 1) + iPos.x;
-	uint32_t iBack		= g_chunkSizeX * (iPos.y * g_chunkSizeZ + iPos.z - 1) + iPos.x;
-	uint32_t iRight		= g_chunkSizeX * (iPos.y * g_chunkSizeZ + iPos.z) + iPos.x + 1;
-	uint32_t iLeft		= g_chunkSizeX * (iPos.y * g_chunkSizeZ + iPos.z) + iPos.x - 1;
-
-	bool topSolid		= iPos.y < g_chunkSizeY - 1 && chunk.blocks[iTop].type != BlockType::AIR;
-	bool bottomSolid	= iPos.y >= 0 && chunk.blocks[iBottom].type != BlockType::AIR;
-	bool frontSolid		= iPos.z < g_chunkSizeZ - 1 && chunk.blocks[iFront].type != BlockType::AIR;
-	bool backSolid		= iPos.z >= 0 && chunk.blocks[iBack].type != BlockType::AIR;
-	bool rightSolid		= iPos.x < g_chunkSizeX - 1 && chunk.blocks[iRight].type != BlockType::AIR;
-	bool leftSolid		= iPos.x >= 0 && chunk.blocks[iLeft].type != BlockType::AIR;
-
-	if (topSolid)		{ setBlockFace(chunk, iTop, bottom, Face::FaceType::BOTTOM); }
-	if (bottomSolid)	{ setBlockFace(chunk, iBottom, top, Face::FaceType::TOP); }
-	if (frontSolid)		{ setBlockFace(chunk, iFront, back, Face::FaceType::BACK); }
-	if (backSolid)		{ setBlockFace(chunk, iBack, front, Face::FaceType::FRONT); }
-	if (rightSolid)		{ setBlockFace(chunk, iRight, left, Face::FaceType::LEFT); }
-	if (leftSolid)		{ setBlockFace(chunk, iLeft, right, Face::FaceType::RIGHT); }
-}
-*/
 void GameModule::updateChunkNeighbourFace(Chunk& less, Chunk& more)
 {
 	if (less.pos.x < more.pos.x)
@@ -401,52 +289,4 @@ void GameModule::updateChunkNeighbourFace(Chunk& less, Chunk& more)
 			}
 		}
 	}
-}
-
-bool GameModule::rayStartInChunk(const Chunk& chunk, const Engine::Ray& ray)
-{
-	return
-		chunk.pos.x <= ray.start.x && ray.start.x <= chunk.pos.x + g_chunkSizeX &&
-		chunk.pos.z <= ray.start.z && ray.start.z <= chunk.pos.z + g_chunkSizeZ;
-}
-
-bool GameModule::rayEndInChunk(const Chunk& chunk, const Engine::Ray& ray)
-{
-	return
-		chunk.pos.x <= ray.end.x && ray.end.x <= chunk.pos.x + g_chunkSizeX &&
-		chunk.pos.z <= ray.end.z && ray.end.z <= chunk.pos.z + g_chunkSizeZ;
-}
-
-bool GameModule::rayEndInBorderX(const Chunk& chunk, const Engine::Ray& ray)
-{
-	return
-		(chunk.pos.x + 1 >= ray.end.x && chunk.pos.x <= ray.end.x) ||
-		(chunk.pos.x + g_chunkSizeX - 1 <= ray.end.x && chunk.pos.x + g_chunkSizeX >= ray.end.x);
-}
-
-bool GameModule::rayEndInBorderZ(const Chunk& chunk, const Engine::Ray& ray)
-{
-	return
-		(chunk.pos.z + 1 >= ray.end.z && chunk.pos.z <= ray.end.z) ||
-		(chunk.pos.z + g_chunkSizeZ - 1 <= ray.end.z && chunk.pos.z + g_chunkSizeZ >= ray.end.z);
-}
-
-bool GameModule::rayEndInBorderXPos(const Chunk& chunk, const Engine::Ray& ray)
-{
-	return (chunk.pos.x + g_chunkSizeX - 1 <= ray.end.x && chunk.pos.x + g_chunkSizeX >= ray.end.x);
-}
-
-bool GameModule::rayEndInBorderZPos(const Chunk& chunk, const Engine::Ray& ray)
-{
-	return (chunk.pos.z + g_chunkSizeZ - 1 <= ray.end.z && chunk.pos.z + g_chunkSizeZ >= ray.end.z);
-}
-
-bool GameModule::rayEndInBorderXNeg(const Chunk& chunk, const Engine::Ray& ray)
-{
-	return (chunk.pos.x + 1 >= ray.end.x && chunk.pos.x <= ray.end.x);
-}
-
-bool GameModule::rayEndInBorderZNeg(const Chunk& chunk, const Engine::Ray& ray)
-{
-	return (chunk.pos.z + 1 >= ray.end.z && chunk.pos.z <= ray.end.z);
 }

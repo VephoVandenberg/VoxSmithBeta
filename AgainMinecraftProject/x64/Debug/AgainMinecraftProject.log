@@ -1,2 +1,20 @@
 ﻿  app.cpp
+  main.cpp
+  chunk.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(182,17): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(183,19): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(184,19): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+          with
+          [
+              T=float
+          ]
+  Generating Code...
   AgainMinecraftProject.vcxproj -> D:\Working\AgainMinecraftProject\x64\Debug\AgainMinecraftProject.exe
