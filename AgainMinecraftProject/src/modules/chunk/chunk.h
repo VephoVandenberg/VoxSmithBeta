@@ -41,8 +41,6 @@ namespace GameModule
 	void	setBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type);
 	void	removeBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type);
 
-	void	updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2);
-
 	void	drawChunk(const Chunk& chunk);
 }
  

@@ -22,9 +22,10 @@
 
 using namespace Engine;
 #ifndef ECS
-using namespace GameModule;
 #endif
+using namespace GameModule;
 using namespace App;
+
 
 const char* g_title = "Azamat's making Minecraft fucking again";
 constexpr size_t g_width = 1240;
@@ -36,9 +37,6 @@ constexpr size_t g_numberOfChunksZ = 8;
 constexpr int32_t g_chunkOffsetX = 16;
 constexpr int32_t g_chunkOffsetZ = 16;
 constexpr int32_t g_chunkOffsetY = 256;
-
-constexpr size_t g_blocksInChunk = g_chunkOffsetX * g_chunkOffsetY * g_chunkOffsetZ;
-constexpr size_t g_terrainSize = g_blocksInChunk * g_numberOfChunksX * g_numberOfChunksZ;
 
 Ray m_ray;
 Renderer::Buffer m_rayBuffer;
@@ -58,9 +56,6 @@ void Application::init()
 {
 	m_window = getWindow(g_title, g_width, g_height);
 
-	m_minBorder = { 0, 0, 0 };
-	m_maxBorder = { g_numberOfChunksX * g_chunkOffsetX, 0, g_numberOfChunksZ  * g_chunkOffsetZ };
-
 	initCamera(m_window, glm::vec3(0.0f, 0.0f, -1.0f),
 		glm::vec3(g_chunkOffsetX * g_numberOfChunksX / 2, g_chunkOffsetY / 2 + 1, g_chunkOffsetZ  * g_numberOfChunksZ / 2));
 	initShaders();
@@ -68,18 +63,7 @@ void Application::init()
 
 #ifdef ECS
 #else
-	for (int32_t x = 0; x < g_numberOfChunksX; x++)
-	{
-		for (int32_t z = 0; z < g_numberOfChunksZ; z++)
-		{
-			glm::ivec3 pos = { x * g_chunkOffsetX, 0, z * g_chunkOffsetZ };
-			m_chunks[pos] = generateChunk(pos);
-			initMeshData(m_chunks[pos]);
-			//generateMesh(m_chunks[pos]);
-			//loadChunkMesh(m_chunks[pos]);
-			//m_chunks[pos].updated = true;
-		}
-	}
+	initWorld(m_world);
 #endif
 }
 
@@ -92,16 +76,16 @@ void Application::initShaders()
 			glm::radians(45.0f), static_cast<float>(g_width) / static_cast<float>(g_height), 0.1f, 100.0f);
 
 	useShader(m_shaders[s_cubeShader]);
-	setUniform4m(m_shaders[s_cubeShader], "u_projection", projection);
-	setUniform4m(m_shaders[s_cubeShader], "u_view", getCameraView());
+	setUniform4m(m_shaders[s_cubeShader], "u_projection",	projection);
+	setUniform4m(m_shaders[s_cubeShader], "u_view",			getCameraView());
 
 	useShader(m_shaders[s_meshShader]);
-	setUniform4m(m_shaders[s_meshShader], "u_projection", projection);
-	setUniform4m(m_shaders[s_meshShader], "u_view", getCameraView());
+	setUniform4m(m_shaders[s_meshShader], "u_projection",	projection);
+	setUniform4m(m_shaders[s_meshShader], "u_view",			getCameraView());
 
 	useShader(m_shaders[s_rayShader]);
-	setUniform4m(m_shaders[s_rayShader], "u_projection", projection);
-	setUniform4m(m_shaders[s_rayShader], "u_view", getCameraView());
+	setUniform4m(m_shaders[s_rayShader], "u_projection",	projection);
+	setUniform4m(m_shaders[s_rayShader], "u_view",			getCameraView());
 }
 
 void Application::initTextures()
@@ -189,27 +173,10 @@ void Application::handleInput()
 
 void Application::onRender()
 {
-
 #ifdef ECS
-	setUniform4m(m_shaders[s_cubeShader], "u_view", getCameraView());
-	
-	for (const auto& component : m_components)
-	{
-		setUniform3f(m_shaders[s_cubeShader], "u_position", component.pos);
-		Renderer::render(Renderer::Type::CUBE);
-	}
 #else
 	setUniform4m(m_shaders[s_meshShader], "u_view", getCameraView());
-	for (auto& chunk : m_chunks)
-	{
-		if (!chunk.second.updated)
-		{
-			generateMesh(chunk.second);
-			loadChunkMesh(chunk.second);
-			chunk.second.updated = true;
-		}
-		drawChunk(chunk.second);
-	}
+	drawWorld(m_world);
 #endif
 
 	setUniform4m(m_shaders[s_rayShader], "u_view", getCameraView());
@@ -219,7 +186,6 @@ void Application::onRender()
 void Application::onUpdate()
 {
 	updateCameraMove(m_keyboard);
-	updateTerrain();
 	
 	if (m_keyboard[GLFW_MOUSE_BUTTON_LEFT] && !m_keyboardPressed[GLFW_MOUSE_BUTTON_LEFT] ||
 		m_keyboard[GLFW_MOUSE_BUTTON_RIGHT] && !m_keyboardPressed[GLFW_MOUSE_BUTTON_RIGHT])
@@ -229,7 +195,8 @@ void Application::onUpdate()
 
 #ifdef ECS
 #else
-		processRay(ray);
+		auto type = m_keyboard[GLFW_MOUSE_BUTTON_LEFT] ? RayType::REMOVE : RayType::PLACE;
+		processRay(m_world, ray, type);
 				
 #endif
 		m_keyboardPressed[GLFW_MOUSE_BUTTON_RIGHT] = true;
@@ -237,6 +204,7 @@ void Application::onUpdate()
 	}
 }
 
+/*
 void Application::updateTerrain()
 {
 	constexpr size_t updateDistance = g_chunkOffsetX;
@@ -245,7 +213,6 @@ void Application::updateTerrain()
 	{
 		return;
 	}
-
 	if (glm::length(getCameraPos().x - m_minBorder.x) < updateDistance)
 	{
 		m_minBorder.x -= g_chunkOffsetX;
@@ -283,12 +250,7 @@ void Application::updateTerrain()
 	}
 }
 
-void Application::addBlock(glm::vec3 rayPosFrac)
-{
-
-}
-
-void Application::updateBlock(glm::vec3 rayPosFrac, RayType type)
+void Application::traceRay(glm::vec3 rayPosFrac, RayType type)
 {
 	auto getChunkPos = [](const glm::vec3 pos) {
 		return glm::ivec3(
@@ -372,12 +334,7 @@ void Application::updateBlock(glm::vec3 rayPosFrac, RayType type)
 		else { setBlockFace(m_chunks[getChunkPos(currBlock)], iCurr, Face::FaceType::BACK); }
 	}
 }
-
-void Application::removeBlock(glm::vec3 rayPosFrac)
-{
-
-}
-
+/*
 void Application::processRay(Engine::Ray ray)
 {
 	bool hit = false;
@@ -415,7 +372,7 @@ void Application::processRay(Engine::Ray ray)
 				iPos = static_cast<glm::ivec3>(currPos) - currChunkPos;
 			}
 
-			updateBlock(currPos, type);
+			traceRay(currPos, type);
 			hit = true;
 			break;
 		}
@@ -427,7 +384,8 @@ void Application::processRay(Engine::Ray ray)
 		{
 			uint32_t id = g_chunkOffsetX * (iPos.y * g_chunkOffsetZ + iPos.z) + iPos.x;
 			m_chunks[currChunkPos].blocks[id].type = BlockType::GRASS_DIRT;
-			updateBlock(currPos, type);
+			traceRay(currPos, type);
 		}
 	}
 }
+*/
