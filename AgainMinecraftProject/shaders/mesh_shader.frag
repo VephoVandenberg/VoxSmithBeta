@@ -1,11 +1,11 @@
 #version 400 core
 
-in vec2 fragTexCoords;
-out vec4 oFragColor;
+in	vec3 fragTexCoords;
+out vec4 o_fragColor;
 
-uniform sampler2D uTexture;
+uniform sampler2DArray u_textureArray;
 
 void main()
 {
-	oFragColor = texture(uTexture, fragTexCoords);
+	o_fragColor = texture(u_textureArray, fragTexCoords);
 }

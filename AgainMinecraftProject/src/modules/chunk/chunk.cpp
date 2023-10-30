@@ -38,63 +38,63 @@ constexpr uint32_t g_vertexPerFace = 6;
 constexpr float g_rayDeltaMag = 0.1f;
 
 constexpr Vertex back[6] = {
-	{{ 0, 0, 0 }, { 0, 0 }},
-	{{ 0, 1, 0 }, { 0, 1 }},
-	{{ 1, 0, 0 }, { 1, 0 }},
-
-	{{ 1, 0, 0 }, { 1, 0 }},
-	{{ 0, 1, 0 }, { 0, 1 }},
-	{{ 1, 1, 0 }, { 1, 1 }},
+	{{ 0, 0, 0 }, { 0, 0, 1 }},
+	{{ 0, 1, 0 }, { 0, 1, 1 }},
+	{{ 1, 0, 0 }, { 1, 0, 1 }},
+						 
+	{{ 1, 0, 0 }, { 1, 0, 1 }},
+	{{ 0, 1, 0 }, { 0, 1, 1 }},
+	{{ 1, 1, 0 }, { 1, 1, 1 }},
 };
 
 constexpr Vertex front[6] = {
-	{{ 0, 0, 1 }, { 0, 0 }},
-	{{ 1, 0, 1 }, { 1, 0 }},
-	{{ 0, 1, 1 }, { 0, 1 }},
+	{{ 0, 0, 1 }, { 0, 0, 1 }},
+	{{ 1, 0, 1 }, { 1, 0, 1 }},
+	{{ 0, 1, 1 }, { 0, 1, 1 }},
 
-	{{ 1, 0, 1 }, { 1, 0 }},
-	{{ 1, 1, 1 }, { 1, 1 }},
-	{{ 0, 1, 1 }, { 0, 1 }},
+	{{ 1, 0, 1 }, { 1, 0, 1 }},
+	{{ 1, 1, 1 }, { 1, 1, 1 }},
+	{{ 0, 1, 1 }, { 0, 1, 1 }},
 };
 
 constexpr Vertex top[6] = {
-	{{ 0, 1, 1 }, { 0, 0 }},
-	{{ 1, 1, 1 }, { 1, 0 }},
-	{{ 0, 1, 0 }, { 0, 1 }},
+	{{ 0, 1, 1 }, { 0, 0, 0 }},
+	{{ 1, 1, 1 }, { 1, 0, 0 }},
+	{{ 0, 1, 0 }, { 0, 1, 0 }},
 
-	{{ 1, 1, 1 }, { 1, 0 }},
-	{{ 1, 1, 0 }, { 1, 1 }},
-	{{ 0, 1, 0 }, { 0, 1 }},
+	{{ 1, 1, 1 }, { 1, 0, 0 }},
+	{{ 1, 1, 0 }, { 1, 1, 0 }},
+	{{ 0, 1, 0 }, { 0, 1, 0 }},
 };
 
 constexpr Vertex bottom[6] = {
-	{{ 0, 0, 1 }, { 0, 0 }},
-	{{ 0, 0, 0 }, { 0, 1 }},
-	{{ 1, 0, 1 }, { 1, 0 }},
+	{{ 0, 0, 1 }, { 0, 0, 2 }},
+	{{ 0, 0, 0 }, { 0, 1, 2 }},
+	{{ 1, 0, 1 }, { 1, 0, 2 }},
 
-	{{ 1, 0, 0 }, { 1, 1 }},
-	{{ 1, 0, 1 }, { 1, 0 }},
-	{{ 0, 0, 0 }, { 0, 1 }},
+	{{ 1, 0, 0 }, { 1, 1, 2 }},
+	{{ 1, 0, 1 }, { 1, 0, 2 }},
+	{{ 0, 0, 0 }, { 0, 1, 2 }},
 };
 
 constexpr Vertex left[6] = {
-	{{ 0, 0, 0 }, { 0, 0 }},
-	{{ 0, 0, 1 }, { 1, 0 }},
-	{{ 0, 1, 0 }, { 0, 1 }},
+	{{ 0, 0, 0 }, { 0, 0, 1 }},
+	{{ 0, 0, 1 }, { 1, 0, 1 }},
+	{{ 0, 1, 0 }, { 0, 1, 1 }},
 
-	{{ 0, 0, 1 }, { 1, 0 }},
-	{{ 0, 1, 1 }, { 1, 1 }},
-	{{ 0, 1, 0 }, { 0, 1 }},
+	{{ 0, 0, 1 }, { 1, 0, 1 }},
+	{{ 0, 1, 1 }, { 1, 1, 1 }},
+	{{ 0, 1, 0 }, { 0, 1, 1 }},
 };
 
 constexpr Vertex right[6] = {
-	{{ 1, 0, 1 }, { 0, 0 }},
-	{{ 1, 0, 0 }, { 1, 0 }},
-	{{ 1, 1, 1 }, { 0, 1 }},
+	{{ 1, 0, 1 }, { 0, 0, 1 }},
+	{{ 1, 0, 0 }, { 1, 0, 1 }},
+	{{ 1, 1, 1 }, { 0, 1, 1 }},
 
-	{{ 1, 0, 0 }, { 1, 0 }},
-	{{ 1, 1, 0 }, { 1, 1 }},
-	{{ 1, 1, 1 }, { 0, 1 }}
+	{{ 1, 0, 0 }, { 1, 0, 1 }},
+	{{ 1, 1, 0 }, { 1, 1, 1 }},
+	{{ 1, 1, 1 }, { 0, 1, 1 }}
 };
 
 using FaceMap = std::unordered_map<Face::FaceType, const Engine::Renderer::Vertex*, EnumHash>;
@@ -106,6 +106,11 @@ FaceMap g_faces = {
 	{Face::FaceType::RIGHT,		right},
 	{Face::FaceType::LEFT,		left},
 };
+
+BlockType getType()
+{
+
+}
 
 Chunk GameModule::generateChunk(const glm::ivec3 pos)
 {
@@ -122,10 +127,34 @@ Chunk GameModule::generateChunk(const glm::ivec3 pos)
 		{
 			for (int32_t x = 0; x < g_chunkSizeX; x++)
 			{
-				chunk.blocks.push_back({
-					y < g_chunkSizeY / 2 ? BlockType::GRASS_DIRT : BlockType::AIR,
-					chunk.pos + glm::vec3(x, y, z)
-				});
+				Block block;
+				if (y < g_chunkSizeY / 2)
+				{
+					block.type = BlockType::DIRT;
+				}
+				else if (y == g_chunkSizeY / 2)
+				{
+					block.type = BlockType::GRASS;
+				}
+				else
+				{
+					block.type = BlockType::AIR;
+				}
+
+				switch (block.type)
+				{
+				case BlockType::GRASS:
+					block.top		= 0;
+					block.side		= 1;
+					block.bottom	= 2;
+					break;
+
+				case BlockType::DIRT:
+					block.top = block.side = block.bottom = 2;
+					break;
+				}
+
+				chunk.blocks.push_back(block);
 			}
 		}
 	}

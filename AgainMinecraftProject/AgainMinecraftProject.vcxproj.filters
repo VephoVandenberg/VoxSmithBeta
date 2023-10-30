@@ -89,6 +89,9 @@
     <ClInclude Include="src\modules\world\world.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\texture\texture_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\mesh_shader.vert" />

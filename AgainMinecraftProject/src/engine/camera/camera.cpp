@@ -6,7 +6,7 @@
 
 using namespace Engine;
 
-constexpr float g_cameraSpeed = 0.025f;
+constexpr float g_cameraSpeed = 0.0125f;
 constexpr float g_rayMagnitude = 3.0f;
 
 static Camera* g_camera = nullptr;

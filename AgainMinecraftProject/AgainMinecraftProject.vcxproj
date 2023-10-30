@@ -154,6 +154,7 @@
     <ClInclude Include="src\engine\shader\shader_list.h" />
     <ClInclude Include="src\engine\texture\stb_loader.h" />
     <ClInclude Include="src\engine\texture\texture.h" />
+    <ClInclude Include="src\engine\texture\texture_list.h" />
     <ClInclude Include="src\engine\window\window.h" />
     <ClInclude Include="src\modules\chunk\block.h" />
     <ClInclude Include="src\modules\chunk\chunk.h" />

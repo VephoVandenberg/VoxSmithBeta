@@ -5,9 +5,6 @@
 #include "../engine/camera/camera.h"
 
 #ifdef ECS
-#include "../modules/chunk/block.h"
-
-#include <queue>
 #else
 #include "../modules/world/world.h"
 #endif
@@ -42,25 +39,18 @@ namespace App
 		void onRender();
 		void onUpdate();
 		void handleInput();
-		//void updateTerrain();
-		//void processRay(Engine::Ray ray);
-		//void traceRay(glm::vec3 rayPosFrac, GameModule::RayType type);
 		
 		bool									m_isRunning = false;
 		bool									m_keyboard[1024];
 		bool									m_keyboardPressed[1024];
 		GLFWwindow*								m_window = nullptr;
 
-		// Move to world
-
 		std::map<const char*, Engine::Shader>	m_shaders;
 		std::map<const char*, Engine::Texture>	m_textures;
+		Engine::TextureArray					m_tArray;
 
-#ifdef ECS
-#else
-		GameModule::World m_world;
+		GameModule::World						m_world;
 		
-		std::vector<std::thread> m_threads;
-#endif
+		std::vector<std::thread>				m_threads;
 	};
 }

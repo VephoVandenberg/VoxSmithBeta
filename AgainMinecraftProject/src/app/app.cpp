@@ -8,15 +8,16 @@
 
 #include "../engine/window/window.h"
 #include "../engine/shader/shader_list.h"
+#include "../engine/texture/texture_list.h"
 
 #include "../engine/ray/ray.h"
 #include "../engine/renderer/block_renderer.h"
 
 #ifdef ECS
 #include "../modules/chunk/block.h"
-#else
-#include "../modules/chunk/chunk.h"
 #endif
+
+#include "../modules/chunk/chunk.h"
 
 #include "app.h"
 
@@ -56,15 +57,14 @@ void Application::init()
 {
 	m_window = getWindow(g_title, g_width, g_height);
 
-	initCamera(m_window, glm::vec3(0.0f, 0.0f, -1.0f),
-		glm::vec3(g_chunkOffsetX * g_numberOfChunksX / 2, g_chunkOffsetY / 2 + 1, g_chunkOffsetZ  * g_numberOfChunksZ / 2));
+	initCamera(m_window, 
+		glm::vec3(0.0f, 0.0f, -1.0f),
+		glm::vec3(	g_chunkOffsetX * g_numberOfChunksX / 2, 
+					g_chunkOffsetY / 2 + 1, 
+					g_chunkOffsetZ  * g_numberOfChunksZ / 2));
 	initShaders();
 	initTextures();
-
-#ifdef ECS
-#else
 	initWorld(m_world);
-#endif
 }
 
 void Application::initShaders()
@@ -93,11 +93,12 @@ void Application::initTextures()
 	Texture texture;
 	initTexture(texture, "textures/grass.png");
 	m_textures["grass"] = texture;
+
+	initTextureArray(m_tArray, s_tPaths);
 }
 
 void Application::run()
 {
-	useTexture(m_textures["grass"]);
 	while (m_isRunning)
 	{
 		onUpdate();
@@ -174,10 +175,10 @@ void Application::handleInput()
 void Application::onRender()
 {
 #ifdef ECS
-#else
-	setUniform4m(m_shaders[s_meshShader], "u_view", getCameraView());
-	drawWorld(m_world);
 #endif
+	setUniform4m(m_shaders[s_meshShader], "u_view", getCameraView());
+	useTextureArray(m_tArray);
+	drawWorld(m_world);
 
 	setUniform4m(m_shaders[s_rayShader], "u_view", getCameraView());
 	Renderer::render(Renderer::Type::RAY);
@@ -194,11 +195,10 @@ void Application::onUpdate()
 		Renderer::loadRayData(ray);
 
 #ifdef ECS
-#else
+#endif
 		auto type = m_keyboard[GLFW_MOUSE_BUTTON_LEFT] ? RayType::REMOVE : RayType::PLACE;
 		processRay(m_world, ray, type);
 				
-#endif
 		m_keyboardPressed[GLFW_MOUSE_BUTTON_RIGHT] = true;
 		m_keyboardPressed[GLFW_MOUSE_BUTTON_LEFT] = true;
 	}

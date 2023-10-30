@@ -13,7 +13,7 @@ namespace GameModule
 	enum class BlockType
 	{
 		AIR,
-		GRASS_DIRT,
+		GRASS,
 		DIRT,
 		STONE,
 		SAND,
@@ -24,6 +24,10 @@ namespace GameModule
 	{
 		BlockType	type;
 		glm::vec3	pos;
+
+		uint32_t side;
+		uint32_t bottom;
+		uint32_t top;
 	};
 
 	struct Face
