@@ -94,7 +94,7 @@ void GameModule::processRay(World& world, Engine::Ray& ray, RayType type)
 		if (type == RayType::PLACE && !hit)
 		{
 			uint32_t id = g_chunkSize.x * (iPos.y * g_chunkSize.z + iPos.z) + iPos.x;
-			world.chunks[currChunkPos].blocks[id].type = BlockType::GRASS_DIRT;
+			world.chunks[currChunkPos].blocks[id].type = BlockType::DIRT;
 			traceRay(world, currPos, type);
 		}
 	}
@@ -163,7 +163,7 @@ void GameModule::traceRay(World& world, glm::vec3 rayPosFrac, GameModule::RayTyp
 	}
 	else
 	{
-		world.chunks[getChunkPos(currBlock)].blocks[iCurr].type = BlockType::GRASS_DIRT;
+		world.chunks[getChunkPos(currBlock)].blocks[iCurr].type = BlockType::DIRT;
 
 		if (rightSolid) { removeBlockFace(world.chunks[getChunkPos(rightBlock)], iRight, Face::FaceType::LEFT); }
 		else { setBlockFace(world.chunks[getChunkPos(currBlock)], iCurr, Face::FaceType::RIGHT); }

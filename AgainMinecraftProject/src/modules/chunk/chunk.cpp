@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <glm/glm.hpp>
 #include <iostream>
+#include <array>
 
 #include "../../engine/renderer/mesh.h"
 #include "../../engine/ray/ray.h"
@@ -37,67 +38,69 @@ constexpr uint32_t g_vertexPerFace = 6;
 
 constexpr float g_rayDeltaMag = 0.1f;
 
-constexpr Vertex back[6] = {
-	{{ 0, 0, 0 }, { 0, 0, 1 }},
-	{{ 0, 1, 0 }, { 0, 1, 1 }},
-	{{ 1, 0, 0 }, { 1, 0, 1 }},
-						 
-	{{ 1, 0, 0 }, { 1, 0, 1 }},
-	{{ 0, 1, 0 }, { 0, 1, 1 }},
-	{{ 1, 1, 0 }, { 1, 1, 1 }},
-};
+using VertexArray = std::array<Vertex, g_vertexPerFace>;
 
-constexpr Vertex front[6] = {
-	{{ 0, 0, 1 }, { 0, 0, 1 }},
-	{{ 1, 0, 1 }, { 1, 0, 1 }},
-	{{ 0, 1, 1 }, { 0, 1, 1 }},
+constexpr VertexArray back{ {
+	{{ 0, 0, 0 }, { 0, 0, -1 }},
+	{{ 0, 1, 0 }, { 0, 1, -1 }},
+	{{ 1, 0, 0 }, { 1, 0, -1 }},
 
-	{{ 1, 0, 1 }, { 1, 0, 1 }},
-	{{ 1, 1, 1 }, { 1, 1, 1 }},
-	{{ 0, 1, 1 }, { 0, 1, 1 }},
-};
+	{{ 1, 0, 0 }, { 1, 0, -1 }},
+	{{ 0, 1, 0 }, { 0, 1, -1 }},
+	{{ 1, 1, 0 }, { 1, 1, -1 }},
+} };
 
-constexpr Vertex top[6] = {
-	{{ 0, 1, 1 }, { 0, 0, 0 }},
-	{{ 1, 1, 1 }, { 1, 0, 0 }},
-	{{ 0, 1, 0 }, { 0, 1, 0 }},
+constexpr VertexArray front{ {
+	{{ 0, 0, 1 }, { 0, 0, -1 }},
+	{{ 1, 0, 1 }, { 1, 0, -1 }},
+	{{ 0, 1, 1 }, { 0, 1, -1 }},
 
-	{{ 1, 1, 1 }, { 1, 0, 0 }},
-	{{ 1, 1, 0 }, { 1, 1, 0 }},
-	{{ 0, 1, 0 }, { 0, 1, 0 }},
-};
+	{{ 1, 0, 1 }, { 1, 0, -1 }},
+	{{ 1, 1, 1 }, { 1, 1, -1 }},
+	{{ 0, 1, 1 }, { 0, 1, -1 }},
+} };
 
-constexpr Vertex bottom[6] = {
-	{{ 0, 0, 1 }, { 0, 0, 2 }},
-	{{ 0, 0, 0 }, { 0, 1, 2 }},
-	{{ 1, 0, 1 }, { 1, 0, 2 }},
+constexpr VertexArray top{ {
+	{{ 0, 1, 1 }, { 0, 0, -1 }},
+	{{ 1, 1, 1 }, { 1, 0, -1 }},
+	{{ 0, 1, 0 }, { 0, 1, -1 }},
 
-	{{ 1, 0, 0 }, { 1, 1, 2 }},
-	{{ 1, 0, 1 }, { 1, 0, 2 }},
-	{{ 0, 0, 0 }, { 0, 1, 2 }},
-};
+	{{ 1, 1, 1 }, { 1, 0, -1 }},
+	{{ 1, 1, 0 }, { 1, 1, -1 }},
+	{{ 0, 1, 0 }, { 0, 1, -1 }},
+} };
 
-constexpr Vertex left[6] = {
-	{{ 0, 0, 0 }, { 0, 0, 1 }},
-	{{ 0, 0, 1 }, { 1, 0, 1 }},
-	{{ 0, 1, 0 }, { 0, 1, 1 }},
+constexpr VertexArray bottom{ {
+	{{ 0, 0, 1 }, { 0, 0, -1 }},
+	{{ 0, 0, 0 }, { 0, 1, -1 }},
+	{{ 1, 0, 1 }, { 1, 0, -1 }},
 
-	{{ 0, 0, 1 }, { 1, 0, 1 }},
-	{{ 0, 1, 1 }, { 1, 1, 1 }},
-	{{ 0, 1, 0 }, { 0, 1, 1 }},
-};
+	{{ 1, 0, 0 }, { 1, 1, -1 }},
+	{{ 1, 0, 1 }, { 1, 0, -1 }},
+	{{ 0, 0, 0 }, { 0, 1, -1 }},
+} };
 
-constexpr Vertex right[6] = {
-	{{ 1, 0, 1 }, { 0, 0, 1 }},
-	{{ 1, 0, 0 }, { 1, 0, 1 }},
-	{{ 1, 1, 1 }, { 0, 1, 1 }},
+constexpr VertexArray left{ {
+	{{ 0, 0, 0 }, { 0, 0, -1 }},
+	{{ 0, 0, 1 }, { 1, 0, -1 }},
+	{{ 0, 1, 0 }, { 0, 1, -1 }},
 
-	{{ 1, 0, 0 }, { 1, 0, 1 }},
-	{{ 1, 1, 0 }, { 1, 1, 1 }},
-	{{ 1, 1, 1 }, { 0, 1, 1 }}
-};
+	{{ 0, 0, 1 }, { 1, 0, -1 }},
+	{{ 0, 1, 1 }, { 1, 1, -1 }},
+	{{ 0, 1, 0 }, { 0, 1, -1 }},
+} };
 
-using FaceMap = std::unordered_map<Face::FaceType, const Engine::Renderer::Vertex*, EnumHash>;
+constexpr VertexArray right{ {
+	{{ 1, 0, 1 }, { 0, 0, -1 }},
+	{{ 1, 0, 0 }, { 1, 0, -1 }},
+	{{ 1, 1, 1 }, { 0, 1, -1 }},
+
+	{{ 1, 0, 0 }, { 1, 0, -1 }},
+	{{ 1, 1, 0 }, { 1, 1, -1 }},
+	{{ 1, 1, 1 }, { 0, 1, -1 }}
+} };
+
+using FaceMap = std::unordered_map<Face::FaceType, const VertexArray, EnumHash>;
 FaceMap g_faces = {
 	{Face::FaceType::TOP,		top},
 	{Face::FaceType::BOTTOM,	bottom},
@@ -109,7 +112,7 @@ FaceMap g_faces = {
 
 BlockType getType()
 {
-
+	return BlockType::GRASS;
 }
 
 Chunk GameModule::generateChunk(const glm::ivec3 pos)
@@ -128,6 +131,7 @@ Chunk GameModule::generateChunk(const glm::ivec3 pos)
 			for (int32_t x = 0; x < g_chunkSizeX; x++)
 			{
 				Block block;
+				block.pos = chunk.pos + glm::vec3(x, y, z);
 				if (y < g_chunkSizeY / 2)
 				{
 					block.type = BlockType::DIRT;
@@ -174,12 +178,34 @@ void GameModule::setBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type)
 {
 	chunk.updated = false;
 	Vertex vertices[g_vertexPerFace];
-	std::copy(g_faces[type], g_faces[type] + g_vertexPerFace, vertices);
+	std::copy(g_faces[type].begin(), g_faces[type].end(), vertices);
 	updateFacePos(vertices, chunk.blocks[id]);
 
 	Face face_;
 	face_.type = type;
 	face_.blockID = id;
+
+	uint32_t texID;
+
+	switch (type)
+	{
+	case Face::FaceType::TOP:
+		texID = chunk.blocks[id].top;
+		break;
+
+	case Face::FaceType::BOTTOM:
+		texID = chunk.blocks[id].bottom;
+		break;
+
+	default:
+		texID = chunk.blocks[id].side;
+		break;
+	}
+
+	for (auto& vert : vertices)
+	{
+		vert.uvw.z = texID;
+	}
 
 	std::copy(vertices, vertices + g_vertexPerFace, face_.vertices);
 	chunk.faces.push_back(face_);
