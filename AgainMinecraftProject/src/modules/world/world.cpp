@@ -163,7 +163,9 @@ void GameModule::traceRay(World& world, glm::vec3 rayPosFrac, GameModule::RayTyp
 	}
 	else
 	{
-		world.chunks[getChunkPos(currBlock)].blocks[iCurr].type = BlockType::DIRT;
+		auto& block = world.chunks[getChunkPos(currBlock)].blocks[iCurr];
+		block.type = BlockType::DIRT;
+		setType(block);
 
 		if (rightSolid) { removeBlockFace(world.chunks[getChunkPos(rightBlock)], iRight, Face::FaceType::LEFT); }
 		else { setBlockFace(world.chunks[getChunkPos(currBlock)], iCurr, Face::FaceType::RIGHT); }

@@ -27,15 +27,12 @@ using namespace Engine::Renderer;
 
 using namespace GameModule;
 
-constexpr uint32_t g_chunkSizeX = 16;
-constexpr uint32_t g_chunkSizeY = 256;
-constexpr uint32_t g_chunkSizeZ = 16;
+constexpr glm::ivec3 g_chunkSize = { 16, 256, 16 };
 
-constexpr uint32_t g_nBlocks = g_chunkSizeX * g_chunkSizeY * g_chunkSizeZ;
-
+constexpr uint32_t g_nBlocks		= g_chunkSize.x * g_chunkSize.y * g_chunkSize.z;
 constexpr uint32_t g_vertexPerCube	= 36;
 
-constexpr float g_rayDeltaMag = 0.1f;
+constexpr float g_rayDeltaMag		= 0.1f;
 
 using VertexArray = std::array<Vertex, g_vertexPerFace>;
 
@@ -109,7 +106,7 @@ FaceMap g_faces = {
 	{Face::FaceType::LEFT,		left},
 };
 
-void setType(Block& block)
+void GameModule::setType(Block& block)
 {
 	switch (block.type)
 	{
@@ -125,7 +122,7 @@ void setType(Block& block)
 	case BlockType::DIRT:
 		for (int32_t i = 0; i < g_facePerCube; i++)
 		{
-			block.texIDs[0] = 2;
+			block.texIDs[i] = 2;
 		}
 		break;
 	}
@@ -137,23 +134,23 @@ Chunk GameModule::generateChunk(const glm::ivec3 pos)
 	chunk.pos = pos;
 	if (chunk.blocks.empty())
 	{
-		chunk.blocks.reserve(g_chunkSizeX * g_chunkSizeY * g_chunkSizeZ);
+		chunk.blocks.reserve(g_nBlocks);
 	}
 
-	for (int32_t y = 0; y < g_chunkSizeY; y++)
+	for (int32_t y = 0; y < g_chunkSize.y; y++)
 	{
-		for (int32_t z = 0; z < g_chunkSizeZ; z++)
+		for (int32_t z = 0; z < g_chunkSize.z; z++)
 		{
-			for (int32_t x = 0; x < g_chunkSizeX; x++)
+			for (int32_t x = 0; x < g_chunkSize.x; x++)
 			{
 				Block block;
 				block.pos = chunk.pos + glm::vec3(x, y, z);
 
-				if (y < g_chunkSizeY / 2 - 1)
+				if (y < g_chunkSize.y / 2 - 1)
 				{
 					block.type = BlockType::DIRT;
 				}
-				else if (y == g_chunkSizeY / 2 - 1)
+				else if (y == g_chunkSize.y / 2 - 1)
 				{
 					block.type = BlockType::GRASS;
 				}
@@ -219,15 +216,15 @@ void GameModule::initMeshData(Chunk& chunk)
 	for (uint32_t iBlock = 0; iBlock < g_nBlocks; iBlock++)
 	{
 		auto iPos = chunk.blocks[iBlock].pos - chunk.pos;
-		uint32_t iTop	= g_chunkSizeX * ((iPos.y + 1) * g_chunkSizeZ + iPos.z) + iPos.x;
-		uint32_t iFront = g_chunkSizeX * (iPos.y * g_chunkSizeZ + (iPos.z + 1)) + iPos.x;
-		uint32_t iRight = g_chunkSizeX * (iPos.y * g_chunkSizeZ + iPos.z) + (iPos.x + 1);
+		uint32_t iTop	= g_chunkSize.x * ((iPos.y + 1) * g_chunkSize.z + iPos.z) + iPos.x;
+		uint32_t iFront = g_chunkSize.x * (iPos.y * g_chunkSize.z + (iPos.z + 1)) + iPos.x;
+		uint32_t iRight = g_chunkSize.x * (iPos.y * g_chunkSize.z + iPos.z) + (iPos.x + 1);
 
 		if (chunk.blocks[iBlock].type == BlockType::AIR)
 		{
-			bool topSolid	= iPos.y < g_chunkSizeY - 1 && chunk.blocks[iTop].type != BlockType::AIR;
-			bool frontSolid = iPos.z < g_chunkSizeZ - 1 && chunk.blocks[iFront].type != BlockType::AIR;
-			bool rightSolid = iPos.x < g_chunkSizeX - 1 && chunk.blocks[iRight].type != BlockType::AIR;
+			bool topSolid	= iPos.y < g_chunkSize.y - 1 && chunk.blocks[iTop].type != BlockType::AIR;
+			bool frontSolid = iPos.z < g_chunkSize.z - 1 && chunk.blocks[iFront].type != BlockType::AIR;
+			bool rightSolid = iPos.x < g_chunkSize.x - 1 && chunk.blocks[iRight].type != BlockType::AIR;
 
 			if (topSolid)	{ setBlockFace(chunk, iTop,	 Face::FaceType::BOTTOM); }
 			if (frontSolid) { setBlockFace(chunk, iFront, Face::FaceType::BACK); }
@@ -235,9 +232,9 @@ void GameModule::initMeshData(Chunk& chunk)
 		}
 		else
 		{
-			bool topTrans	= iPos.y < g_chunkSizeY - 1 && chunk.blocks[iTop].type == BlockType::AIR;
-			bool frontTrans = iPos.z < g_chunkSizeZ - 1 && chunk.blocks[iFront].type == BlockType::AIR;
-			bool rightTrans = iPos.x < g_chunkSizeX - 1 && chunk.blocks[iRight].type == BlockType::AIR;
+			bool topTrans	= iPos.y < g_chunkSize.y - 1 && chunk.blocks[iTop].type == BlockType::AIR;
+			bool frontTrans = iPos.z < g_chunkSize.z - 1 && chunk.blocks[iFront].type == BlockType::AIR;
+			bool rightTrans = iPos.x < g_chunkSize.x - 1 && chunk.blocks[iRight].type == BlockType::AIR;
 
 			if (topTrans)	{ setBlockFace(chunk, iBlock, Face::FaceType::TOP); }
 			if (frontTrans) { setBlockFace(chunk, iBlock, Face::FaceType::FRONT); }

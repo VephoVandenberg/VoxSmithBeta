@@ -38,6 +38,7 @@ namespace GameModule
 	void	generateMesh(Chunk& chunk);
 	void	loadChunkMesh(Chunk& chunk);
 
+	void	setType(Block& block);
 	void	setBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type);
 	void	removeBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type);
 

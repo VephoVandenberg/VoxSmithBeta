@@ -2,12 +2,13 @@
 
 /** TO DO LIST
 * Agenda
-* - Think more about how the texture is being set to the face,
-*	it might be improved for certain
+* 
 * Later
+* - Block outline
+* - Perlin noise we should find out how 3d noise work
+* - SkyBox
 * - Investigate math behind coordinate systems and matrices
 * Works for now but might be improved
-* - Results are pretty solid in block editing but some outline must be taken into consideration
 */
 
 int main(int argc, char **argv)
