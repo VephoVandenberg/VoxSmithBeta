@@ -7,6 +7,7 @@
 #include "../../engine/renderer/mesh.h"
 
 constexpr uint32_t g_facePerCube = 6;
+constexpr uint32_t g_vertexPerFace = g_facePerCube;
 
 namespace GameModule
 {
@@ -25,9 +26,7 @@ namespace GameModule
 		BlockType	type;
 		glm::vec3	pos;
 
-		uint32_t side;
-		uint32_t bottom;
-		uint32_t top;
+		uint32_t	texIDs[g_vertexPerFace];
 	};
 
 	struct Face
@@ -43,7 +42,7 @@ namespace GameModule
 		} type;
 
 		int32_t						blockID;
-		Engine::Renderer::Vertex	vertices[6];
+		Engine::Renderer::Vertex	vertices[g_vertexPerFace];
 	};
 
 	struct EnumHash

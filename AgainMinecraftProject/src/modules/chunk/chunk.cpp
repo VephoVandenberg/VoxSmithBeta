@@ -33,8 +33,7 @@ constexpr uint32_t g_chunkSizeZ = 16;
 
 constexpr uint32_t g_nBlocks = g_chunkSizeX * g_chunkSizeY * g_chunkSizeZ;
 
-constexpr uint32_t g_vertexPerCube = 36;
-constexpr uint32_t g_vertexPerFace = 6;
+constexpr uint32_t g_vertexPerCube	= 36;
 
 constexpr float g_rayDeltaMag = 0.1f;
 
@@ -110,9 +109,26 @@ FaceMap g_faces = {
 	{Face::FaceType::LEFT,		left},
 };
 
-BlockType getType()
+void setType(Block& block)
 {
-	return BlockType::GRASS;
+	switch (block.type)
+	{
+	case BlockType::GRASS:
+		block.texIDs[static_cast<uint32_t>(Face::FaceType::TOP)]		= 0;
+		block.texIDs[static_cast<uint32_t>(Face::FaceType::RIGHT)]		= 1;
+		block.texIDs[static_cast<uint32_t>(Face::FaceType::LEFT)]		= 1;
+		block.texIDs[static_cast<uint32_t>(Face::FaceType::FRONT)]		= 1;
+		block.texIDs[static_cast<uint32_t>(Face::FaceType::BACK)]		= 1;
+		block.texIDs[static_cast<uint32_t>(Face::FaceType::BOTTOM)]		= 2;
+		break;
+
+	case BlockType::DIRT:
+		for (int32_t i = 0; i < g_facePerCube; i++)
+		{
+			block.texIDs[0] = 2;
+		}
+		break;
+	}
 }
 
 Chunk GameModule::generateChunk(const glm::ivec3 pos)
@@ -132,11 +148,12 @@ Chunk GameModule::generateChunk(const glm::ivec3 pos)
 			{
 				Block block;
 				block.pos = chunk.pos + glm::vec3(x, y, z);
-				if (y < g_chunkSizeY / 2)
+
+				if (y < g_chunkSizeY / 2 - 1)
 				{
 					block.type = BlockType::DIRT;
 				}
-				else if (y == g_chunkSizeY / 2)
+				else if (y == g_chunkSizeY / 2 - 1)
 				{
 					block.type = BlockType::GRASS;
 				}
@@ -145,19 +162,8 @@ Chunk GameModule::generateChunk(const glm::ivec3 pos)
 					block.type = BlockType::AIR;
 				}
 
-				switch (block.type)
-				{
-				case BlockType::GRASS:
-					block.top		= 0;
-					block.side		= 1;
-					block.bottom	= 2;
-					break;
-
-				case BlockType::DIRT:
-					block.top = block.side = block.bottom = 2;
-					break;
-				}
-
+				setType(block);
+				
 				chunk.blocks.push_back(block);
 			}
 		}
@@ -166,11 +172,12 @@ Chunk GameModule::generateChunk(const glm::ivec3 pos)
 	return chunk;
 }
 
-void updateFacePos(Vertex* vertices, const Block& block)
+void updateFace(Vertex* vertices, const Block& block, uint32_t texID)
 {
 	for (uint32_t iVertex = 0; iVertex < g_vertexPerFace; iVertex++)
 	{
 		vertices[iVertex].pos += block.pos;
+		vertices[iVertex].uvw.z = texID;
 	}
 }
 
@@ -179,35 +186,13 @@ void GameModule::setBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type)
 	chunk.updated = false;
 	Vertex vertices[g_vertexPerFace];
 	std::copy(g_faces[type].begin(), g_faces[type].end(), vertices);
-	updateFacePos(vertices, chunk.blocks[id]);
+	updateFace(vertices, chunk.blocks[id], chunk.blocks[id].texIDs[static_cast<uint32_t>(type)]);
 
 	Face face_;
 	face_.type = type;
 	face_.blockID = id;
-
-	uint32_t texID;
-
-	switch (type)
-	{
-	case Face::FaceType::TOP:
-		texID = chunk.blocks[id].top;
-		break;
-
-	case Face::FaceType::BOTTOM:
-		texID = chunk.blocks[id].bottom;
-		break;
-
-	default:
-		texID = chunk.blocks[id].side;
-		break;
-	}
-
-	for (auto& vert : vertices)
-	{
-		vert.uvw.z = texID;
-	}
-
 	std::copy(vertices, vertices + g_vertexPerFace, face_.vertices);
+
 	chunk.faces.push_back(face_);
 }
 
