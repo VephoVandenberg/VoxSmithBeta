@@ -33,7 +33,7 @@ GLFWwindow* Engine::getWindow(const char* title, size_t width, size_t height)
 void Engine::clearScreen()
 {
 	glClearColor(147.0f/255.0f, 202.0f/255.0f, 237.0f/255.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 void Engine::updateScreen(GLFWwindow* window)

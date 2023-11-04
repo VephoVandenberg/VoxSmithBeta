@@ -29,6 +29,7 @@ namespace GameModule
 
 	enum class RayType
 	{
+		IDLE,
 		REMOVE,
 		PLACE
 	};

@@ -7,9 +7,7 @@
 *	 that means we are loading up faces
 *	 to the array with the correspoding vertices, also we store the block ID(index),
 *	 and type of face that will be drawn.
-* 3. (This step might not be needed because we will move the chunk generation into the world struct)
-	  Check the neighbour chunks if there are block faces that need to be rendered.
-* 4. Sort the faces array by block id, then generate the mesh.
+* 3. Sort the faces array by block id, then generate the mesh.
 */
 
 #include <algorithm>

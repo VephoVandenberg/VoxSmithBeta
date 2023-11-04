@@ -1,6 +1,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "../../engine/ray/ray.h"
+#include "../../engine/shader/shader.h"
+#include "../../engine/renderer/block_renderer.h"
 
 #include "../chunk/chunk.h"
 
@@ -46,7 +48,7 @@ void GameModule::drawWorld(World& world)
 	}
 }
 
-void GameModule::processRay(World& world, Engine::Ray& ray, RayType type)
+void GameModule::processRay(World& world, Engine::Ray& ray, Engine::Shader& shader, RayType type)
 {
 	bool		hit				= false;
 	float		dl				= 0.1f;
@@ -83,7 +85,7 @@ void GameModule::processRay(World& world, Engine::Ray& ray, RayType type)
 				iPos = static_cast<glm::ivec3>(currPos) - currChunkPos;
 			}
 
-			traceRay(world, currPos, type);
+			traceRay(world, currPos, shader, type);
 			hit = true;
 			break;
 		}
@@ -91,16 +93,22 @@ void GameModule::processRay(World& world, Engine::Ray& ray, RayType type)
 
 	if (world.chunks.find(currChunkPos) != world.chunks.end())
 	{
-		if (type == RayType::PLACE && !hit)
+		if ((type == RayType::PLACE) && !hit)
 		{
 			uint32_t id = g_chunkSize.x * (iPos.y * g_chunkSize.z + iPos.z) + iPos.x;
 			world.chunks[currChunkPos].blocks[id].type = BlockType::DIRT;
-			traceRay(world, currPos, type);
+			traceRay(world, currPos, shader, type);
 		}
+	}
+
+	if (type == RayType::IDLE)
+	{
+		glm::vec3 pos = static_cast<glm::ivec3>(currPos);
+		Engine::setUniform3f(shader, "u_position", pos);
 	}
 }
 
-void GameModule::traceRay(World& world, glm::vec3 rayPosFrac, GameModule::RayType type)
+void GameModule::traceRay(World& world, glm::vec3 rayPosFrac, Engine::Shader& shader, GameModule::RayType type)
 {
 	auto getChunkPos = [](const glm::vec3 pos) {
 		return glm::ivec3(
@@ -161,7 +169,7 @@ void GameModule::traceRay(World& world, glm::vec3 rayPosFrac, GameModule::RayTyp
 		if (frontSolid)		{ setBlockFace(world.chunks[getChunkPos(frontBlock)],	iFront,		Face::FaceType::BACK); }
 		if (backSolid)		{ setBlockFace(world.chunks[getChunkPos(backBlock)],	iBack,		Face::FaceType::FRONT); }
 	}
-	else
+	else if (type == RayType::PLACE)
 	{
 		auto& block = world.chunks[getChunkPos(currBlock)].blocks[iCurr];
 		block.type = BlockType::DIRT;
@@ -184,5 +192,11 @@ void GameModule::traceRay(World& world, glm::vec3 rayPosFrac, GameModule::RayTyp
 
 		if (backSolid) { removeBlockFace(world.chunks[getChunkPos(backBlock)], iBack, Face::FaceType::FRONT); }
 		else { setBlockFace(world.chunks[getChunkPos(currBlock)], iCurr, Face::FaceType::BACK); }
+	}
+	else
+	{
+		glm::vec3 pos = static_cast<glm::ivec3>(rayPosFrac);
+		Engine::setUniform3f(shader, "u_position", pos);
+		//Engine::Renderer::render(Engine::Renderer::Type::CUBE);
 	}
 }

@@ -2,9 +2,9 @@
 
 /** TO DO LIST
 * Agenda
-* 
+*  - Block or face outline
 * Later
-* - Block outline
+*
 * - Perlin noise we should find out how 3d noise work
 * - SkyBox
 * - Investigate math behind coordinate systems and matrices

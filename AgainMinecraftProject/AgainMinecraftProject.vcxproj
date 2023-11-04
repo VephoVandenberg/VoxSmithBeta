@@ -161,6 +161,8 @@
     <ClInclude Include="src\modules\world\world.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\face_outline_shader.frag" />
+    <None Include="shaders\face_outline_shader.vert" />
     <None Include="shaders\mesh_shader.frag" />
     <None Include="shaders\mesh_shader.vert" />
     <None Include="shaders\ray_shader.frag" />

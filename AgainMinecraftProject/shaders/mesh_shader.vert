@@ -10,6 +10,6 @@ uniform mat4 u_view;
 
 void main()
 {
-	gl_Position = u_projection * u_view * vec4(aPos, 1.0f);
-	fragTexCoords = aTexCoords;
+	gl_Position		= u_projection * u_view * vec4(aPos, 1.0f);
+	fragTexCoords	= aTexCoords;
 }

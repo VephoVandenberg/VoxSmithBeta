@@ -3,7 +3,70 @@
   "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
   "runs": [
     {
-      "results": [],
+      "results": [
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "Variable 'GameModule::World::maxBorder' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
+                },
+                "region": {
+                  "startLine": 40,
+                  "startColumn": 2,
+                  "endLine": 40,
+                  "endColumn": 2
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::World::{ctor}",
+                  "decoratedName": "??0World@GameModule@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "GameModule::World::maxBorder"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "Variable 'GameModule::World::minBorder' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
+                },
+                "region": {
+                  "startLine": 40,
+                  "startColumn": 2,
+                  "endLine": 40,
+                  "endColumn": 2
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::World::{ctor}",
+                  "decoratedName": "??0World@GameModule@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "GameModule::World::minBorder"
+          }
+        }
+      ],
       "tool": {
         "driver": {
           "name": "PREfast",
@@ -20,13 +83,24 @@
       "artifacts": [
         {
           "location": {
+            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
+          },
+          "roles": [
+            "resultFile"
+          ],
+          "hashes": {
+            "sha-256": "3bce7f7eeb16b5adb10988fbbcd3e8e04d6af4d2f3b6dc1a1b5866e5f593baf2"
+          }
+        },
+        {
+          "location": {
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/app/app.cpp"
           },
           "roles": [
             "analysisTarget"
           ],
           "hashes": {
-            "sha-256": "1acf4c15a7d74ada885ec3b649dfc21456adcc54f2d4f7e49116221a3a8906c5"
+            "sha-256": "f03d53d913b2e1bbba8596d6fe7d9fcc31253dca0dd90b24aa8374cab41f4743"
           }
         },
         {
@@ -1138,7 +1212,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/window/window.h"
           },
           "hashes": {
-            "sha-256": "e53b0e050f9fb1b03124530e10c800e904b2ec89c819589684cb7921023ff800"
+            "sha-256": "d270c5e113ce16356e252ef2335090104ba60fcfe96f8df66d13b877e0447369"
           }
         },
         {
@@ -1146,7 +1220,15 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/shader/shader_list.h"
           },
           "hashes": {
-            "sha-256": "234c29bae28470ef8b3356d34af6ebef3110b26dc2519293d82e0a62d65c2e65"
+            "sha-256": "afd096d59a8ec08764e3bd0d14f20153d9102a78b762d873acba771a252f02d5"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/texture/texture_list.h"
+          },
+          "hashes": {
+            "sha-256": "827c49cbae14f73812d31af346533846958447c14e27313db1ba137b67731867"
           }
         },
         {
@@ -1226,7 +1308,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/renderer/block_renderer.h"
           },
           "hashes": {
-            "sha-256": "cbc49b59b8839ac9859c1937958c1c18d8cf4add3df60b4980b28cb1eae8efc8"
+            "sha-256": "e5d63805c10fcea8f9a7a1ea9d1a4347477b5ea947ae5d8706f2afdb612da2a2"
           }
         },
         {
@@ -1234,7 +1316,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/modules/chunk/chunk.h"
           },
           "hashes": {
-            "sha-256": "a095a41d49139dab8c5041535ae9a8f3199044910c917864cc901a7149244b2e"
+            "sha-256": "41f1b2f03519bf513d6f9bdebbe8127b805a674323558d7272f88434e605fc2b"
           }
         },
         {
@@ -1242,7 +1324,15 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/renderer/mesh.h"
           },
           "hashes": {
-            "sha-256": "d3ec4a1f01d495ee9f7ad631b213675b8e581b9848cab687968557cf0fdefabd"
+            "sha-256": "86b1c9f3b96f229f6fa7fab5c26b0de140f1a15dcfc9480cc4515b15419ad943"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/modules/chunk/block.h"
+          },
+          "hashes": {
+            "sha-256": "df323cc5e58ee0558394617b07f8ca6565f81eab965171bcd366340b053a7ec5"
           }
         },
         {
@@ -1250,7 +1340,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/app/app.h"
           },
           "hashes": {
-            "sha-256": "13df87888c1d0770ae428de17a44f8d6f0adb2b467fda0909e0b91353c7e7ff8"
+            "sha-256": "b9b4d48132fbce8889d814d4a80e5a8dbfdf8e2bbf2754f41aad132cda6a21d4"
           }
         },
         {
@@ -1258,7 +1348,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/shader/shader.h"
           },
           "hashes": {
-            "sha-256": "3a7ddeb2daa9d53157b0cf940e5932b32c1b5116a4803eddcceaa4dbabf8a8b1"
+            "sha-256": "083161a9eaf97c56e68d2ab13dff24281bde3da251428bd175b1d222dc49ac82"
           }
         },
         {
@@ -1266,7 +1356,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/texture/texture.h"
           },
           "hashes": {
-            "sha-256": "472ddad0a323bd092584741c54aaae3c891ae439f9988336dbacbb1c2e0f6e3e"
+            "sha-256": "a5d02ff1376b2e0fb4612c4f0eb61c4b93a430c5f5bef9352863db8452e6db58"
           }
         },
         {
@@ -1274,7 +1364,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/camera/camera.h"
           },
           "hashes": {
-            "sha-256": "fa6c448b872ef21ad47a87cb5e2a979da501a69c985b61f065ef469723884130"
+            "sha-256": "a47a1fd4f09a1de782b351657a1dc4f6f51c61de41a6ec0df829472b05889e04"
           }
         }
       ]

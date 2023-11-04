@@ -19,6 +19,13 @@ namespace Engine
 			uint32_t VBO;
 		};
 
+		struct IBuffer
+		{
+			uint32_t VAO;
+			uint32_t IBO;
+			uint32_t VBO;
+		};
+
 		void loadCubeData();
 		void loadRayData(const Ray& ray);
 

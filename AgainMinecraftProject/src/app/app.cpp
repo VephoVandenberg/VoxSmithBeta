@@ -35,9 +35,7 @@ constexpr size_t g_height = 720;
 constexpr size_t g_numberOfChunksX = 8;
 constexpr size_t g_numberOfChunksZ = 8;
 
-constexpr int32_t g_chunkOffsetX = 16;
-constexpr int32_t g_chunkOffsetZ = 16;
-constexpr int32_t g_chunkOffsetY = 256;
+constexpr glm::ivec3 g_chunkSize = { 16, 256, 16 };
 
 Ray m_ray;
 Renderer::Buffer m_rayBuffer;
@@ -59,9 +57,9 @@ void Application::init()
 
 	initCamera(m_window, 
 		glm::vec3(0.0f, 0.0f, -1.0f),
-		glm::vec3(	g_chunkOffsetX * g_numberOfChunksX / 2, 
-					g_chunkOffsetY / 2 + 1, 
-					g_chunkOffsetZ  * g_numberOfChunksZ / 2));
+		glm::vec3(	g_chunkSize.x * g_numberOfChunksX / 2, 
+					g_chunkSize.y / 2 + 1, 
+					g_chunkSize.z  * g_numberOfChunksZ / 2));
 	initShaders();
 	initTextures();
 	initWorld(m_world);
@@ -69,6 +67,7 @@ void Application::init()
 
 void Application::initShaders()
 {
+	Engine::Renderer::loadCubeData();
 	Engine::loadShaders(m_shaders);
 
 	glm::mat4 projection =
@@ -76,16 +75,20 @@ void Application::initShaders()
 			glm::radians(45.0f), static_cast<float>(g_width) / static_cast<float>(g_height), 0.1f, 100.0f);
 
 	useShader(m_shaders[s_cubeShader]);
-	setUniform4m(m_shaders[s_cubeShader], "u_projection",	projection);
-	setUniform4m(m_shaders[s_cubeShader], "u_view",			getCameraView());
+	setUniform4m(m_shaders[s_cubeShader],		"u_projection",		projection);
+	setUniform4m(m_shaders[s_cubeShader],		"u_view",			getCameraView());
 
 	useShader(m_shaders[s_meshShader]);
-	setUniform4m(m_shaders[s_meshShader], "u_projection",	projection);
-	setUniform4m(m_shaders[s_meshShader], "u_view",			getCameraView());
+	setUniform4m(m_shaders[s_meshShader],		"u_projection",		projection);
+	setUniform4m(m_shaders[s_meshShader],		"u_view",			getCameraView());
 
 	useShader(m_shaders[s_rayShader]);
-	setUniform4m(m_shaders[s_rayShader], "u_projection",	projection);
-	setUniform4m(m_shaders[s_rayShader], "u_view",			getCameraView());
+	setUniform4m(m_shaders[s_rayShader],		"u_projection",		projection);
+	setUniform4m(m_shaders[s_rayShader],		"u_view",			getCameraView());
+
+	useShader(m_shaders[s_outlineShader]);
+	setUniform4m(m_shaders[s_outlineShader],	"u_projection",		projection);
+	setUniform4m(m_shaders[s_outlineShader],	"u_view",			getCameraView());
 }
 
 void Application::initTextures()
@@ -176,30 +179,37 @@ void Application::onRender()
 {
 #ifdef ECS
 #endif
-	setUniform4m(m_shaders[s_meshShader], "u_view", getCameraView());
+	setUniform4m(m_shaders[s_outlineShader],	"u_view", getCameraView());
+	Renderer::render(Renderer::Type::CUBE);
+
+	setUniform4m(m_shaders[s_meshShader],		"u_view", getCameraView());
 	useTextureArray(m_tArray);
 	drawWorld(m_world);
 
-	setUniform4m(m_shaders[s_rayShader], "u_view", getCameraView());
+	setUniform4m(m_shaders[s_rayShader],		"u_view", getCameraView());
 	Renderer::render(Renderer::Type::RAY);
 }
 
 void Application::onUpdate()
 {
+	Ray ray = castRay();
+
 	updateCameraMove(m_keyboard);
 	
+	RayType type = RayType::IDLE;
+
 	if (m_keyboard[GLFW_MOUSE_BUTTON_LEFT] && !m_keyboardPressed[GLFW_MOUSE_BUTTON_LEFT] ||
 		m_keyboard[GLFW_MOUSE_BUTTON_RIGHT] && !m_keyboardPressed[GLFW_MOUSE_BUTTON_RIGHT])
 	{
-		Ray ray = castRay();
 		Renderer::loadRayData(ray);
 
 #ifdef ECS
 #endif
-		auto type = m_keyboard[GLFW_MOUSE_BUTTON_LEFT] ? RayType::REMOVE : RayType::PLACE;
-		processRay(m_world, ray, type);
+		type = m_keyboard[GLFW_MOUSE_BUTTON_LEFT] ? RayType::REMOVE : RayType::PLACE;
 				
-		m_keyboardPressed[GLFW_MOUSE_BUTTON_RIGHT] = true;
-		m_keyboardPressed[GLFW_MOUSE_BUTTON_LEFT] = true;
+		m_keyboardPressed[GLFW_MOUSE_BUTTON_RIGHT]	= true;
+		m_keyboardPressed[GLFW_MOUSE_BUTTON_LEFT]	= true;
 	}
+
+	processRay(m_world, ray, m_shaders[s_outlineShader], type);
 }

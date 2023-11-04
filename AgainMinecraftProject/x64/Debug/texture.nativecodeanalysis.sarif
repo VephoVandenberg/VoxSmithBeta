@@ -2446,7 +2446,7 @@
             "analysisTarget"
           ],
           "hashes": {
-            "sha-256": "53ba439dec00670c046d7a78ea22fac33458a384ecad5f6147d14a9153f723bd"
+            "sha-256": "5bbac90b1a89569b88354b2c71599098dafef75147d76753dc0ff9be48b6c89c"
           }
         },
         {
@@ -2478,7 +2478,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/texture/texture.h"
           },
           "hashes": {
-            "sha-256": "472ddad0a323bd092584741c54aaae3c891ae439f9988336dbacbb1c2e0f6e3e"
+            "sha-256": "a5d02ff1376b2e0fb4612c4f0eb61c4b93a430c5f5bef9352863db8452e6db58"
           }
         }
       ]

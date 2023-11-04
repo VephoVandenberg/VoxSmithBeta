@@ -7,6 +7,7 @@
 namespace Engine
 {
 	struct Ray;
+	struct Shader;
 }
 
 namespace GameModule
@@ -41,6 +42,6 @@ namespace GameModule
 	void initWorld(World& world);
 	void drawWorld(World& world);
 
-	void processRay(World& world, Engine::Ray& ray, RayType type);
-	void traceRay(World& world, glm::vec3 rayPosFrac, GameModule::RayType type);
+	void processRay(World& world, Engine::Ray& ray, Engine::Shader& shader, RayType type);
+	void traceRay(World& world, glm::vec3 rayPosFrac, Engine::Shader& shader, RayType type);
 }
