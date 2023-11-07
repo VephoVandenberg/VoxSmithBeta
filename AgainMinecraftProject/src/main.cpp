@@ -2,11 +2,11 @@
 
 /** TO DO LIST
 * Agenda
-*  - Block or face outline
 * Later
-*
+* - Physics
 * - Perlin noise we should find out how 3d noise work
 * - SkyBox
+* - Water Walta
 * - Investigate math behind coordinate systems and matrices
 * Works for now but might be improved
 */

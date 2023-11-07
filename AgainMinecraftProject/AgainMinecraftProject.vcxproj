@@ -158,6 +158,7 @@
     <ClInclude Include="src\engine\window\window.h" />
     <ClInclude Include="src\modules\chunk\block.h" />
     <ClInclude Include="src\modules\chunk\chunk.h" />
+    <ClInclude Include="src\modules\player\player.h" />
     <ClInclude Include="src\modules\world\world.h" />
   </ItemGroup>
   <ItemGroup>

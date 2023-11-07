@@ -3,11 +3,14 @@
 #include "../engine/shader/shader.h"
 #include "../engine/texture/texture.h"
 #include "../engine/camera/camera.h"
+#include "../engine/ray/ray.h"
+#include "../engine/renderer/block_renderer.h"
 
 #ifdef ECS
-#else
-#include "../modules/world/world.h"
 #endif
+
+#include "../modules/player/player.h"
+#include "../modules/world/world.h"
 
 #include <unordered_map>
 #include <map>
@@ -36,8 +39,10 @@ namespace App
 		void init();
 		void initShaders();
 		void initTextures();
+		void initPlayer();
 		void onRender();
-		void onUpdate();
+		void onUpdate(float dt);
+		void handleCamera(const double xPos, const double yPos);
 		void handleInput();
 		
 		bool									m_isRunning = false;
@@ -50,7 +55,13 @@ namespace App
 		Engine::TextureArray					m_tArray;
 
 		GameModule::World						m_world;
+		GameModule::Player						m_player;
+
+		Engine::Ray								m_ray;
+		Engine::Renderer::Buffer				m_rayBuffer;
 		
 		std::vector<std::thread>				m_threads;
+
+		friend void cursorCallbackWrapper(GLFWwindow* window, const double x, const double y);
 	};
 }

@@ -35,10 +35,14 @@ constexpr size_t g_height = 720;
 constexpr size_t g_numberOfChunksX = 8;
 constexpr size_t g_numberOfChunksZ = 8;
 
+constexpr float g_playerSpeed = 10.0f;
+
 constexpr glm::ivec3 g_chunkSize = { 16, 256, 16 };
 
-Ray m_ray;
-Renderer::Buffer m_rayBuffer;
+void App::cursorCallbackWrapper(GLFWwindow* window, const double x, const double y)
+{
+	static_cast<Application*>(glfwGetWindowUserPointer(window))->handleCamera(x, y);
+}
 
 Application::Application()
 	: m_isRunning(true)
@@ -48,21 +52,42 @@ Application::Application()
 
 Application::~Application()
 {
-	freeCamera();
 }
 
 void Application::init()
 {
 	m_window = getWindow(g_title, g_width, g_height);
 
-	initCamera(m_window, 
-		glm::vec3(0.0f, 0.0f, -1.0f),
-		glm::vec3(	g_chunkSize.x * g_numberOfChunksX / 2, 
-					g_chunkSize.y / 2 + 1, 
-					g_chunkSize.z  * g_numberOfChunksZ / 2));
+	initPlayer();
+
 	initShaders();
 	initTextures();
 	initWorld(m_world);
+}
+
+void Application::initPlayer()
+{
+	m_player.height = 2;
+	m_player.pos = {
+		g_chunkSize.x * g_numberOfChunksX / 2,
+		g_chunkSize.y / 2,
+		g_chunkSize.z * g_numberOfChunksZ / 2
+	};
+	m_player.velocity = { 0.0f, 0.0f, 1.0f };
+
+	m_player.camera.lastX	= 620;
+	m_player.camera.lastY	= 360;
+	m_player.camera.yaw		= -90.0f;
+	m_player.camera.pitch	= 0.0f;
+	m_player.camera.pos		= { m_player.pos.x, m_player.pos.y + m_player.height, m_player.pos.z };
+	m_player.camera.speed	= 10.0f;
+	m_player.camera.front	= { 0.0f, 0.0f, 1.0f };
+	m_player.camera.up		= { 0.0f, 1.0f, 0.0f };
+	m_player.camera.view	= glm::lookAt(m_player.camera.pos, m_player.camera.front, m_player.camera.up);
+
+	glfwSetWindowUserPointer(m_window, this);
+
+	glfwSetCursorPosCallback(m_window, cursorCallbackWrapper);
 }
 
 void Application::initShaders()
@@ -76,19 +101,19 @@ void Application::initShaders()
 
 	useShader(m_shaders[s_cubeShader]);
 	setUniform4m(m_shaders[s_cubeShader],		"u_projection",		projection);
-	setUniform4m(m_shaders[s_cubeShader],		"u_view",			getCameraView());
+	setUniform4m(m_shaders[s_cubeShader],		"u_view",			m_player.camera.view);
 
 	useShader(m_shaders[s_meshShader]);
 	setUniform4m(m_shaders[s_meshShader],		"u_projection",		projection);
-	setUniform4m(m_shaders[s_meshShader],		"u_view",			getCameraView());
+	setUniform4m(m_shaders[s_meshShader],		"u_view",			m_player.camera.view);
 
 	useShader(m_shaders[s_rayShader]);
 	setUniform4m(m_shaders[s_rayShader],		"u_projection",		projection);
-	setUniform4m(m_shaders[s_rayShader],		"u_view",			getCameraView());
+	setUniform4m(m_shaders[s_rayShader],		"u_view",			m_player.camera.view);
 
 	useShader(m_shaders[s_outlineShader]);
 	setUniform4m(m_shaders[s_outlineShader],	"u_projection",		projection);
-	setUniform4m(m_shaders[s_outlineShader],	"u_view",			getCameraView());
+	setUniform4m(m_shaders[s_outlineShader],	"u_view",			m_player.camera.view);
 }
 
 void Application::initTextures()
@@ -102,15 +127,21 @@ void Application::initTextures()
 
 void Application::run()
 {
+	float previousFrame = 0.0f;
 	while (m_isRunning)
 	{
-		onUpdate();
+		float currentFrame = glfwGetTime();
+		float dt = currentFrame - previousFrame;
+
+		onUpdate(dt);
 		clearScreen();
 
 		onRender();
 
 		handleInput();
 		updateScreen(m_window);
+
+		previousFrame = currentFrame;
 	}
 }
 
@@ -179,23 +210,20 @@ void Application::onRender()
 {
 #ifdef ECS
 #endif
-	setUniform4m(m_shaders[s_outlineShader],	"u_view", getCameraView());
+	setUniform4m(m_shaders[s_outlineShader],	"u_view", m_player.camera.view);
 	Renderer::render(Renderer::Type::CUBE);
 
-	setUniform4m(m_shaders[s_meshShader],		"u_view", getCameraView());
+	setUniform4m(m_shaders[s_meshShader],		"u_view", m_player.camera.view);
 	useTextureArray(m_tArray);
 	drawWorld(m_world);
 
-	setUniform4m(m_shaders[s_rayShader],		"u_view", getCameraView());
+	setUniform4m(m_shaders[s_rayShader],		"u_view", m_player.camera.view);
 	Renderer::render(Renderer::Type::RAY);
 }
 
-void Application::onUpdate()
+void Application::onUpdate(float dt)
 {
-	Ray ray = castRay();
-
-	updateCameraMove(m_keyboard);
-	
+	Ray ray = castRay(m_player.camera);	
 	RayType type = RayType::IDLE;
 
 	if (m_keyboard[GLFW_MOUSE_BUTTON_LEFT] && !m_keyboardPressed[GLFW_MOUSE_BUTTON_LEFT] ||
@@ -211,5 +239,66 @@ void Application::onUpdate()
 		m_keyboardPressed[GLFW_MOUSE_BUTTON_LEFT]	= true;
 	}
 
+	if (m_keyboard[GLFW_KEY_W])
+	{
+		m_player.camera.pos += m_player.camera.front * g_playerSpeed * dt;
+	}
+
+	if (m_keyboard[GLFW_KEY_S])
+	{
+		m_player.camera.pos -= m_player.camera.front * g_playerSpeed * dt;
+	}
+
+	if (m_keyboard[GLFW_KEY_A])
+	{
+		auto leftVelocity = glm::normalize(glm::cross(m_player.camera.front, glm::vec3(0.0f, 1.0f, 0.0f)));
+		m_player.camera.pos -= leftVelocity * g_playerSpeed * dt;
+	}
+
+	if (m_keyboard[GLFW_KEY_D])
+	{
+		auto rightVelocity = glm::normalize(glm::cross(m_player.camera.front, glm::vec3(0.0f, 1.0f, 0.0f)));
+		m_player.camera.pos += rightVelocity * g_playerSpeed * dt;
+	}
+
+	updateCameraView(m_player.camera);
 	processRay(m_world, ray, m_shaders[s_outlineShader], type);
+}
+
+void Application::handleCamera(const double xPos, const double yPos)
+{
+	static bool firstMove = false;
+	if (firstMove)
+	{
+		m_player.camera.lastX = xPos;
+		m_player.camera.lastY = yPos;
+		firstMove = false;
+	}
+
+	float xoffset = xPos - m_player.camera.lastX;
+	float yoffset = m_player.camera.lastY - yPos;
+	m_player.camera.lastX = xPos;
+	m_player.camera.lastY = yPos;
+
+	float sensitivity = 0.1f;
+	xoffset *= sensitivity;
+	yoffset *= sensitivity;
+
+	m_player.camera.yaw += xoffset;
+	m_player.camera.pitch += yoffset;
+
+	if (m_player.camera.pitch > 89.0f)
+	{
+		m_player.camera.pitch = 89.0f;
+	}
+	if (m_player.camera.pitch < -89.0f)
+	{
+		m_player.camera.pitch = -89.0f;
+	}
+
+	glm::vec3 direction;
+	direction.x = cos(glm::radians(m_player.camera.yaw)) * cos(glm::radians(m_player.camera.pitch));
+	direction.y = sin(glm::radians(m_player.camera.pitch));
+	direction.z = sin(glm::radians(m_player.camera.yaw)) * cos(glm::radians(m_player.camera.pitch));
+	m_player.camera.front = glm::normalize(direction);
 }

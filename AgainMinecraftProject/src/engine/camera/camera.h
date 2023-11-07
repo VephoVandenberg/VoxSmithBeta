@@ -27,12 +27,10 @@ namespace Engine
 		Ray ray;
 	};
 
-	void initCamera(GLFWwindow* window, const glm::vec3 target, const glm::vec3 pos);
-	void freeCamera();
-	void updateCameraMove(const bool* keyboard);
+	void updateCameraView(Camera& camera);
 	void updateCameraRotation(GLFWwindow* window, const double xPos, const double yPos);
 	
-	Ray castRay();
+	Ray castRay(const Camera& camera);
 	glm::mat4 getCameraView();
 	glm::vec3 getCameraPos();
 }
