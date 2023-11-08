@@ -5,6 +5,7 @@
 #include "../../engine/renderer/block_renderer.h"
 
 #include "../chunk/chunk.h"
+#include "../player/player.h"
 
 #include "world.h"
 
@@ -18,13 +19,9 @@ void GameModule::initWorld(World& world)
 	world.minBorder = glm::ivec3(0);
 	world.maxBorder = glm::ivec3(g_chunkSize.x * g_chunksX, 0, g_chunkSize.z * g_chunksZ);
 
-	for (int32_t z = 0;
-		z < g_chunksZ;
-		z++)
+	for (int32_t z = 0; z < g_chunksZ; z++)
 	{
-		for (int32_t x = 0;
-			x < g_chunksX;
-			x++)
+		for (int32_t x = 0; x < g_chunksX; x++)
 		{
 			glm::ivec3 chunkPos = { x * g_chunkSize.x, 0, z * g_chunkSize.z};
 			world.chunks[chunkPos] = generateChunk(chunkPos);
@@ -48,6 +45,15 @@ void GameModule::drawWorld(World& world)
 	}
 }
 
+glm::ivec3 getChunkPos(const glm::vec3 pos) 
+{
+	return {
+		static_cast<int32_t>(pos.x) / g_chunkSize.x * g_chunkSize.x,
+		0,
+		static_cast<int32_t>(pos.z) / g_chunkSize.z * g_chunkSize.z
+	};
+}
+
 void GameModule::processRay(World& world, Engine::Ray& ray, Engine::Shader& shader, RayType type)
 {
 	bool		hit				= false;
@@ -63,11 +69,7 @@ void GameModule::processRay(World& world, Engine::Ray& ray, Engine::Shader& shad
 	for (float mag = 0.0f; mag < length; mag += dl)
 	{
 		currPos = ray.start + mag * dir;
-		currChunkPos = {
-			static_cast<int32_t>(currPos.x) / g_chunkSize.x * g_chunkSize.x,
-			0,
-			static_cast<int32_t>(currPos.z) / g_chunkSize.z * g_chunkSize.z
-		};
+		currChunkPos = getChunkPos(currPos);
 
 		if (world.chunks.find(currChunkPos) == world.chunks.end())
 		{
@@ -110,14 +112,6 @@ void GameModule::processRay(World& world, Engine::Ray& ray, Engine::Shader& shad
 
 void GameModule::traceRay(World& world, glm::vec3 rayPosFrac, Engine::Shader& shader, GameModule::RayType type)
 {
-	auto getChunkPos = [](const glm::vec3 pos) {
-		return glm::ivec3(
-			static_cast<int32_t>(pos.x) / g_chunkSize.x * g_chunkSize.x,
-			0,
-			static_cast<int32_t>(pos.z) / g_chunkSize.z * g_chunkSize.z
-		);
-	};
-
 	glm::ivec3 currBlock	= static_cast<glm::ivec3>(rayPosFrac);
 
 	glm::ivec3 rightBlock	= { currBlock.x + 1,	currBlock.y,		currBlock.z };
@@ -197,5 +191,34 @@ void GameModule::traceRay(World& world, glm::vec3 rayPosFrac, Engine::Shader& sh
 	{
 		glm::vec3 pos = static_cast<glm::ivec3>(rayPosFrac);
 		Engine::setUniform3f(shader, "u_position", pos);
+	}
+}
+
+void GameModule::checkPlayerCollision(World& world, Player& player)
+{
+	// Finish this function
+	auto collision = [&](glm::vec3 player, glm::ivec3 block) {
+		bool collX =
+			player.x + 1 > block.x && player.x < block.x + 1;
+		bool collZ =
+			player.z + 1 > block.z && player.z < block.z + 1;
+		bool collY =
+			player.y + 1 > block.y && player.y < block.y + 1;
+		return collX && collZ; //&& collY;
+	};
+
+	glm::ivec3 left		= { player.pos.x,			player.pos.y, player.pos.z };
+	glm::ivec3 right	= { player.pos.x + 1.0f,	player.pos.y, player.pos.z };
+	glm::ivec3 front	= { player.pos.x,			player.pos.y, player.pos.z + 1.0f };
+	glm::ivec3 back		= { player.pos.x,			player.pos.y, player.pos.z };
+
+	if (collision(player.pos, left) || collision(player.pos, right))
+	{
+		player.velocity.x = 0.0f;
+	}
+
+	if (collision(player.pos, front) || collision(player.pos, back))
+	{
+		player.velocity.z = 0.0f;
 	}
 }

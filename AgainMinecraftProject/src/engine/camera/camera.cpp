@@ -7,7 +7,7 @@
 using namespace Engine;
 
 constexpr float g_cameraSpeed = 0.0125f;
-constexpr float g_rayMagnitude = 3.0f;
+constexpr float g_rayMagnitude = 4.0f;
 
 static bool g_firstMouseMove = true;
 

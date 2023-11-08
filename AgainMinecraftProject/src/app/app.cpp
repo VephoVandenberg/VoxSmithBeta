@@ -70,7 +70,7 @@ void Application::init()
 
 void Application::initPlayer()
 {
-	m_player.height = 2;
+	m_player.height = 2.0f;
 	m_player.pos = {
 		g_chunkSize.x * g_numberOfChunksX / 2,
 		g_chunkSize.y / 2,
@@ -83,7 +83,7 @@ void Application::initPlayer()
 	m_player.camera.lastY	= 360;
 	m_player.camera.yaw		= -90.0f;
 	m_player.camera.pitch	= 0.0f;
-	m_player.camera.pos		= { m_player.pos.x, m_player.pos.y + m_player.height, m_player.pos.z };
+	m_player.camera.pos		= { m_player.pos.x + 0.5f, m_player.pos.y + m_player.height - 0.1f, m_player.pos.z + 0.5f };
 	m_player.camera.speed	= 10.0f;
 	m_player.camera.front	= { 0.0f, 0.0f, 1.0f };
 	m_player.camera.up		= { 0.0f, 1.0f, 0.0f };
@@ -187,6 +187,15 @@ void Application::handleInput()
 		m_keyboard[GLFW_KEY_S] = false;
 	}
 
+	if (glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS)
+	{
+		m_keyboard[GLFW_KEY_SPACE] = true;
+	}
+	else
+	{
+		m_keyboard[GLFW_KEY_SPACE] = false;
+	}
+
 	if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS &&
 		!m_keyboardPressed[GLFW_MOUSE_BUTTON_LEFT])
 	{
@@ -268,8 +277,16 @@ void Application::onUpdate(float dt)
 		m_player.velocity += right * g_playerAcceleration * dt;
 	}
 
-	m_player.camera.pos += m_player.velocity * dt;
-	m_player.velocity *= 0.995f;
+	if (m_keyboard[GLFW_KEY_SPACE])
+	{
+		//m_player.velocity
+	}
+
+	m_player.camera.pos	+= m_player.velocity * dt;
+	m_player.pos		+= m_player.velocity * dt;
+	m_player.velocity	*= 0.995f;
+
+	checkPlayerCollision(m_world, m_player);
 	
 	updateCameraView(m_player.camera);
 	processRay(m_world, ray, m_shaders[s_outlineShader], type);

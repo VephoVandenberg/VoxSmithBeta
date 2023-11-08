@@ -2,10 +2,7 @@
 
 #include <glm/glm.hpp>
 
-namespace Engine
-{
-	struct Camera;
-}
+#include "../../engine/camera/camera.h"
 
 namespace GameModule
 {
