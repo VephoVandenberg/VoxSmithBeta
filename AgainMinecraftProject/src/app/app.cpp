@@ -36,6 +36,9 @@ constexpr size_t g_numberOfChunksX = 8;
 constexpr size_t g_numberOfChunksZ = 8;
 
 constexpr float g_playerSpeed = 10.0f;
+constexpr float g_playerAcceleration = 30.0f;
+
+constexpr float g_gravity = 9.8f;
 
 constexpr glm::ivec3 g_chunkSize = { 16, 256, 16 };
 
@@ -73,8 +76,9 @@ void Application::initPlayer()
 		g_chunkSize.y / 2,
 		g_chunkSize.z * g_numberOfChunksZ / 2
 	};
-	m_player.velocity = { 0.0f, 0.0f, 1.0f };
+	m_player.velocity = { 0.0f, 0.0f, 0.0f };
 
+	m_player.speed			= 0;
 	m_player.camera.lastX	= 620;
 	m_player.camera.lastY	= 360;
 	m_player.camera.yaw		= -90.0f;
@@ -226,6 +230,7 @@ void Application::onUpdate(float dt)
 	Ray ray = castRay(m_player.camera);	
 	RayType type = RayType::IDLE;
 
+	// Ray handling
 	if (m_keyboard[GLFW_MOUSE_BUTTON_LEFT] && !m_keyboardPressed[GLFW_MOUSE_BUTTON_LEFT] ||
 		m_keyboard[GLFW_MOUSE_BUTTON_RIGHT] && !m_keyboardPressed[GLFW_MOUSE_BUTTON_RIGHT])
 	{
@@ -239,35 +244,40 @@ void Application::onUpdate(float dt)
 		m_keyboardPressed[GLFW_MOUSE_BUTTON_LEFT]	= true;
 	}
 
+	// Player handling
+	glm::vec3 v = { m_player.camera.front.x, 0.0f, m_player.camera.front.z };
 	if (m_keyboard[GLFW_KEY_W])
 	{
-		m_player.camera.pos += m_player.camera.front * g_playerSpeed * dt;
+		m_player.velocity += v* g_playerAcceleration * dt;
 	}
 
 	if (m_keyboard[GLFW_KEY_S])
 	{
-		m_player.camera.pos -= m_player.camera.front * g_playerSpeed * dt;
+		m_player.velocity -= v * g_playerAcceleration * dt;
 	}
 
 	if (m_keyboard[GLFW_KEY_A])
 	{
-		auto leftVelocity = glm::normalize(glm::cross(m_player.camera.front, glm::vec3(0.0f, 1.0f, 0.0f)));
-		m_player.camera.pos -= leftVelocity * g_playerSpeed * dt;
+		auto left = glm::normalize(glm::cross(v, glm::vec3(0.0f, 1.0f, 0.0f)));
+		m_player.velocity -= left * g_playerAcceleration * dt;
 	}
 
 	if (m_keyboard[GLFW_KEY_D])
 	{
-		auto rightVelocity = glm::normalize(glm::cross(m_player.camera.front, glm::vec3(0.0f, 1.0f, 0.0f)));
-		m_player.camera.pos += rightVelocity * g_playerSpeed * dt;
+		auto right = glm::normalize(glm::cross(v, glm::vec3(0.0f, 1.0f, 0.0f)));
+		m_player.velocity += right * g_playerAcceleration * dt;
 	}
 
+	m_player.camera.pos += m_player.velocity * dt;
+	m_player.velocity *= 0.995f;
+	
 	updateCameraView(m_player.camera);
 	processRay(m_world, ray, m_shaders[s_outlineShader], type);
 }
 
 void Application::handleCamera(const double xPos, const double yPos)
 {
-	static bool firstMove = false;
+	static bool firstMove = true;
 	if (firstMove)
 	{
 		m_player.camera.lastX = xPos;
@@ -297,8 +307,9 @@ void Application::handleCamera(const double xPos, const double yPos)
 	}
 
 	glm::vec3 direction;
-	direction.x = cos(glm::radians(m_player.camera.yaw)) * cos(glm::radians(m_player.camera.pitch));
+	direction.x = cos(glm::radians(m_player.camera.yaw)) *cos(glm::radians(m_player.camera.pitch));
 	direction.y = sin(glm::radians(m_player.camera.pitch));
-	direction.z = sin(glm::radians(m_player.camera.yaw)) * cos(glm::radians(m_player.camera.pitch));
+	direction.z = sin(glm::radians(m_player.camera.yaw)) *cos(glm::radians(m_player.camera.pitch));
 	m_player.camera.front = glm::normalize(direction);
+	m_player.velocity.y = 0.0f;
 }

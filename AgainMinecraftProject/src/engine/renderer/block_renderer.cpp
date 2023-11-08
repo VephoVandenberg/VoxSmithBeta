@@ -29,7 +29,7 @@ constexpr uint32_t g_cubeOutlineInds[] = {
 	3, 7,	2, 6					// right
 };
 
-constexpr float g_lineWidth = 5.0f;
+constexpr float g_lineWidth = 3.0f;
 
 void Engine::Renderer::loadCubeData()
 {

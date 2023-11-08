@@ -197,6 +197,5 @@ void GameModule::traceRay(World& world, glm::vec3 rayPosFrac, Engine::Shader& sh
 	{
 		glm::vec3 pos = static_cast<glm::ivec3>(rayPosFrac);
 		Engine::setUniform3f(shader, "u_position", pos);
-		//Engine::Renderer::render(Engine::Renderer::Type::CUBE);
 	}
 }

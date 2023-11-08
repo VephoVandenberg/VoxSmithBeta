@@ -31,6 +31,6 @@ namespace Engine
 	void updateCameraRotation(GLFWwindow* window, const double xPos, const double yPos);
 	
 	Ray castRay(const Camera& camera);
-	glm::mat4 getCameraView();
-	glm::vec3 getCameraPos();
+	// glm::mat4 getCameraView();
+	// glm::vec3 getCameraPos();
 }
