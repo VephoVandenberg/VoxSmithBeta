@@ -226,6 +226,10 @@ void Application::onRender()
 	setUniform4m(m_shaders[s_outlineShader],	"u_view", m_player.camera.view);
 	Renderer::render(Renderer::Type::CUBE);
 
+	setUniform4m(m_shaders[s_outlineShader],	"u_view", m_player.camera.view);
+	setUniform3f(m_shaders[s_outlineShader],	"u_position", m_player.pos);
+	Renderer::render(Renderer::Type::CUBE);
+
 	setUniform4m(m_shaders[s_meshShader],		"u_view", m_player.camera.view);
 	useTextureArray(m_tArray);
 	drawWorld(m_world);
@@ -254,7 +258,7 @@ void Application::onUpdate(float dt)
 	}
 
 	// Player handling
-	glm::vec3 v = { m_player.camera.front.x, 0.0f, m_player.camera.front.z };
+	glm::vec3 v = glm::normalize(glm::vec3(m_player.camera.front.x, 0.0f, m_player.camera.front.z));
 	if (m_keyboard[GLFW_KEY_W])
 	{
 		m_player.velocity += v* g_playerAcceleration * dt;
@@ -281,12 +285,17 @@ void Application::onUpdate(float dt)
 	{
 		//m_player.velocity
 	}
-
-	m_player.camera.pos	+= m_player.velocity * dt;
+	
+	m_player.camera.pos += m_player.velocity * dt;
 	m_player.pos		+= m_player.velocity * dt;
-	m_player.velocity	*= 0.995f;
 
-	checkPlayerCollision(m_world, m_player);
+	if (checkPlayerCollision(m_world, m_player, dt))
+	{
+		//m_player.camera.pos -= m_player.velocity * dt;
+		//m_player.pos		-= m_player.velocity * dt;
+	}
+
+	m_player.velocity *= 0.995f;
 	
 	updateCameraView(m_player.camera);
 	processRay(m_world, ray, m_shaders[s_outlineShader], type);
