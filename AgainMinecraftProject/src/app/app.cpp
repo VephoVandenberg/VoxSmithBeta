@@ -293,10 +293,10 @@ void Application::onUpdate(float dt)
 		//m_player.velocity
 	}
 	
-	m_player.camera.pos += m_player.velocity * dt;
-	m_player.pos		+= m_player.velocity * dt;
-
 	checkPlayerCollision(m_world, m_player, dt);
+
+	m_player.camera.pos += m_player.velocity * dt;
+	m_player.pos += m_player.velocity * dt;
 
 	m_player.velocity *= 0.995f;
 	

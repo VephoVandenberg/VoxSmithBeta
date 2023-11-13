@@ -230,7 +230,7 @@ float sweptAABB(const Player& player, const Block& block, glm::ivec3& normals)
 	float dxEntry, dzEntry;
 	float dxExit, dzExit;
 
-	glm::vec3 vel = player.velocity;
+	glm::vec3 vel = 5.0f * glm::normalize(player.velocity);
 
 	if (player.velocity.x > 0.0f)
 	{
@@ -325,8 +325,8 @@ float sweptAABB(const Player& player, const Block& block, glm::ivec3& normals)
 
 void GameModule::checkPlayerCollision(World& world, Player& player, float dt)
 {
-	int32_t xOffset = player.velocity.x > 0.0f ? 2 : -1;
-	int32_t zOffset = player.velocity.z > 0.0f ? 2 : -1;
+	float xOffset = player.velocity.x > 0.0f ? 1.01f : -0.01f;
+	float zOffset = player.velocity.z > 0.0f ? 1.01f : -0.01f;
 
 	const glm::vec3 startPos = { player.pos.x, player.pos.y, player.pos.z };
 
