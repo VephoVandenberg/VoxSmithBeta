@@ -234,8 +234,15 @@ void Application::onRender()
 	useTextureArray(m_tArray);
 	drawWorld(m_world);
 
+#ifdef _DEBUG
 	setUniform4m(m_shaders[s_rayShader],		"u_view", m_player.camera.view);
 	Renderer::render(Renderer::Type::RAY);
+
+	//setUniform4m(m_shaders[s_rayShader],		"u_view", m_player.camera.view);
+	//Ray ray = { m_player.pos, m_player.pos + m_player.velocity};
+	//Renderer::loadRayData(ray);
+	//Renderer::render(Renderer::Type::RAY);
+#endif
 }
 
 void Application::onUpdate(float dt)
@@ -289,11 +296,7 @@ void Application::onUpdate(float dt)
 	m_player.camera.pos += m_player.velocity * dt;
 	m_player.pos		+= m_player.velocity * dt;
 
-	if (checkPlayerCollision(m_world, m_player, dt))
-	{
-		//m_player.camera.pos -= m_player.velocity * dt;
-		//m_player.pos		-= m_player.velocity * dt;
-	}
+	checkPlayerCollision(m_world, m_player, dt);
 
 	m_player.velocity *= 0.995f;
 	

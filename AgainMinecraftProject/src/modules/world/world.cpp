@@ -1,4 +1,6 @@
+#include <limits>
 #include <glm/gtc/matrix_transform.hpp>
+#include <iostream>
 
 #include "../../engine/ray/ray.h"
 #include "../../engine/shader/shader.h"
@@ -216,72 +218,139 @@ uint32_t getId(World& world, const glm::ivec3 pos)
 	return g_chunkSize.x * (g_chunkSize.z * iPos.y + iPos.z) + iPos.x;
 }
 
-Block& getBlock(World& world, const glm::ivec3 pos)
+Block& getBlock(World& world, const glm::vec3 pos)
 {
-	return world.chunks[getChunkPos(pos)].blocks[getId(world, pos)];
+	glm::ivec3 p = static_cast<glm::ivec3>(pos);
+
+	return world.chunks[getChunkPos(pos)].blocks[getId(world, p)];
 }
 
-bool GameModule::checkPlayerCollision(World& world, Player& player, float dt)
+float sweptAABB(const Player& player, const Block& block, glm::ivec3& normals)
 {
-	int32_t xOffset = player.velocity.x > 0.0f ? 1 : 0;
-	int32_t zOffset = player.velocity.z > 0.0f ? 1 : 0;
+	float dxEntry, dzEntry;
+	float dxExit, dzExit;
 
-	glm::ivec3 leftZ	= {	player.pos.x,			player.pos.y,	player.pos.z + zOffset};
-	glm::ivec3 rightZ	= {	player.pos.x + 1,		player.pos.y,	player.pos.z + zOffset};
-	glm::ivec3 backX	= { player.pos.x + xOffset, player.pos.y,	player.pos.z };
-	glm::ivec3 frontX	= { player.pos.x + xOffset, player.pos.y,	player.pos.z + 1 };
+	glm::vec3 vel = player.velocity;
 
-	const auto& bLZ = getBlock(world, leftZ);
-	const auto& bRZ = getBlock(world, rightZ);
-	const auto& bBX = getBlock(world, backX);
-	const auto& bFX = getBlock(world, frontX);
-
-
-
-	bool shouldCollideX =
-		std::abs(player.pos.x - backX.x) > std::abs(player.pos.z - backX.z) ||
-		std::abs(player.pos.x - frontX.x) > std::abs(player.pos.z - frontX.z);
-
-	if (shouldCollideX)
+	if (player.velocity.x > 0.0f)
 	{
-		bool flag = false;
-
-		if (collAABB(player.pos, bLZ) || collAABB(player.pos, bRZ))
-		{
-			player.pos.z -= player.velocity.z * dt;
-			player.camera.pos.z -= player.velocity.z * dt;
-			flag = true;
-		}
-
-		if (collAABB(player.pos, bBX) || collAABB(player.pos, bFX))
-		{
-			player.pos.x -= player.velocity.x * dt;
-			player.camera.pos.x -= player.velocity.x * dt;
-			flag = true;
-		}
-
-		if (flag) return flag;
+		dxEntry = block.pos.x - (player.pos.x + 1.0f);
+		dxExit = block.pos.x + 1.0f - player.pos.x;
+	}
+	else
+	{
+		dxEntry = block.pos.x + 1.0f - player.pos.x;
+		dxExit = block.pos.x - (player.pos.x + 1.0f);
 	}
 
-	bool shouldCollideZ =
-		std::abs(player.pos.x - leftZ.x) > std::abs(player.pos.z - leftZ.z) ||
-		std::abs(player.pos.x - rightZ.x) > std::abs(player.pos.z - rightZ.z);
-
-	if (shouldCollideZ)
+	if (player.velocity.z > 0.0f)
 	{
-		if (collAABB(player.pos, bBX) || collAABB(player.pos, bFX))
-		{
-			player.pos.x -= player.velocity.x * dt;
-			player.camera.pos.x -= player.velocity.x * dt;
-		}
-
-		if (collAABB(player.pos, bLZ) || collAABB(player.pos, bRZ))
-		{
-			player.pos.z -= player.velocity.z * dt;
-			player.camera.pos.z -= player.velocity.z * dt;
-		}
+		dzEntry = block.pos.z - (player.pos.z + 1.0f);
+		dzExit = block.pos.z + 1.0f - player.pos.z;
+	}
+	else
+	{
+		dzEntry = block.pos.z + 1.0f - player.pos.z;
+		dzExit = block.pos.z - (player.pos.z + 1.0f);
 	}
 
-	
-	return true;
+	float xEntry, zEntry;
+	float xExit, zExit;
+
+	if (player.velocity.x == 0.0f)
+	{
+		xEntry = -std::numeric_limits<float>::infinity();
+		xExit = std::numeric_limits<float>::infinity();
+	}
+	else
+	{
+		xEntry = dxEntry / vel.x;
+		xExit = dxExit / vel.x;
+	}
+
+	if (player.velocity.z == 0.0f)
+	{
+		zEntry = -std::numeric_limits<float>::infinity();
+		zExit = std::numeric_limits<float>::infinity();
+	}
+	else
+	{
+		zEntry = dzEntry / vel.z;
+		zExit = dzExit / vel.z;
+	}
+
+	float entryTime = std::max(zEntry, xEntry);
+	float exitTime = std::min(zExit, xExit);
+
+	if (block.type == BlockType::AIR || 
+		entryTime > exitTime || 
+		xEntry < 0.0f && zEntry < 0.0f 
+		|| xEntry > 1.0f || zEntry > 1.0f)
+	{
+		normals = { 0.0f, 0.0f, 0.0f };
+		return 1.0f;
+	}
+	else
+	{
+		if (xEntry > zEntry)
+		{
+			if (dxEntry < 0.0f)
+			{
+				normals.x = 1;
+				normals.z = 0;
+			}
+			else
+			{
+				normals.x = -1;
+				normals.z = 0;
+			}
+		}
+		else
+		{
+			if (dzEntry < 0.0f)
+			{
+				normals.x = 0;
+				normals.z = 1;
+			}
+			else
+			{
+				normals.x = 0;
+				normals.z = -1;
+			}
+		}
+
+		return entryTime;
+	}
+}
+
+void GameModule::checkPlayerCollision(World& world, Player& player, float dt)
+{
+	int32_t xOffset = player.velocity.x > 0.0f ? 2 : -1;
+	int32_t zOffset = player.velocity.z > 0.0f ? 2 : -1;
+
+	const glm::vec3 startPos = { player.pos.x, player.pos.y, player.pos.z };
+
+	const glm::vec3 posZLeft	= { startPos.x,			  startPos.y, player.pos.z + zOffset };
+	const glm::vec3 posZRight	= { startPos.x + 1.0f,	  startPos.y, player.pos.z + zOffset };
+	const glm::vec3 posXBack	= { startPos.x + xOffset, startPos.y, player.pos.z };
+	const glm::vec3 posXFront	= { startPos.x + xOffset, startPos.y, player.pos.z + 1.0f };
+
+	const Block& leftZ	= getBlock(world, posZLeft);
+	const Block& rightZ = getBlock(world, posZRight);
+	const Block& backX	= getBlock(world, posXBack);
+	const Block& frontX = getBlock(world, posXFront);
+
+	glm::ivec3 normals;
+
+	if (sweptAABB(player, leftZ, normals) < 1.0f || sweptAABB(player, rightZ, normals) < 1.0f)
+	{
+		player.pos.z -= player.velocity.z * dt;
+		player.camera.pos.z -= player.velocity.z * dt;
+	}
+
+	if (sweptAABB(player, backX, normals) < 1.0f || sweptAABB(player, frontX, normals) < 1.0f)
+	{
+		player.pos.x -= player.velocity.x * dt;
+		player.camera.pos.x -= player.velocity.x * dt;
+	}
 }
