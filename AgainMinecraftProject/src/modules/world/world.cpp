@@ -230,7 +230,7 @@ float sweptAABB(const Player& player, const Block& block, glm::ivec3& normals)
 	float dxEntry, dzEntry;
 	float dxExit, dzExit;
 
-	glm::vec3 vel = 5.0f * glm::normalize(player.velocity);
+	glm::vec3 dir = 5.0f * glm::normalize(player.velocity);
 
 	if (player.velocity.x > 0.0f)
 	{
@@ -264,8 +264,8 @@ float sweptAABB(const Player& player, const Block& block, glm::ivec3& normals)
 	}
 	else
 	{
-		xEntry = dxEntry / vel.x;
-		xExit = dxExit / vel.x;
+		xEntry = dxEntry / dir.x;
+		xExit = dxExit / dir.x;
 	}
 
 	if (player.velocity.z == 0.0f)
@@ -275,16 +275,15 @@ float sweptAABB(const Player& player, const Block& block, glm::ivec3& normals)
 	}
 	else
 	{
-		zEntry = dzEntry / vel.z;
-		zExit = dzExit / vel.z;
+		zEntry = dzEntry / dir.z;
+		zExit = dzExit / dir.z;
 	}
 
 	float entryTime = std::max(zEntry, xEntry);
 	float exitTime = std::min(zExit, xExit);
 
 	if (block.type == BlockType::AIR || 
-		entryTime > exitTime || 
-		xEntry < 0.0f && zEntry < 0.0f 
+		entryTime > exitTime
 		|| xEntry > 1.0f || zEntry > 1.0f)
 	{
 		normals = { 0.0f, 0.0f, 0.0f };
@@ -323,10 +322,11 @@ float sweptAABB(const Player& player, const Block& block, glm::ivec3& normals)
 	}
 }
 
+// Will work for now but must be changed for certain
 void GameModule::checkPlayerCollision(World& world, Player& player, float dt)
 {
-	float xOffset = player.velocity.x > 0.0f ? 1.01f : -0.01f;
-	float zOffset = player.velocity.z > 0.0f ? 1.01f : -0.01f;
+	float xOffset = player.velocity.x >= 0.0f ? 1.0f : 0.0f;
+	float zOffset = player.velocity.z >= 0.0f ? 1.0f : 0.0f;
 
 	const glm::vec3 startPos = { player.pos.x, player.pos.y, player.pos.z };
 
@@ -344,13 +344,13 @@ void GameModule::checkPlayerCollision(World& world, Player& player, float dt)
 
 	if (sweptAABB(player, leftZ, normals) < 1.0f || sweptAABB(player, rightZ, normals) < 1.0f)
 	{
-		player.pos.z -= player.velocity.z * dt;
-		player.camera.pos.z -= player.velocity.z * dt;
+		player.pos.z -= normals.z * std::abs(player.velocity.z) * dt;
+		player.camera.pos.z -= normals.z * std::abs(player.velocity.z) * dt;
 	}
 
 	if (sweptAABB(player, backX, normals) < 1.0f || sweptAABB(player, frontX, normals) < 1.0f)
 	{
-		player.pos.x -= player.velocity.x * dt;
-		player.camera.pos.x -= player.velocity.x * dt;
+		player.pos.x -= normals.x * std::abs(player.velocity.x) * dt;
+		player.camera.pos.x -= normals.x * std::abs(player.velocity.x) * dt;
 	}
 }
