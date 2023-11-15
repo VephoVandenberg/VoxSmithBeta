@@ -83,7 +83,7 @@ void Application::initPlayer()
 	m_player.camera.lastY	= 360;
 	m_player.camera.yaw		= -90.0f;
 	m_player.camera.pitch	= 0.0f;
-	m_player.camera.pos		= { m_player.pos.x + 0.5f, m_player.pos.y + m_player.height - 0.1f, m_player.pos.z + 0.5f };
+	m_player.camera.pos		= { m_player.pos.x + 0.25f, m_player.pos.y + m_player.height - 0.1f, m_player.pos.z + 0.25f };
 	m_player.camera.speed	= 10.0f;
 	m_player.camera.front	= { 0.0f, 0.0f, 1.0f };
 	m_player.camera.up		= { 0.0f, 1.0f, 0.0f };

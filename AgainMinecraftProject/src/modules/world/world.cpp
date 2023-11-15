@@ -225,12 +225,12 @@ Block& getBlock(World& world, const glm::vec3 pos)
 	return world.chunks[getChunkPos(pos)].blocks[getId(world, p)];
 }
 
-float sweptAABB(const Player& player, const Block& block, glm::ivec3& normals)
+float sweptAABB(const Player& player, const Block& block, glm::ivec3& normals, float dt)
 {
 	float dxEntry, dzEntry;
 	float dxExit, dzExit;
 
-	glm::vec3 dir = 5.0f * glm::normalize(player.velocity);
+	glm::vec3 dir = player.velocity * dt;
 
 	if (player.velocity.x > 0.0f)
 	{
@@ -283,7 +283,8 @@ float sweptAABB(const Player& player, const Block& block, glm::ivec3& normals)
 	float exitTime = std::min(zExit, xExit);
 
 	if (block.type == BlockType::AIR || 
-		entryTime > exitTime
+		entryTime > exitTime ||
+		(xEntry < 0.0f && zEntry < 0.0f)
 		|| xEntry > 1.0f || zEntry > 1.0f)
 	{
 		normals = { 0.0f, 0.0f, 0.0f };
@@ -322,11 +323,63 @@ float sweptAABB(const Player& player, const Block& block, glm::ivec3& normals)
 	}
 }
 
+#ifdef false
+bool rayVsCube(const Engine::Ray& ray, const Block& block, glm::ivec3 normals, float& tHitNear)
+{
+	glm::vec3 dir = ray.end - ray.start;
+
+	glm::vec3 tNear = (block.pos - ray.start) / dir;
+	glm::vec3 tFar = (block.pos + glm::vec3(1.0f) - ray.start) / dir;
+	
+	if (tNear.x > tFar.x) std::swap(tNear.x, tFar.x);
+	if (tNear.z > tFar.z) std::swap(tNear.z, tFar.z);
+
+	if (tNear.x > tFar.z || tNear.z > tFar.x) return false;
+
+	tHitNear = std::max(tNear.x, tNear.z);
+	float tHitFar = std::min(tFar.x, tFar.z);
+
+	if (tHitFar < 0) return false;
+
+	glm::vec3 contact = ray.start + tHitNear * dir;
+
+	if (tNear.x > tNear.z)
+	{
+		if (dir.x < 0)
+		{
+			normals = { 1, 0, 0 };
+		}
+		else
+		{
+			normals = { -1, 0, 0 };
+		}
+	}
+	else if (tNear.x < tNear.z)
+	{
+		if (dir.z < 0)
+		{
+			normals = { 0, 0, 1 };
+		}
+		else
+		{
+			normals = { 0, 0, -1 };
+		}
+	}
+
+	return true;
+}
+
+bool playerVsCube(const Player& player, const Block& block, glm::ivec3& normals)
+{
+	return true;
+}
+#endif
+
 // Will work for now but must be changed for certain
 void GameModule::checkPlayerCollision(World& world, Player& player, float dt)
 {
-	float xOffset = player.velocity.x >= 0.0f ? 1.0f : 0.0f;
-	float zOffset = player.velocity.z >= 0.0f ? 1.0f : 0.0f;
+	float xOffset = player.velocity.x > 0.0f ? 2.0f : -1.0f;
+	float zOffset = player.velocity.z > 0.0f ? 2.0f : -1.0f;
 
 	const glm::vec3 startPos = { player.pos.x, player.pos.y, player.pos.z };
 
@@ -342,15 +395,19 @@ void GameModule::checkPlayerCollision(World& world, Player& player, float dt)
 
 	glm::ivec3 normals;
 
-	if (sweptAABB(player, leftZ, normals) < 1.0f || sweptAABB(player, rightZ, normals) < 1.0f)
+	if (sweptAABB(player, leftZ, normals, dt) < 1.0f || sweptAABB(player, rightZ, normals, dt) < 1.0f)
 	{
-		player.pos.z -= normals.z * std::abs(player.velocity.z) * dt;
-		player.camera.pos.z -= normals.z * std::abs(player.velocity.z) * dt;
+		player.pos.z += normals.z * std::abs(player.velocity.z) * dt;
+		player.camera.pos.z += normals.z * std::abs(player.velocity.z) * dt;
+		//player.pos -= player.velocity * dt;
+		//player.camera.pos -= player.velocity * dt;
 	}
 
-	if (sweptAABB(player, backX, normals) < 1.0f || sweptAABB(player, frontX, normals) < 1.0f)
+	if (sweptAABB(player, backX, normals, dt) < 1.0f || sweptAABB(player, frontX, normals, dt) < 1.0f)
 	{
-		player.pos.x -= normals.x * std::abs(player.velocity.x) * dt;
-		player.camera.pos.x -= normals.x * std::abs(player.velocity.x) * dt;
+		player.pos.x += normals.x * std::abs(player.velocity.x) * dt;
+		player.camera.pos.x += normals.x * std::abs(player.velocity.x) * dt;
+		//player.pos -= player.velocity * dt;
+		//player.camera.pos -= player.velocity * dt;
 	}
 }
