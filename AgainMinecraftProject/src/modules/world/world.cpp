@@ -1,6 +1,7 @@
 #include <limits>
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
+#include <array>
 
 #include "../../engine/ray/ray.h"
 #include "../../engine/shader/shader.h"
@@ -30,7 +31,9 @@ void GameModule::initWorld(World& world)
 			glm::ivec3 chunkPos = { x * g_chunkSize.x, 0, z * g_chunkSize.z};
 			world.chunks[chunkPos] = generateChunk(chunkPos);
 			initMeshData(world.chunks[chunkPos]);
-			world.chunks[chunkPos].updated = false;
+			generateMesh(world.chunks[chunkPos]);
+			loadChunkMesh(world.chunks[chunkPos]);
+			world.chunks[chunkPos].updated = true;
 		}
 	}
 }
@@ -208,7 +211,7 @@ bool collAABB(const glm::vec3 player, const Block& block)
 	bool collX = player.x + 1 > block.pos.x && block.pos.x + 1 > player.x;
 	bool collZ = player.z + 1 > block.pos.z && block.pos.z + 1 > player.z;
 	bool collY = player.y + 1 > block.pos.y && block.pos.y + 1 > player.y;
-	return collX && collZ;//&& block.type != BlockType::AIR; //&& collY;
+	return collX && collY && collZ;//&& block.type != BlockType::AIR; //&& collY;
 }
 
 uint32_t getId(World& world, const glm::ivec3 pos)
@@ -225,12 +228,12 @@ Block& getBlock(World& world, const glm::vec3 pos)
 	return world.chunks[getChunkPos(pos)].blocks[getId(world, p)];
 }
 
-float sweptAABB(const Player& player, const Block& block, glm::ivec3& normals, float dt)
+bool sweptAABB(const Player& player, const Block& block, glm::vec3& normals, float dt)
 {
-	float dxEntry, dzEntry;
-	float dxExit, dzExit;
+	float dxEntry, dzEntry, dyEntry;
+	float dxExit, dzExit, dyExit;
 
-	glm::vec3 dir = player.velocity * dt;
+	glm::vec3 dir = player.velocity;
 
 	if (player.velocity.x > 0.0f)
 	{
@@ -254,8 +257,19 @@ float sweptAABB(const Player& player, const Block& block, glm::ivec3& normals, f
 		dzExit = block.pos.z - (player.pos.z + 1.0f);
 	}
 
-	float xEntry, zEntry;
-	float xExit, zExit;
+	if (player.velocity.y > 0.0f)
+	{
+		dyEntry = block.pos.y - (player.pos.y + 1.0f);
+		dyExit = block.pos.y + 1.0f - player.pos.z;
+	}
+	else
+	{
+		dyEntry = block.pos.y + 1.0f - player.pos.y;
+		dyExit = block.pos.y - (player.pos.y + 1.0f);
+	}
+
+	float xEntry, zEntry, yEntry;
+	float xExit, zExit, yExit;
 
 	if (player.velocity.x == 0.0f)
 	{
@@ -279,47 +293,80 @@ float sweptAABB(const Player& player, const Block& block, glm::ivec3& normals, f
 		zExit = dzExit / dir.z;
 	}
 
-	float entryTime = std::max(zEntry, xEntry);
-	float exitTime = std::min(zExit, xExit);
-
-	if (block.type == BlockType::AIR || 
-		entryTime > exitTime ||
-		(xEntry < 0.0f && zEntry < 0.0f)
-		|| xEntry > 1.0f || zEntry > 1.0f)
+	if (player.velocity.y == 0.0f)
 	{
-		normals = { 0.0f, 0.0f, 0.0f };
-		return 1.0f;
+		yEntry = -std::numeric_limits<float>::infinity();
+		yExit = std::numeric_limits<float>::infinity();
 	}
 	else
 	{
-		if (xEntry > zEntry)
+		yEntry = dyEntry / dir.y;
+		yExit = dyExit / dir.y;
+	}
+
+	float entryTime = std::max(std::min(xEntry, zEntry), yEntry);
+	float exitTime = std::min(std::max(xEntry, zExit), yEntry);
+
+	if (block.type == BlockType::AIR || 
+		entryTime > exitTime ||
+		(xEntry < 0.0f && zEntry < 0.0f && yEntry < 0.0f)
+		|| xEntry > 1.0f || zEntry > 1.0f || yEntry > 1.0f)
+	{
+		return false;
+	}
+	else
+	{
+		if (xEntry > yEntry)
 		{
-			if (dxEntry < 0.0f)
+			if (xEntry > zEntry)
 			{
-				normals.x = 1;
-				normals.z = 0;
+				if (dxEntry < 0.0f)
+				{
+					normals.x = 1;
+				}
+				else
+				{
+					normals.x = -1;
+				}
 			}
 			else
 			{
-				normals.x = -1;
-				normals.z = 0;
+				if (dzEntry < 0.0f)
+				{
+					normals.z = 1;
+				}
+				else
+				{
+					normals.z = -1;
+				}
 			}
 		}
 		else
 		{
-			if (dzEntry < 0.0f)
+			if (yEntry > zEntry)
 			{
-				normals.x = 0;
-				normals.z = 1;
+				if (dyEntry < 0.0f)
+				{
+					normals.y = 1;
+				}
+				else
+				{
+					normals.y = -1;
+				}
 			}
 			else
 			{
-				normals.x = 0;
-				normals.z = -1;
+				if (dzEntry < 0.0f)
+				{
+					normals.z = 1;
+				}
+				else
+				{
+					normals.z = -1;
+				}
 			}
 		}
-
-		return entryTime;
+		return true;
 	}
 }
 
@@ -375,39 +422,47 @@ bool playerVsCube(const Player& player, const Block& block, glm::ivec3& normals)
 }
 #endif
 
-// Will work for now but must be changed for certain
 void GameModule::checkPlayerCollision(World& world, Player& player, float dt)
 {
-	float xOffset = player.velocity.x > 0.0f ? 2.0f : -1.0f;
-	float zOffset = player.velocity.z > 0.0f ? 2.0f : -1.0f;
+	float x = player.velocity.x > 0.0f ? 1.0f : 0.0f;
+	float z = player.velocity.z > 0.0f ? 1.0f : 0.0f;
+	float y = player.velocity.y > 0.0f ? 4.0f : -1.0f;
 
-	const glm::vec3 startPos = { player.pos.x, player.pos.y, player.pos.z };
+	const glm::vec3 start = { player.pos.x, player.pos.y, player.pos.z };
 
-	const glm::vec3 posZLeft	= { startPos.x,			  startPos.y, player.pos.z + zOffset };
-	const glm::vec3 posZRight	= { startPos.x + 1.0f,	  startPos.y, player.pos.z + zOffset };
-	const glm::vec3 posXBack	= { startPos.x + xOffset, startPos.y, player.pos.z };
-	const glm::vec3 posXFront	= { startPos.x + xOffset, startPos.y, player.pos.z + 1.0f };
+	const Block& leftZ		= getBlock(world, { start.x,			start.y,		start.z + z });
+	const Block& rightZ		= getBlock(world, { start.x + 1.0f,		start.y,		start.z + z });
+	const Block& backX		= getBlock(world, { start.x + x,		start.y,		start.z });
+	const Block& frontX		= getBlock(world, { start.x + x,		start.y,		start.z + 1.0f });
+	const Block& leftFZ		= getBlock(world, { start.x,			start.y + 1.0f,	start.z + z });
+	const Block& rightFZ	= getBlock(world, { start.x + 1.0f,		start.y + 1.0f,	start.z + z });
+	const Block& backFX		= getBlock(world, { start.x + x,		start.y + 1.0f,	start.z });
+	const Block& frontFX	= getBlock(world, { start.x + x,		start.y + 1.0f,	start.z + 1.0f });
+	const Block& frontLY	= getBlock(world, { start.x,			start.y + y,	start.z + 1.0f });
+	const Block& frontRY	= getBlock(world, { start.x + 1.0f,		start.y + y,	start.z + 1.0f });
+	const Block& backLY		= getBlock(world, { start.x,			start.y + y,	start.z });
+	const Block& backRY		= getBlock(world, { start.x + 1.0f,		start.y + y,	start.z });
 
-	const Block& leftZ	= getBlock(world, posZLeft);
-	const Block& rightZ = getBlock(world, posZRight);
-	const Block& backX	= getBlock(world, posXBack);
-	const Block& frontX = getBlock(world, posXFront);
+	glm::vec3 normals = glm::vec3(0);
+	glm::vec3 absoluteVelocity = { 
+		std::abs(player.velocity.x), 
+		std::abs(player.velocity.y), 
+		std::abs(player.velocity.z) 
+	};
 
-	glm::ivec3 normals;
+	sweptAABB(player, leftZ,	normals, dt);
+	sweptAABB(player, rightZ,	normals, dt);
+	sweptAABB(player, backX,	normals, dt);
+	sweptAABB(player, frontX,	normals, dt);
+	sweptAABB(player, leftFZ,	normals, dt);
+	sweptAABB(player, rightFZ,	normals, dt);
+	sweptAABB(player, backFX,	normals, dt);
+	sweptAABB(player, frontFX,	normals, dt);
+	sweptAABB(player, frontLY,	normals, dt);
+	sweptAABB(player, frontRY,	normals, dt);
+	sweptAABB(player, backLY,	normals, dt);
+	sweptAABB(player, backRY,	normals, dt);
 
-	if (sweptAABB(player, leftZ, normals, dt) < 1.0f || sweptAABB(player, rightZ, normals, dt) < 1.0f)
-	{
-		player.pos.z += normals.z * std::abs(player.velocity.z) * dt;
-		player.camera.pos.z += normals.z * std::abs(player.velocity.z) * dt;
-		//player.pos -= player.velocity * dt;
-		//player.camera.pos -= player.velocity * dt;
-	}
-
-	if (sweptAABB(player, backX, normals, dt) < 1.0f || sweptAABB(player, frontX, normals, dt) < 1.0f)
-	{
-		player.pos.x += normals.x * std::abs(player.velocity.x) * dt;
-		player.camera.pos.x += normals.x * std::abs(player.velocity.x) * dt;
-		//player.pos -= player.velocity * dt;
-		//player.camera.pos -= player.velocity * dt;
-	}
+	player.pos += normals * absoluteVelocity * dt;
+	player.camera.pos += normals * absoluteVelocity * dt;
 }

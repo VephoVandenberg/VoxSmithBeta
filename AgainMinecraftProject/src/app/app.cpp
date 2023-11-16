@@ -39,6 +39,7 @@ constexpr float g_playerSpeed = 10.0f;
 constexpr float g_playerAcceleration = 30.0f;
 
 constexpr float g_gravity = 9.8f;
+constexpr float g_jumpForce = 12.0f;
 
 constexpr glm::ivec3 g_chunkSize = { 16, 256, 16 };
 
@@ -73,7 +74,7 @@ void Application::initPlayer()
 	m_player.height = 2.0f;
 	m_player.pos = {
 		g_chunkSize.x * g_numberOfChunksX / 2,
-		g_chunkSize.y / 2,
+		g_chunkSize.y / 2 + 10,
 		g_chunkSize.z * g_numberOfChunksZ / 2
 	};
 	m_player.velocity = { 0.0f, 0.0f, 0.0f };
@@ -265,7 +266,7 @@ void Application::onUpdate(float dt)
 	}
 
 	// Player handling
-	glm::vec3 v = glm::normalize(glm::vec3(m_player.camera.front.x, 0.0f, m_player.camera.front.z));
+	glm::vec3 v = glm::normalize(glm::vec3(m_player.camera.front.x, m_player.camera.front.y, m_player.camera.front.z));
 	if (m_keyboard[GLFW_KEY_W])
 	{
 		m_player.velocity += v* g_playerAcceleration * dt;
@@ -290,8 +291,10 @@ void Application::onUpdate(float dt)
 
 	if (m_keyboard[GLFW_KEY_SPACE])
 	{
-		//m_player.velocity
+		m_player.velocity += glm::vec3(0.0f, 1.0f, 0.0f) * g_jumpForce * dt;
 	}
+
+	//m_player.velocity += glm::vec3(0.0f, -1.0f, 0.0f) * 1.0f * dt;
 	
 	checkPlayerCollision(m_world, m_player, dt);
 
@@ -340,5 +343,4 @@ void Application::handleCamera(const double xPos, const double yPos)
 	direction.y = sin(glm::radians(m_player.camera.pitch));
 	direction.z = sin(glm::radians(m_player.camera.yaw)) *cos(glm::radians(m_player.camera.pitch));
 	m_player.camera.front = glm::normalize(direction);
-	m_player.velocity.y = 0.0f;
 }
