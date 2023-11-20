@@ -211,7 +211,7 @@ bool collAABB(const glm::vec3 player, const Block& block)
 	bool collX = player.x + 1 > block.pos.x && block.pos.x + 1 > player.x;
 	bool collZ = player.z + 1 > block.pos.z && block.pos.z + 1 > player.z;
 	bool collY = player.y + 1 > block.pos.y && block.pos.y + 1 > player.y;
-	return collX && collY && collZ;//&& block.type != BlockType::AIR; //&& collY;
+	return collX && collY && collZ;
 }
 
 uint32_t getId(World& world, const glm::ivec3 pos)
@@ -441,39 +441,57 @@ void GameModule::checkPlayerCollision(World& world, Player& player, float dt)
 
 	const glm::vec3 start = { player.pos.x, player.pos.y, player.pos.z };
 
-	const Block& leftZ		= getBlock(world, { start.x,			start.y,		start.z + z });
-	const Block& rightZ		= getBlock(world, { start.x + 1.0f,		start.y,		start.z + z });
-	const Block& backX		= getBlock(world, { start.x + x,		start.y,		start.z });
-	const Block& frontX		= getBlock(world, { start.x + x,		start.y,		start.z + 1.0f });
-	const Block& leftFZ		= getBlock(world, { start.x,			start.y + 1.0f,	start.z + z });
-	const Block& rightFZ	= getBlock(world, { start.x + 1.0f,		start.y + 1.0f,	start.z + z });
-	const Block& backFX		= getBlock(world, { start.x + x,		start.y + 1.0f,	start.z });
-	const Block& frontFX	= getBlock(world, { start.x + x,		start.y + 1.0f,	start.z + 1.0f });
-	const Block& frontLY	= getBlock(world, { start.x,			start.y + y,	start.z + 1.0f });
-	const Block& frontRY	= getBlock(world, { start.x + 1.0f,		start.y + y,	start.z + 1.0f });
-	const Block& backLY		= getBlock(world, { start.x,			start.y + y,	start.z });
-	const Block& backRY		= getBlock(world, { start.x + 1.0f,		start.y + y,	start.z });
+	const Block& leftZ = getBlock(world, { start.x,			start.y,		start.z + z });
+	const Block& rightZ = getBlock(world, { start.x + 1.0f,		start.y,		start.z + z });
+	const Block& backX = getBlock(world, { start.x + x,		start.y,		start.z });
+	const Block& frontX = getBlock(world, { start.x + x,		start.y,		start.z + 1.0f });
+	const Block& leftFZ = getBlock(world, { start.x,			start.y + 1.0f,	start.z + z });
+	const Block& rightFZ = getBlock(world, { start.x + 1.0f,		start.y + 1.0f,	start.z + z });
+	const Block& backFX = getBlock(world, { start.x + x,		start.y + 1.0f,	start.z });
+	const Block& frontFX = getBlock(world, { start.x + x,		start.y + 1.0f,	start.z + 1.0f });
+	const Block& frontLY = getBlock(world, { start.x,			start.y + y,	start.z + 1.0f });
+	const Block& frontRY = getBlock(world, { start.x + 1.0f,		start.y + y,	start.z + 1.0f });
+	const Block& backLY = getBlock(world, { start.x,			start.y + y,	start.z });
+	const Block& backRY = getBlock(world, { start.x + 1.0f,		start.y + y,	start.z });
 
 	glm::vec3 normals = glm::vec3(0);
-	glm::vec3 absoluteVelocity = { 
-		std::abs(player.velocity.x), 
-		std::abs(player.velocity.y), 
-		std::abs(player.velocity.z) 
-	};
+
 
 	float t;
 	glm::vec3 newVel = player.velocity;
-	if (sweptAABB(player, leftZ,	normals, t)) { player.velocity += normals * absoluteVelocity * (1.0f - t); }
-	if (sweptAABB(player, rightZ,	normals, t)) { player.velocity += normals * absoluteVelocity * (1.0f - t); }
-	if (sweptAABB(player, backX,	normals, t)) { player.velocity += normals * absoluteVelocity * (1.0f - t); }
-	if (sweptAABB(player, frontX,	normals, t)) { player.velocity += normals * absoluteVelocity * (1.0f - t); }
-	if (sweptAABB(player, leftFZ,	normals, t)) { player.velocity += normals * absoluteVelocity * (1.0f - t); }
-	if (sweptAABB(player, rightFZ,	normals, t)) { player.velocity += normals * absoluteVelocity * (1.0f - t); }
-	if (sweptAABB(player, backFX,	normals, t)) { player.velocity += normals * absoluteVelocity * (1.0f - t); }
-	if (sweptAABB(player, frontFX,	normals, t)) { player.velocity += normals * absoluteVelocity * (1.0f - t); }
-	if (sweptAABB(player, frontLY,	normals, t)) { player.velocity += normals * absoluteVelocity * (1.0f - t); }
-	if (sweptAABB(player, frontRY,	normals, t)) { player.velocity += normals * absoluteVelocity * (1.0f - t); }
-	if (sweptAABB(player, backLY,	normals, t)) { player.velocity += normals * absoluteVelocity * (1.0f - t); }
-	if (sweptAABB(player, backRY,	normals, t)) { player.velocity += normals * absoluteVelocity * (1.0f - t); }
-	
+
+	std::vector<std::pair<float, glm::vec3>> distances;
+	if (sweptAABB(player, leftZ, normals, t)) { distances.push_back({ t, normals }); }
+	if (sweptAABB(player, rightZ, normals, t)) { distances.push_back({ t, normals }); }
+	if (sweptAABB(player, backX, normals, t)) { distances.push_back({ t, normals }); }
+	if (sweptAABB(player, frontX, normals, t)) { distances.push_back({ t, normals }); }
+	if (sweptAABB(player, leftFZ, normals, t)) { distances.push_back({ t, normals }); }
+	if (sweptAABB(player, rightFZ, normals, t)) { distances.push_back({ t, normals }); }
+	if (sweptAABB(player, backFX, normals, t)) { distances.push_back({ t, normals }); }
+	if (sweptAABB(player, frontFX, normals, t)) { distances.push_back({ t, normals }); }
+	if (sweptAABB(player, frontLY, normals, t)) { distances.push_back({ t, normals }); }
+	if (sweptAABB(player, frontRY, normals, t)) { distances.push_back({ t, normals }); }
+	if (sweptAABB(player, backLY, normals, t)) { distances.push_back({ t, normals }); }
+	if (sweptAABB(player, backRY, normals, t)) { distances.push_back({ t, normals }); }
+
+	std::sort(
+		distances.begin(),
+		distances.end(),
+		[](const std::pair<float, glm::vec3> a, const std::pair<float, glm::vec3> b) {
+			return a.first < b.first;
+		});
+
+
+	for (auto& pair : distances)
+	{
+
+		glm::vec3 absoluteVelocity = {
+			std::abs(player.velocity.x),
+			std::abs(player.velocity.y),
+			std::abs(player.velocity.z)
+		};
+
+		player.velocity += pair.second * absoluteVelocity * (1 - pair.first);
+	}
+
 }

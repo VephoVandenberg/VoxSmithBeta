@@ -269,7 +269,7 @@ void Application::onUpdate(float dt)
 	static bool move = false;
 	// Player handling
 	glm::vec3 v = glm::normalize(
-		glm::vec3(m_player.camera.front.x, m_player.camera.front.y, m_player.camera.front.z));
+		glm::vec3(m_player.camera.front.x, 0.0f, m_player.camera.front.z));
 	if (m_keyboard[GLFW_KEY_W])
 	{
 		m_player.velocity += v * 0.1f * dt;
