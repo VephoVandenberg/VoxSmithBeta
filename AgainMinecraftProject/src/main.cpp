@@ -2,9 +2,9 @@
 
 /** TO DO LIST
 * Agenda
+* - Player struct and camera functions must be investigated
 * - Physics(Walk and jump)
 * Later
-* - Player struct and camera functions must be investigated
 * - Perlin noise we should find out how 3d noise work
 * - SkyBox
 * - Water Walta

@@ -132,11 +132,13 @@ void Application::initTextures()
 
 void Application::run()
 {
-	float previousFrame = 0.0f;
+	static float limits = 1.0f / 60.0f;
+	float previousFrame = (float)glfwGetTime();
 	while (m_isRunning)
 	{
-		float currentFrame = glfwGetTime();
-		float dt = currentFrame - previousFrame;
+		float currentFrame = (float)glfwGetTime();
+		float dt = (currentFrame - previousFrame) / limits;
+		previousFrame = currentFrame;
 
 		onUpdate(dt);
 		clearScreen();
@@ -146,7 +148,6 @@ void Application::run()
 		handleInput();
 		updateScreen(m_window);
 
-		previousFrame = currentFrame;
 	}
 }
 
@@ -265,43 +266,50 @@ void Application::onUpdate(float dt)
 		m_keyboardPressed[GLFW_MOUSE_BUTTON_LEFT]	= true;
 	}
 
+	static bool move = false;
 	// Player handling
-	glm::vec3 v = glm::normalize(glm::vec3(m_player.camera.front.x, m_player.camera.front.y, m_player.camera.front.z));
+	glm::vec3 v = glm::normalize(
+		glm::vec3(m_player.camera.front.x, m_player.camera.front.y, m_player.camera.front.z));
 	if (m_keyboard[GLFW_KEY_W])
 	{
-		m_player.velocity += v* g_playerAcceleration * dt;
+		m_player.velocity += v * 0.1f * dt;
+		move = true;
 	}
 
 	if (m_keyboard[GLFW_KEY_S])
 	{
-		m_player.velocity -= v * g_playerAcceleration * dt;
+		m_player.velocity += -v * 0.1f * dt;
+		move = true;
 	}
 
 	if (m_keyboard[GLFW_KEY_A])
 	{
 		auto left = glm::normalize(glm::cross(v, glm::vec3(0.0f, 1.0f, 0.0f)));
-		m_player.velocity -= left * g_playerAcceleration * dt;
+		m_player.velocity += -left * 0.1f * dt;
+		move = true;
 	}
 
 	if (m_keyboard[GLFW_KEY_D])
 	{
 		auto right = glm::normalize(glm::cross(v, glm::vec3(0.0f, 1.0f, 0.0f)));
-		m_player.velocity += right * g_playerAcceleration * dt;
+		m_player.velocity += right * 0.1f * dt;
+		move = true;
 	}
 
 	if (m_keyboard[GLFW_KEY_SPACE])
 	{
-		m_player.velocity += glm::vec3(0.0f, 1.0f, 0.0f) * g_jumpForce * dt;
+		
 	}
-
-	//m_player.velocity += glm::vec3(0.0f, -1.0f, 0.0f) * 1.0f * dt;
 	
+	glm::vec3 down = glm::vec3(0.0f, -0.1f, 0.0f);
+	m_player.velocity += down * dt;
+
 	checkPlayerCollision(m_world, m_player, dt);
 
 	m_player.camera.pos += m_player.velocity * dt;
 	m_player.pos += m_player.velocity * dt;
 
-	m_player.velocity *= 0.995f;
+	m_player.velocity *= 0.95f;
 	
 	updateCameraView(m_player.camera);
 	processRay(m_world, ray, m_shaders[s_outlineShader], type);
