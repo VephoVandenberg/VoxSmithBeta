@@ -47,4 +47,6 @@ namespace GameModule
 	void traceRay(World& world, glm::vec3 rayPosFrac, Engine::Shader& shader, RayType type);
 	
 	void checkPlayerCollision(World& world, Player& player, float dt);
+
+	bool isPlayerFalling(World& world, const Player& player);
 }

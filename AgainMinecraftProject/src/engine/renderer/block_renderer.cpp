@@ -8,6 +8,7 @@
 using namespace Engine::Renderer;
 
 static IBuffer g_cubeBuff;
+static IBuffer g_pOutlineBuff;
 static Buffer g_rayBuff;
 
 // This might not be needed anymore
@@ -20,6 +21,17 @@ constexpr float g_cubeOutlineVerts[] = {
 	0, 1, 1, // -x +y +z (5)
 	1, 1, 1, // +x +y +z (6)
 	1, 0, 1, // +x -y +z (7)
+};
+
+constexpr float g_playerOutlineVerts[] = {
+	0.0f, 0.0f, 0.0f, // -x -y -z (0)
+	0.0f, 2.0f, 0.0f, // -x +y -z (1)
+	0.6f, 2.0f, 0.0f, // +x +y -z (2)
+	0.6f, 0.0f, 0.0f, // +x -y -z (3)
+	0.0f, 0.0f, 0.6f, // -x -y +z (4)
+	0.0f, 2.0f, 0.6f, // -x +y +z (5)
+	0.6f, 2.0f, 0.6f, // +x +y +z (6)
+	0.6f, 0.0f, 0.6f, // +x -y +z (7)
 };
 
 constexpr uint32_t g_cubeOutlineInds[] = {
@@ -43,6 +55,26 @@ void Engine::Renderer::loadCubeData()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_cubeBuff.IBO);
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_cubeOutlineVerts), g_cubeOutlineVerts, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(g_cubeOutlineInds), g_cubeOutlineInds, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+	glLineWidth(g_lineWidth);
+}
+
+void Engine::Renderer::loadPlayerOutlineData()
+{
+	// This function might not be needed at all
+	glGenVertexArrays(1, &g_pOutlineBuff.VAO);
+	glGenBuffers(1, &g_pOutlineBuff.VBO);
+	glGenBuffers(1, &g_pOutlineBuff.IBO);
+
+	glBindVertexArray(g_pOutlineBuff.VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, g_pOutlineBuff.VBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_pOutlineBuff.IBO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_playerOutlineVerts), g_playerOutlineVerts, GL_STATIC_DRAW);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(g_cubeOutlineInds), g_cubeOutlineInds, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
@@ -88,6 +120,11 @@ void Engine::Renderer::render(const Type type)
 	case Type::RAY:
 		glBindVertexArray(g_rayBuff.VAO);
 		glDrawArrays(GL_LINES, 0, 2);
+		break;
+
+	case Type::PLAYER:
+		glBindVertexArray(g_pOutlineBuff.VAO);
+		glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, 0);
 		break;
 	}
 }

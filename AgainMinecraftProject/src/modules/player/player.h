@@ -10,6 +10,7 @@ namespace GameModule
 	{
 		glm::vec3 pos;
 		glm::vec3 velocity;
+		glm::vec3 size;
 		uint32_t height;
 		float speed;
 

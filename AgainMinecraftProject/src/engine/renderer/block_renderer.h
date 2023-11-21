@@ -10,7 +10,8 @@ namespace Engine
 		{
 			RAY,
 			CUBE,
-			QUAD
+			QUAD,
+			PLAYER
 		};
 
 		struct Buffer
@@ -27,6 +28,7 @@ namespace Engine
 		};
 
 		void loadCubeData();
+		void loadPlayerOutlineData();
 		void loadRayData(const Ray& ray);
 
 		void render(const Type type);

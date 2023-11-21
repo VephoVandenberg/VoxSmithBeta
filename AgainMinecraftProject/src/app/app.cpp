@@ -78,13 +78,17 @@ void Application::initPlayer()
 		g_chunkSize.z * g_numberOfChunksZ / 2
 	};
 	m_player.velocity = { 0.0f, 0.0f, 0.0f };
+	m_player.size = { 0.6f, 2.0f, 0.6f };
 
 	m_player.speed			= 0;
 	m_player.camera.lastX	= 620;
 	m_player.camera.lastY	= 360;
 	m_player.camera.yaw		= -90.0f;
 	m_player.camera.pitch	= 0.0f;
-	m_player.camera.pos		= { m_player.pos.x + 0.25f, m_player.pos.y + m_player.height - 0.1f, m_player.pos.z + 0.25f };
+	m_player.camera.pos		= { 
+		m_player.pos.x + m_player.size.x / 2.0f, 
+		m_player.pos.y + m_player.height - 0.2f,
+		m_player.pos.z + m_player.size.z / 2.0f};
 	m_player.camera.speed	= 10.0f;
 	m_player.camera.front	= { 0.0f, 0.0f, 1.0f };
 	m_player.camera.up		= { 0.0f, 1.0f, 0.0f };
@@ -98,6 +102,7 @@ void Application::initPlayer()
 void Application::initShaders()
 {
 	Engine::Renderer::loadCubeData();
+	Engine::Renderer::loadPlayerOutlineData();
 	Engine::loadShaders(m_shaders);
 
 	glm::mat4 projection =
@@ -230,7 +235,7 @@ void Application::onRender()
 
 	setUniform4m(m_shaders[s_outlineShader],	"u_view", m_player.camera.view);
 	setUniform3f(m_shaders[s_outlineShader],	"u_position", m_player.pos);
-	Renderer::render(Renderer::Type::CUBE);
+	Renderer::render(Renderer::Type::PLAYER);
 
 	setUniform4m(m_shaders[s_meshShader],		"u_view", m_player.camera.view);
 	useTextureArray(m_tArray);
@@ -269,31 +274,27 @@ void Application::onUpdate(float dt)
 	static bool move = false;
 	// Player handling
 	glm::vec3 v = glm::normalize(
-		glm::vec3(m_player.camera.front.x, 0.0f, m_player.camera.front.z));
+		glm::vec3(m_player.camera.front.x, m_player.camera.front.y, m_player.camera.front.z));
 	if (m_keyboard[GLFW_KEY_W])
 	{
 		m_player.velocity += v * 0.1f * dt;
-		move = true;
 	}
 
 	if (m_keyboard[GLFW_KEY_S])
 	{
 		m_player.velocity += -v * 0.1f * dt;
-		move = true;
 	}
 
 	if (m_keyboard[GLFW_KEY_A])
 	{
 		auto left = glm::normalize(glm::cross(v, glm::vec3(0.0f, 1.0f, 0.0f)));
 		m_player.velocity += -left * 0.1f * dt;
-		move = true;
 	}
 
 	if (m_keyboard[GLFW_KEY_D])
 	{
 		auto right = glm::normalize(glm::cross(v, glm::vec3(0.0f, 1.0f, 0.0f)));
 		m_player.velocity += right * 0.1f * dt;
-		move = true;
 	}
 
 	if (m_keyboard[GLFW_KEY_SPACE])
