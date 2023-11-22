@@ -48,5 +48,5 @@ namespace GameModule
 	
 	void checkPlayerCollision(World& world, Player& player, float dt);
 
-	bool isPlayerFalling(World& world, const Player& player);
+	bool isPlayerFalling(World& world, const Player& player, float dt);
 }

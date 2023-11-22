@@ -81,6 +81,7 @@ void Application::initPlayer()
 	m_player.size = { 0.6f, 2.0f, 0.6f };
 
 	m_player.speed			= 0;
+	m_player.isJumping		= false;
 	m_player.camera.lastX	= 620;
 	m_player.camera.lastY	= 360;
 	m_player.camera.yaw		= -90.0f;
@@ -92,7 +93,11 @@ void Application::initPlayer()
 	m_player.camera.speed	= 10.0f;
 	m_player.camera.front	= { 0.0f, 0.0f, 1.0f };
 	m_player.camera.up		= { 0.0f, 1.0f, 0.0f };
-	m_player.camera.view	= glm::lookAt(m_player.camera.pos, m_player.camera.front, m_player.camera.up);
+	m_player.camera.view	= 
+		glm::lookAt(
+			m_player.camera.pos, 
+			m_player.camera.front, 
+			m_player.camera.up);
 
 	glfwSetWindowUserPointer(m_window, this);
 
@@ -194,7 +199,7 @@ void Application::handleInput()
 		m_keyboard[GLFW_KEY_S] = false;
 	}
 
-	if (glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS)
+	if (glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS )
 	{
 		m_keyboard[GLFW_KEY_SPACE] = true;
 	}
@@ -228,8 +233,6 @@ void Application::handleInput()
 
 void Application::onRender()
 {
-#ifdef ECS
-#endif
 	setUniform4m(m_shaders[s_outlineShader],	"u_view", m_player.camera.view);
 	Renderer::render(Renderer::Type::CUBE);
 
@@ -244,11 +247,6 @@ void Application::onRender()
 #ifdef _DEBUG
 	setUniform4m(m_shaders[s_rayShader],		"u_view", m_player.camera.view);
 	Renderer::render(Renderer::Type::RAY);
-
-	//setUniform4m(m_shaders[s_rayShader],		"u_view", m_player.camera.view);
-	//Ray ray = { m_player.pos, m_player.pos + m_player.velocity};
-	//Renderer::loadRayData(ray);
-	//Renderer::render(Renderer::Type::RAY);
 #endif
 }
 
@@ -297,13 +295,39 @@ void Application::onUpdate(float dt)
 		m_player.velocity += right * 0.1f * dt;
 	}
 
-	if (m_keyboard[GLFW_KEY_SPACE])
+	if (m_keyboard[GLFW_KEY_SPACE] && !m_player.isJumping)
 	{
-		
+		m_player.isJumping = true;
+		m_player.jumpSpeed = 4.0f;
 	}
+
 	
+	glm::vec3 up = glm::vec3(0.0f, 0.1f, 0.0f);
 	glm::vec3 down = glm::vec3(0.0f, -0.1f, 0.0f);
-	m_player.velocity += down * dt;
+	if (m_player.jumpSpeed > 0.0f)
+	{
+		m_player.jumpSpeed += down.y * dt;
+		m_player.velocity += m_player.jumpSpeed * up * dt;
+		if (m_player.jumpSpeed <= 0.0f)
+		{
+			m_player.jumpSpeed = 0.0f;
+		}
+	}
+
+	if (m_player.isJumping)
+	{
+		m_player.jumpSpeed += up.y * dt;
+		if (m_player.jumpSpeed > 1.0f)
+		{
+			m_player.isJumping = false;
+			m_player.jumpSpeed = 0.0f;
+		}
+	}
+		
+	if (isPlayerFalling(m_world, m_player, dt))
+	{
+		m_player.velocity += down * dt;
+	}
 
 	checkPlayerCollision(m_world, m_player, dt);
 
@@ -348,8 +372,8 @@ void Application::handleCamera(const double xPos, const double yPos)
 	}
 
 	glm::vec3 direction;
-	direction.x = cos(glm::radians(m_player.camera.yaw)) *cos(glm::radians(m_player.camera.pitch));
+	direction.x = cos(glm::radians(m_player.camera.yaw)) * cos(glm::radians(m_player.camera.pitch));
 	direction.y = sin(glm::radians(m_player.camera.pitch));
-	direction.z = sin(glm::radians(m_player.camera.yaw)) *cos(glm::radians(m_player.camera.pitch));
+	direction.z = sin(glm::radians(m_player.camera.yaw)) * cos(glm::radians(m_player.camera.pitch));
 	m_player.camera.front = glm::normalize(direction);
 }

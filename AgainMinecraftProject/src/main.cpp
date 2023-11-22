@@ -2,15 +2,15 @@
 
 /** TO DO LIST
 * Agenda
-* - Player struct and camera functions must be investigated
-* - Physics(Walk and jump)
 * Later
 * - Perlin noise we should find out how 3d noise work
+* - More blocks
 * - SkyBox
-* - Water Walta
 * - Investigate math behind coordinate systems and matrices
+* - Water Walta
 * Works for now but might be improved
-* - We probably shouldn't place block in the mid air
+* - We probably shouldn't place block in the mid air, and shouldn't be placed where the player is
+* - We need to improve jumping because it works like shit, but I don't care for now at least
 */
 
 int main(int argc, char **argv)

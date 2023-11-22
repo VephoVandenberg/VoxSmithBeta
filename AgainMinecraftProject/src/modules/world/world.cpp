@@ -201,16 +201,16 @@ void GameModule::traceRay(World& world, glm::vec3 rayPosFrac, Engine::Shader& sh
 	}
 }
 
-bool collAABB(const glm::vec3 player, const Block& block)
+bool collAABB(const Player& player, const Block& block)
 {
 	if (block.type == BlockType::AIR)
 	{
 		return false;
 	}
 
-	bool collX = player.x + 1 > block.pos.x && block.pos.x + 1 > player.x;
-	bool collZ = player.z + 1 > block.pos.z && block.pos.z + 1 > player.z;
-	bool collY = player.y + 1 > block.pos.y && block.pos.y + 1 > player.y;
+	bool collX = player.pos.x + player.size.x > block.pos.x && block.pos.x + 1 > player.pos.x;
+	bool collZ = player.pos.z + player.size.y > block.pos.z && block.pos.z + 1 > player.pos.z;
+	bool collY = player.pos.y + player.size.z > block.pos.y && block.pos.y + 1 > player.pos.y;
 	return collX && collY && collZ;
 }
 
@@ -424,16 +424,19 @@ void GameModule::checkPlayerCollision(World& world, Player& player, float dt)
 	}
 }
 
-bool GameModule::isPlayerFalling(World& world, const Player& player)
+bool GameModule::isPlayerFalling(World& world, const Player& player, float dt)
 {
 	const glm::vec3 start = { player.pos.x, player.pos.y, player.pos.z };
 
-	const Block& frontLY	= getBlock(world,	{ start.x,				start.y,	start.z + 1.0f });
-	const Block& frontRY	= getBlock(world,	{ start.x + 1.0f,		start.y,	start.z + 1.0f });
-	const Block& backLY		= getBlock(world,	{ start.x,				start.y,	start.z });
-	const Block& backRY		= getBlock(world,	{ start.x + 1.0f,		start.y,	start.z });
+	const Block& frontLY	= getBlock(world,	{ start.x,				start.y - 1.0f,	start.z + 1.0f });
+	const Block& frontRY	= getBlock(world,	{ start.x + 1.0f,		start.y - 1.0f,	start.z + 1.0f });
+	const Block& backLY		= getBlock(world,	{ start.x,				start.y - 1.0f,	start.z });
+	const Block& backRY		= getBlock(world,	{ start.x + 1.0f,		start.y - 1.0f,	start.z });
+
+	glm::vec3 normals;
+	float t;
 
 	return 
-		frontLY.type == BlockType::AIR && frontRY.type == BlockType::AIR &&
-		backLY.type == BlockType::AIR && backRY.type == BlockType::AIR;
+		!sweptAABB(player, frontLY, normals, dt, t) && !sweptAABB(player, frontRY, normals, dt, t) &&
+		!sweptAABB(player, backLY, normals, dt, t)  && !sweptAABB(player, backRY, normals, dt, t);
 }

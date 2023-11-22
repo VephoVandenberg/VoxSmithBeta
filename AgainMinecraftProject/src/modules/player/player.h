@@ -14,6 +14,9 @@ namespace GameModule
 		uint32_t height;
 		float speed;
 
+		bool isJumping;
+		float jumpSpeed;
+
 		Engine::Camera camera;
 	};
 }
