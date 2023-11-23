@@ -35,10 +35,12 @@ constexpr size_t g_height = 720;
 constexpr size_t g_numberOfChunksX = 8;
 constexpr size_t g_numberOfChunksZ = 8;
 
+constexpr size_t g_jumpHeight = 3;
+
 constexpr float g_playerSpeed = 10.0f;
 constexpr float g_playerAcceleration = 30.0f;
 
-constexpr float g_gravity = 9.8f;
+constexpr float g_gravity = 1.1f;
 constexpr float g_jumpForce = 12.0f;
 
 constexpr glm::ivec3 g_chunkSize = { 16, 256, 16 };
@@ -272,7 +274,7 @@ void Application::onUpdate(float dt)
 	static bool move = false;
 	// Player handling
 	glm::vec3 v = glm::normalize(
-		glm::vec3(m_player.camera.front.x, m_player.camera.front.y, m_player.camera.front.z));
+		glm::vec3(m_player.camera.front.x, 0.0f, m_player.camera.front.z));
 	if (m_keyboard[GLFW_KEY_W])
 	{
 		m_player.velocity += v * 0.1f * dt;
@@ -298,35 +300,29 @@ void Application::onUpdate(float dt)
 	if (m_keyboard[GLFW_KEY_SPACE] && !m_player.isJumping)
 	{
 		m_player.isJumping = true;
-		m_player.jumpSpeed = 4.0f;
+		m_player.jumpSpeed = 2.0f;
+		m_player.heightJumped = 0.0f;
 	}
 
-	
 	glm::vec3 up = glm::vec3(0.0f, 0.1f, 0.0f);
 	glm::vec3 down = glm::vec3(0.0f, -0.1f, 0.0f);
-	if (m_player.jumpSpeed > 0.0f)
+	if (m_player.heightJumped < g_jumpHeight)
 	{
-		m_player.jumpSpeed += down.y * dt;
-		m_player.velocity += m_player.jumpSpeed * up * dt;
-		if (m_player.jumpSpeed <= 0.0f)
-		{
-			m_player.jumpSpeed = 0.0f;
-		}
+		m_player.heightJumped += up.y * m_player.jumpSpeed * dt;
+		m_player.velocity += up * m_player.jumpSpeed * dt;
+		m_player.jumpSpeed -= g_gravity * down.y  * dt * dt;
 	}
-
-	if (m_player.isJumping)
-	{
-		m_player.jumpSpeed += up.y * dt;
-		if (m_player.jumpSpeed > 1.0f)
-		{
-			m_player.isJumping = false;
-			m_player.jumpSpeed = 0.0f;
-		}
-	}
-		
+	
 	if (isPlayerFalling(m_world, m_player, dt))
 	{
-		m_player.velocity += down * dt;
+		m_player.velocity += down * g_gravity * dt;
+	}
+	//else
+	{
+		if (!m_keyboard[GLFW_KEY_SPACE])
+		{
+			m_player.isJumping = false;
+		}
 	}
 
 	checkPlayerCollision(m_world, m_player, dt);
