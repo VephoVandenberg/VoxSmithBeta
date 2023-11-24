@@ -1,9 +1,5 @@
-﻿  app.cpp
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(76,20): warning C4244: '=': conversion from 'float' to 'uint32_t', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(344,27): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(345,27): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(349,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(350,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(351,26): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(352,26): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
+﻿  world.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(359,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(360,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(361,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
   AgainMinecraftProject.vcxproj -> D:\Working\AgainMinecraftProject\x64\Debug\AgainMinecraftProject.exe

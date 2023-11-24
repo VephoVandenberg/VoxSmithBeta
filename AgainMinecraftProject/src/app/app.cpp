@@ -40,7 +40,7 @@ constexpr size_t g_jumpHeight = 3;
 constexpr float g_playerSpeed = 10.0f;
 constexpr float g_playerAcceleration = 30.0f;
 
-constexpr float g_gravity = 1.1f;
+constexpr float g_gravity = 0.9f;
 constexpr float g_jumpForce = 12.0f;
 
 constexpr glm::ivec3 g_chunkSize = { 16, 256, 16 };
@@ -263,8 +263,6 @@ void Application::onUpdate(float dt)
 	{
 		Renderer::loadRayData(ray);
 
-#ifdef ECS
-#endif
 		type = m_keyboard[GLFW_MOUSE_BUTTON_LEFT] ? RayType::REMOVE : RayType::PLACE;
 				
 		m_keyboardPressed[GLFW_MOUSE_BUTTON_RIGHT]	= true;
@@ -297,10 +295,11 @@ void Application::onUpdate(float dt)
 		m_player.velocity += right * 0.1f * dt;
 	}
 
+	// My shitty jumping
 	if (m_keyboard[GLFW_KEY_SPACE] && !m_player.isJumping)
 	{
 		m_player.isJumping = true;
-		m_player.jumpSpeed = 2.0f;
+		m_player.jumpAcceleration = 1.5f;
 		m_player.heightJumped = 0.0f;
 	}
 
@@ -308,18 +307,18 @@ void Application::onUpdate(float dt)
 	glm::vec3 down = glm::vec3(0.0f, -0.1f, 0.0f);
 	if (m_player.heightJumped < g_jumpHeight)
 	{
-		m_player.heightJumped += up.y * m_player.jumpSpeed * dt;
-		m_player.velocity += up * m_player.jumpSpeed * dt;
-		m_player.jumpSpeed -= g_gravity * down.y  * dt * dt;
+		m_player.heightJumped += up.y * m_player.jumpAcceleration * dt;
+		m_player.velocity += up * m_player.jumpAcceleration * dt;
+		m_player.jumpAcceleration -= g_gravity * down.y * dt;
 	}
 	
 	if (isPlayerFalling(m_world, m_player, dt))
 	{
 		m_player.velocity += down * g_gravity * dt;
 	}
-	//else
+	else
 	{
-		if (!m_keyboard[GLFW_KEY_SPACE])
+		if (!m_keyboard[GLFW_KEY_SPACE] && m_player.isJumping)
 		{
 			m_player.isJumping = false;
 		}
@@ -333,7 +332,7 @@ void Application::onUpdate(float dt)
 	m_player.velocity *= 0.95f;
 	
 	updateCameraView(m_player.camera);
-	processRay(m_world, ray, m_shaders[s_outlineShader], type);
+	processRay(m_world, m_player, ray, m_shaders[s_outlineShader], type);
 }
 
 void Application::handleCamera(const double xPos, const double yPos)

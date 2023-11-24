@@ -7,7 +7,7 @@
 using namespace Engine;
 
 constexpr float g_cameraSpeed = 0.0125f;
-constexpr float g_rayMagnitude = 4.0f;
+constexpr float g_rayMagnitude = 6.0f;
 
 static bool g_firstMouseMove = true;
 
@@ -25,17 +25,6 @@ void Engine::updateCameraRotation(GLFWwindow* window, const double xPos, const d
 
 }
 
-/*
-glm::mat4 Engine::getCameraView()
-{
-	//return g_camera->view;
-}
-
-glm::vec3 Engine::getCameraPos()
-{
-	//return g_camera->pos;
-}
-*/
 Ray Engine::castRay(const Camera& camera)
 {
 	glm::vec3 start = camera.pos;

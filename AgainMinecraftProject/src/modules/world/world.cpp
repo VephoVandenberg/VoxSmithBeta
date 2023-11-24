@@ -61,7 +61,15 @@ glm::ivec3 getChunkPos(const glm::vec3 pos)
 	};
 }
 
-void GameModule::processRay(World& world, Engine::Ray& ray, Engine::Shader& shader, RayType type)
+bool collAABB(const Player& player, const Block& block)
+{
+	bool collX = player.pos.x + player.size.x > block.pos.x && block.pos.x + 1 > player.pos.x;
+	bool collZ = player.pos.z + player.size.z > block.pos.z && block.pos.z + 1 > player.pos.z;
+	bool collY = player.pos.y + player.size.y > block.pos.y && block.pos.y + 1 > player.pos.y;
+	return collX && collY && collZ;
+}
+
+void GameModule::processRay(World& world, const Player& player, Engine::Ray& ray, Engine::Shader& shader, RayType type)
 {
 	bool		hit				= false;
 	float		dl				= 0.1f;
@@ -91,29 +99,19 @@ void GameModule::processRay(World& world, Engine::Ray& ray, Engine::Shader& shad
 			if (type == RayType::PLACE)
 			{
 				currPos -= dl * dir;
+				currChunkPos = getChunkPos(currPos);
 				iPos = static_cast<glm::ivec3>(currPos) - currChunkPos;
+				id = g_chunkSize.x * (g_chunkSize.x * iPos.y + iPos.z) + iPos.x;
+				if (collAABB(player, world.chunks[currChunkPos].blocks[id]))
+				{
+					break;
+				}
 			}
 
 			traceRay(world, currPos, shader, type);
 			hit = true;
 			break;
 		}
-	}
-
-	if (world.chunks.find(currChunkPos) != world.chunks.end())
-	{
-		if ((type == RayType::PLACE) && !hit)
-		{
-			uint32_t id = g_chunkSize.x * (iPos.y * g_chunkSize.z + iPos.z) + iPos.x;
-			world.chunks[currChunkPos].blocks[id].type = BlockType::DIRT;
-			traceRay(world, currPos, shader, type);
-		}
-	}
-
-	if (type == RayType::IDLE)
-	{
-		glm::vec3 pos = static_cast<glm::ivec3>(currPos);
-		Engine::setUniform3f(shader, "u_position", pos);
 	}
 }
 
@@ -173,6 +171,7 @@ void GameModule::traceRay(World& world, glm::vec3 rayPosFrac, Engine::Shader& sh
 	else if (type == RayType::PLACE)
 	{
 		auto& block = world.chunks[getChunkPos(currBlock)].blocks[iCurr];
+
 		block.type = BlockType::DIRT;
 		setType(block);
 
@@ -199,19 +198,6 @@ void GameModule::traceRay(World& world, glm::vec3 rayPosFrac, Engine::Shader& sh
 		glm::vec3 pos = static_cast<glm::ivec3>(rayPosFrac);
 		Engine::setUniform3f(shader, "u_position", pos);
 	}
-}
-
-bool collAABB(const Player& player, const Block& block)
-{
-	if (block.type == BlockType::AIR)
-	{
-		return false;
-	}
-
-	bool collX = player.pos.x + player.size.x > block.pos.x && block.pos.x + 1 > player.pos.x;
-	bool collZ = player.pos.z + player.size.y > block.pos.z && block.pos.z + 1 > player.pos.z;
-	bool collY = player.pos.y + player.size.z > block.pos.y && block.pos.y + 1 > player.pos.y;
-	return collX && collY && collZ;
 }
 
 uint32_t getId(World& world, const glm::ivec3 pos)

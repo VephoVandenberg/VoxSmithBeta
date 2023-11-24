@@ -15,7 +15,8 @@ namespace GameModule
 		float speed;
 
 		bool isJumping;
-		float jumpSpeed;
+		float jumpAcceleration;
+		float fallAcceleration;
 		float heightJumped;
 
 		Engine::Camera camera;

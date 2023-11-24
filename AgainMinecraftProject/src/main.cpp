@@ -2,6 +2,7 @@
 
 /** TO DO LIST
 * Agenda
+* - We probably shouldn't place block in the mid air, and shouldn't be placed where the player is
 * Later
 * - Perlin noise we should find out how 3d noise work
 * - More blocks
@@ -9,8 +10,7 @@
 * - Investigate math behind coordinate systems and matrices
 * - Water Walta
 * Works for now but might be improved
-* - We probably shouldn't place block in the mid air, and shouldn't be placed where the player is
-* - We need to improve jumping because it works like shit, but I don't care for now at least
+* - We have some working jumping, but it's still shit
 */
 
 int main(int argc, char **argv)
