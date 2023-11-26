@@ -2,10 +2,14 @@
 
 /** TO DO LIST
 * Agenda
-* - We probably shouldn't place block in the mid air, and shouldn't be placed where the player is
+* - Get comfortable with noise algorithms
 * Later
 * - Perlin noise we should find out how 3d noise work
 * - More blocks
+* - Infinite terrain babe
+* - Serialisation
+* - Octrees
+* - Greedy Meshing
 * - SkyBox
 * - Investigate math behind coordinate systems and matrices
 * - Water Walta
