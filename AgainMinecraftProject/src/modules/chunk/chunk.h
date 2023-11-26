@@ -42,6 +42,8 @@ namespace GameModule
 	void	setType(Block& block);
 	void	setBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type);
 	void	removeBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type);
+	void	updateFace(Engine::Renderer::Vertex* vertices, const Block& block, uint32_t texID);
+
 
 	void	drawChunk(const Chunk& chunk);
 }

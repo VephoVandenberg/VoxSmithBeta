@@ -316,8 +316,8 @@ Chunk GameModule::generateChunk(const glm::ivec3 pos)
 		{
 			int octaves = 5;
 			float persistance = 0.5f;
-			float frequency = 0.01f;
-			float amplitude = 1.5f;
+			float frequency = 0.001f;
+			float amplitude = 1.0f;
 			float y = 0.0f;
 			float maxValue = 0.0f;  // Used for normalizing result to 0.0 - 1.0
 			for (int i = 0; i < octaves; i++)
@@ -367,7 +367,7 @@ Chunk GameModule::generateChunk(const glm::ivec3 pos)
 	return chunk;
 }
 
-void updateFace(Vertex* vertices, const Block& block, uint32_t texID)
+void GameModule::updateFace(Vertex* vertices, const Block& block, uint32_t texID)
 {
 	for (uint32_t iVertex = 0; iVertex < g_vertexPerFace; iVertex++)
 	{

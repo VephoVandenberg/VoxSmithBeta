@@ -1,38 +1,9 @@
-﻿  window.cpp
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\window\window.cpp(19,78): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\window\window.cpp(28,32): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-  main.cpp
-  chunk.cpp
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(333,28): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
-          with
-          [
-              _Ty=int32_t
-          ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(375,29): warning C4244: '=': conversion from 'uint32_t' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(417,17): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
-          with
-          [
-              T=float
-          ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(418,19): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
-          with
-          [
-              T=float
-          ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(419,19): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
-          with
-          [
-              T=float
-          ]
-  world.cpp
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(359,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(360,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(361,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-  Generating Code...
-  LINK : D:\Working\AgainMinecraftProject\x64\Debug\AgainMinecraftProject.exe not found or not built by the last incremental link; performing full link
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+﻿  app.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(76,20): warning C4244: '=': conversion from 'float' to 'uint32_t', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(343,27): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(344,27): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(348,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(349,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(350,26): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(351,26): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
   AgainMinecraftProject.vcxproj -> D:\Working\AgainMinecraftProject\x64\Debug\AgainMinecraftProject.exe

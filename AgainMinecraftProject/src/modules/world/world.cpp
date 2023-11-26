@@ -19,6 +19,8 @@ constexpr glm::ivec3 g_chunkSize = { 16, 256, 16 };
 constexpr int32_t g_chunksX = 8;
 constexpr int32_t g_chunksZ = 8;
 
+constexpr size_t g_nBlocks = g_chunkSize.x * g_chunkSize.y * g_chunkSize.z;
+
 void GameModule::initWorld(World& world)
 {
 	world.minBorder = glm::ivec3(0);
@@ -28,14 +30,105 @@ void GameModule::initWorld(World& world)
 	{
 		for (int32_t x = 0; x < g_chunksX; x++)
 		{
-			glm::ivec3 chunkPos = { x * g_chunkSize.x, 0, z * g_chunkSize.z};
+			glm::ivec3 chunkPos = { x * g_chunkSize.x, 0, z * g_chunkSize.z };
 			world.chunks[chunkPos] = generateChunk(chunkPos);
-			initMeshData(world.chunks[chunkPos]);
+		}
+	}
+
+
+	for (int32_t z = 0; z < g_chunksZ; z++)
+	{
+		for (int32_t x = 0; x < g_chunksX; x++)
+		{
+			glm::ivec3 chunkPos = { x * g_chunkSize.x, 0, z * g_chunkSize.z };
+			initChunkFaces(world, world.chunks[chunkPos]);
 			generateMesh(world.chunks[chunkPos]);
 			loadChunkMesh(world.chunks[chunkPos]);
 			world.chunks[chunkPos].updated = true;
 		}
 	}
+
+}
+
+glm::ivec3 getChunkPos(const glm::vec3 pos)
+{
+	return {
+		static_cast<int32_t>(pos.x) / g_chunkSize.x * g_chunkSize.x,
+		static_cast<int32_t>(pos.y) / g_chunkSize.y * g_chunkSize.y,
+		static_cast<int32_t>(pos.z) / g_chunkSize.z * g_chunkSize.z
+	};
+}
+
+uint32_t getId(World& world, const glm::ivec3 pos)
+{
+	glm::ivec3 iPos = pos - getChunkPos(pos);
+
+	return g_chunkSize.x * (g_chunkSize.z * iPos.y + iPos.z) + iPos.x;
+}
+
+Block& getBlock(World& world, const glm::vec3 pos)
+{
+	glm::ivec3 p = static_cast<glm::ivec3>(pos);
+
+	return world.chunks[getChunkPos(pos)].blocks[getId(world, pos)];
+}
+
+void setFace(World& world, glm::vec3 pos, Face::FaceType type)
+{
+	auto& chunk = world.chunks[getChunkPos(pos)];
+	setBlockFace(chunk, getId(world, pos), type);
+}
+
+bool isBlockTrans(World& world, const glm::vec3 pos)
+{
+	if (world.chunks.find(getChunkPos(pos)) == world.chunks.end())
+	{
+		return false;
+	}
+
+	return getBlock(world, pos).type == BlockType::AIR;
+}
+
+bool isBlockSolid(World& world, const glm::vec3 pos)
+{
+	if (world.chunks.find(getChunkPos(pos)) == world.chunks.end())
+	{
+		return false;
+	}
+
+	return getBlock(world, pos).type != BlockType::AIR;
+}
+
+void GameModule::initChunkFaces(World& world, Chunk& chunk)
+{
+	if (chunk.faces.empty())
+	{
+		chunk.faces.reserve(g_nBlocks * g_vertexPerFace);
+	}
+
+	for (uint32_t iBlock = 0; iBlock < g_nBlocks; iBlock++)
+	{
+		glm::vec3 pos = chunk.blocks[iBlock].pos;
+
+		glm::vec3 top = { pos.x, pos.y + 1, pos.z };
+		glm::vec3 front = { pos.x, pos.y, pos.z + 1 };
+		glm::vec3 right = { pos.x + 1, pos.y, pos.z };
+
+		if (chunk.blocks[iBlock].type == BlockType::AIR)
+		{
+			if (isBlockSolid(world, top)) { setFace(world, top, Face::FaceType::BOTTOM); }
+			if (isBlockSolid(world, front)) { setFace(world, front, Face::FaceType::BACK); }
+			if (isBlockSolid(world, right)) { setFace(world, right, Face::FaceType::LEFT); }
+		}
+		else
+		{
+			if (isBlockTrans(world, top)) { setFace(world, pos, Face::FaceType::TOP); }
+			if (isBlockTrans(world, front)) { setFace(world, pos, Face::FaceType::FRONT); }
+			if (isBlockTrans(world, right)) { setFace(world, pos, Face::FaceType::RIGHT); }
+		}
+	}
+	chunk.mesh.capacity = g_nBlocks * 36 * sizeof(Engine::Renderer::Vertex);
+	chunk.mesh.vertices.reserve(g_nBlocks * 36);
 }
 
 void GameModule::drawWorld(World& world)
@@ -52,15 +145,6 @@ void GameModule::drawWorld(World& world)
 	}
 }
 
-glm::ivec3 getChunkPos(const glm::vec3 pos) 
-{
-	return {
-		static_cast<int32_t>(pos.x) / g_chunkSize.x * g_chunkSize.x,
-		0,
-		static_cast<int32_t>(pos.z) / g_chunkSize.z * g_chunkSize.z
-	};
-}
-
 bool collAABB(const Player& player, const Block& block)
 {
 	bool collX = player.pos.x + player.size.x > block.pos.x && block.pos.x + 1 > player.pos.x;
@@ -71,15 +155,15 @@ bool collAABB(const Player& player, const Block& block)
 
 void GameModule::processRay(World& world, const Player& player, Engine::Ray& ray, Engine::Shader& shader, RayType type)
 {
-	bool		hit				= false;
-	float		dl				= 0.1f;
-	float		length			= glm::length(ray.end - ray.start);
-	
-	glm::vec3	dir				= glm::normalize(ray.end - ray.start);
-	glm::vec3	currPos			= {};
-	
-	glm::ivec3	iPos			= glm::ivec3(0);
-	glm::ivec3	currChunkPos	= {};
+	bool		hit = false;
+	float		dl = 0.1f;
+	float		length = glm::length(ray.end - ray.start);
+
+	glm::vec3	dir = glm::normalize(ray.end - ray.start);
+	glm::vec3	currPos = {};
+
+	glm::ivec3	iPos = glm::ivec3(0);
+	glm::ivec3	currChunkPos = {};
 
 	for (float mag = 0.0f; mag < length; mag += dl)
 	{
@@ -91,7 +175,7 @@ void GameModule::processRay(World& world, const Player& player, Engine::Ray& ray
 			continue;
 		}
 
-		iPos		= static_cast<glm::ivec3>(currPos) - currChunkPos;
+		iPos = static_cast<glm::ivec3>(currPos) - currChunkPos;
 		uint32_t id = g_chunkSize.x * (g_chunkSize.x * iPos.y + iPos.z) + iPos.x;
 
 		if (world.chunks[currChunkPos].blocks[id].type != BlockType::AIR)
@@ -117,34 +201,34 @@ void GameModule::processRay(World& world, const Player& player, Engine::Ray& ray
 
 void GameModule::traceRay(World& world, glm::vec3 rayPosFrac, Engine::Shader& shader, GameModule::RayType type)
 {
-	glm::ivec3 currBlock	= static_cast<glm::ivec3>(rayPosFrac);
+	glm::ivec3 currBlock = static_cast<glm::ivec3>(rayPosFrac);
 
-	glm::ivec3 rightBlock	= { currBlock.x + 1,	currBlock.y,		currBlock.z };
-	glm::ivec3 leftBlock	= { currBlock.x - 1,	currBlock.y,		currBlock.z };
-	glm::ivec3 frontBlock	= { currBlock.x,		currBlock.y,		currBlock.z + 1 };
-	glm::ivec3 backBlock	= { currBlock.x,		currBlock.y,		currBlock.z - 1 };
+	glm::ivec3 rightBlock = { currBlock.x + 1,	currBlock.y,		currBlock.z };
+	glm::ivec3 leftBlock = { currBlock.x - 1,	currBlock.y,		currBlock.z };
+	glm::ivec3 frontBlock = { currBlock.x,		currBlock.y,		currBlock.z + 1 };
+	glm::ivec3 backBlock = { currBlock.x,		currBlock.y,		currBlock.z - 1 };
 
-	glm::ivec3 iPosCurr		= currBlock		- getChunkPos(currBlock);
-	glm::ivec3 iPosRight	= rightBlock	- getChunkPos(rightBlock);
-	glm::ivec3 iPosLeft		= leftBlock		- getChunkPos(leftBlock);
-	glm::ivec3 iPosFront	= frontBlock	- getChunkPos(frontBlock);
-	glm::ivec3 iPosBack		= backBlock		- getChunkPos(backBlock);
+	glm::ivec3 iPosCurr = currBlock - getChunkPos(currBlock);
+	glm::ivec3 iPosRight = rightBlock - getChunkPos(rightBlock);
+	glm::ivec3 iPosLeft = leftBlock - getChunkPos(leftBlock);
+	glm::ivec3 iPosFront = frontBlock - getChunkPos(frontBlock);
+	glm::ivec3 iPosBack = backBlock - getChunkPos(backBlock);
 
-	uint32_t iCurr			= g_chunkSize.x * (g_chunkSize.z * iPosCurr.y		+ iPosCurr.z) + iPosCurr.x;
-	uint32_t iTop			= g_chunkSize.x * (g_chunkSize.z * (iPosCurr.y + 1) + iPosCurr.z) + iPosCurr.x;
-	uint32_t iBottom		= g_chunkSize.x * (g_chunkSize.z * (iPosCurr.y - 1) + iPosCurr.z) + iPosCurr.x;
+	uint32_t iCurr = g_chunkSize.x * (g_chunkSize.z * iPosCurr.y + iPosCurr.z) + iPosCurr.x;
+	uint32_t iTop = g_chunkSize.x * (g_chunkSize.z * (iPosCurr.y + 1) + iPosCurr.z) + iPosCurr.x;
+	uint32_t iBottom = g_chunkSize.x * (g_chunkSize.z * (iPosCurr.y - 1) + iPosCurr.z) + iPosCurr.x;
 
-	uint32_t iRight			= g_chunkSize.x * (g_chunkSize.z * iPosRight.y	+ iPosRight.z)	+ iPosRight.x;
-	uint32_t iLeft			= g_chunkSize.x * (g_chunkSize.z * iPosLeft.y	+ iPosLeft.z)	+ iPosLeft.x;
-	uint32_t iFront			= g_chunkSize.x * (g_chunkSize.z * iPosFront.y	+ iPosFront.z)	+ iPosFront.x;
-	uint32_t iBack			= g_chunkSize.x * (g_chunkSize.z * iPosBack.y	+ iPosBack.z)	+ iPosBack.x;
+	uint32_t iRight = g_chunkSize.x * (g_chunkSize.z * iPosRight.y + iPosRight.z) + iPosRight.x;
+	uint32_t iLeft = g_chunkSize.x * (g_chunkSize.z * iPosLeft.y + iPosLeft.z) + iPosLeft.x;
+	uint32_t iFront = g_chunkSize.x * (g_chunkSize.z * iPosFront.y + iPosFront.z) + iPosFront.x;
+	uint32_t iBack = g_chunkSize.x * (g_chunkSize.z * iPosBack.y + iPosBack.z) + iPosBack.x;
 
-	bool rightSolid			= world.chunks[getChunkPos(rightBlock)].blocks[iRight].type	!= BlockType::AIR;
-	bool leftSolid			= world.chunks[getChunkPos(leftBlock)].blocks[iLeft].type	!= BlockType::AIR;
-	bool topSolid			= world.chunks[getChunkPos(currBlock)].blocks[iTop].type	!= BlockType::AIR;
-	bool bottomSolid		= world.chunks[getChunkPos(currBlock)].blocks[iBottom].type != BlockType::AIR;
-	bool frontSolid			= world.chunks[getChunkPos(frontBlock)].blocks[iFront].type != BlockType::AIR;
-	bool backSolid			= world.chunks[getChunkPos(backBlock)].blocks[iBack].type	!= BlockType::AIR;
+	bool rightSolid = world.chunks[getChunkPos(rightBlock)].blocks[iRight].type != BlockType::AIR;
+	bool leftSolid = world.chunks[getChunkPos(leftBlock)].blocks[iLeft].type != BlockType::AIR;
+	bool topSolid = world.chunks[getChunkPos(currBlock)].blocks[iTop].type != BlockType::AIR;
+	bool bottomSolid = world.chunks[getChunkPos(currBlock)].blocks[iBottom].type != BlockType::AIR;
+	bool frontSolid = world.chunks[getChunkPos(frontBlock)].blocks[iFront].type != BlockType::AIR;
+	bool backSolid = world.chunks[getChunkPos(backBlock)].blocks[iBack].type != BlockType::AIR;
 
 	if (type == RayType::REMOVE)
 	{
@@ -158,15 +242,15 @@ void GameModule::traceRay(World& world, glm::vec3 rayPosFrac, Engine::Shader& sh
 					return face.blockID == iCurr;
 				}),
 			curr.faces.end()
-		);
+					);
 		curr.updated = false;
 
-		if (rightSolid)		{ setBlockFace(world.chunks[getChunkPos(rightBlock)],	iRight,		Face::FaceType::LEFT); }
-		if (leftSolid)		{ setBlockFace(world.chunks[getChunkPos(leftBlock)],	iLeft,		Face::FaceType::RIGHT); }
-		if (topSolid)		{ setBlockFace(world.chunks[getChunkPos(currBlock)],	iTop,		Face::FaceType::BOTTOM); }
-		if (bottomSolid)	{ setBlockFace(world.chunks[getChunkPos(currBlock)],	iBottom,	Face::FaceType::TOP); }
-		if (frontSolid)		{ setBlockFace(world.chunks[getChunkPos(frontBlock)],	iFront,		Face::FaceType::BACK); }
-		if (backSolid)		{ setBlockFace(world.chunks[getChunkPos(backBlock)],	iBack,		Face::FaceType::FRONT); }
+		if (rightSolid) { setBlockFace(world.chunks[getChunkPos(rightBlock)], iRight, Face::FaceType::LEFT); }
+		if (leftSolid) { setBlockFace(world.chunks[getChunkPos(leftBlock)], iLeft, Face::FaceType::RIGHT); }
+		if (topSolid) { setBlockFace(world.chunks[getChunkPos(currBlock)], iTop, Face::FaceType::BOTTOM); }
+		if (bottomSolid) { setBlockFace(world.chunks[getChunkPos(currBlock)], iBottom, Face::FaceType::TOP); }
+		if (frontSolid) { setBlockFace(world.chunks[getChunkPos(frontBlock)], iFront, Face::FaceType::BACK); }
+		if (backSolid) { setBlockFace(world.chunks[getChunkPos(backBlock)], iBack, Face::FaceType::FRONT); }
 	}
 	else if (type == RayType::PLACE)
 	{
@@ -200,25 +284,11 @@ void GameModule::traceRay(World& world, glm::vec3 rayPosFrac, Engine::Shader& sh
 	}
 }
 
-uint32_t getId(World& world, const glm::ivec3 pos)
-{
-	glm::ivec3 iPos = pos - getChunkPos(pos);
-
-	return g_chunkSize.x * (g_chunkSize.z * iPos.y + iPos.z) + iPos.x;
-}
-
-Block& getBlock(World& world, const glm::vec3 pos)
-{
-	glm::ivec3 p = static_cast<glm::ivec3>(pos);
-
-	return world.chunks[getChunkPos(pos)].blocks[getId(world, p)];
-}
-
 bool sweptAABB(const Player& player, const Block& block, glm::vec3& normals, float dt, float& hitTime)
 {
 	float dxEntry, dzEntry, dyEntry;
 	float dxExit, dzExit, dyExit;
-	
+
 	glm::vec3 vel = glm::normalize(player.velocity) * dt;
 
 	if (player.velocity.x > 0.0f)
@@ -290,10 +360,10 @@ bool sweptAABB(const Player& player, const Block& block, glm::vec3& normals, flo
 		tyExit = dyExit / vel.y;
 	}
 
-	hitTime			= std::max(std::max(txEntry, tzEntry), tyEntry);
-	float exitTime	= std::min(std::min(txExit, tzExit), tyExit);
+	hitTime = std::max(std::max(txEntry, tzEntry), tyEntry);
+	float exitTime = std::min(std::min(txExit, tzExit), tyExit);
 
-	if (block.type == BlockType::AIR || 
+	if (block.type == BlockType::AIR ||
 		hitTime > exitTime ||
 		(txEntry < 0.0f && tzEntry < 0.0f && tyEntry < 0.0f)
 		|| txEntry > 1.0f || tzEntry > 1.0f || tyEntry > 1.0f)
@@ -301,7 +371,7 @@ bool sweptAABB(const Player& player, const Block& block, glm::vec3& normals, flo
 		return false;
 	}
 
- 	if (txEntry > tyEntry)
+	if (txEntry > tyEntry)
 	{
 		if (txEntry > tzEntry)
 		{
@@ -311,7 +381,7 @@ bool sweptAABB(const Player& player, const Block& block, glm::vec3& normals, flo
 			}
 			else
 			{
- 				normals = { -1, 0, 0 };
+				normals = { -1, 0, 0 };
 			}
 		}
 		else
@@ -352,9 +422,9 @@ bool sweptAABB(const Player& player, const Block& block, glm::vec3& normals, flo
 		}
 	}
 	return true;
-} 
+}
 
-void GameModule::checkPlayerCollision(World& world, Player& player, float dt) 
+void GameModule::checkPlayerCollision(World& world, Player& player, float dt)
 {
 	float x = player.velocity.x > 0.0f ? 1 : -1;
 	float z = player.velocity.z > 0.0f ? 1 : -1;
@@ -362,49 +432,49 @@ void GameModule::checkPlayerCollision(World& world, Player& player, float dt)
 
 	const glm::vec3 start = { player.pos.x, player.pos.y, player.pos.z };
 
-	const Block& leftZ		= getBlock(world, { start.x,			start.y,		start.z + z });
-	const Block& rightZ		= getBlock(world, { start.x + 1.0f,		start.y,		start.z + z });
-	const Block& backX		= getBlock(world, { start.x + x,		start.y,		start.z });
-	const Block& frontX		= getBlock(world, { start.x + x,		start.y,		start.z + 1.0f });
-	const Block& leftFZ		= getBlock(world, { start.x,			start.y + 1.0f,	start.z + z });
-	const Block& rightFZ	= getBlock(world, { start.x + 1.0f,		start.y + 1.0f,	start.z + z });
-	const Block& backFX		= getBlock(world, { start.x + x,		start.y + 1.0f,	start.z });
-	const Block& frontFX	= getBlock(world, { start.x + x,		start.y + 1.0f,	start.z + 1.0f });
-	const Block& frontLY	= getBlock(world, { start.x,			start.y + y,	start.z + 1.0f });
-	const Block& frontRY	= getBlock(world, { start.x + 1.0f,		start.y + y,	start.z + 1.0f });
-	const Block& backLY		= getBlock(world, { start.x,			start.y + y,	start.z });
-	const Block& backRY		= getBlock(world, { start.x + 1.0f,		start.y + y,	start.z });
+	const Block& leftZ = getBlock(world, { start.x,			start.y,		start.z + z });
+	const Block& rightZ = getBlock(world, { start.x + 1.0f,		start.y,		start.z + z });
+	const Block& backX = getBlock(world, { start.x + x,		start.y,		start.z });
+	const Block& frontX = getBlock(world, { start.x + x,		start.y,		start.z + 1.0f });
+	const Block& leftFZ = getBlock(world, { start.x,			start.y + 1.0f,	start.z + z });
+	const Block& rightFZ = getBlock(world, { start.x + 1.0f,		start.y + 1.0f,	start.z + z });
+	const Block& backFX = getBlock(world, { start.x + x,		start.y + 1.0f,	start.z });
+	const Block& frontFX = getBlock(world, { start.x + x,		start.y + 1.0f,	start.z + 1.0f });
+	const Block& frontLY = getBlock(world, { start.x,			start.y + y,	start.z + 1.0f });
+	const Block& frontRY = getBlock(world, { start.x + 1.0f,		start.y + y,	start.z + 1.0f });
+	const Block& backLY = getBlock(world, { start.x,			start.y + y,	start.z });
+	const Block& backRY = getBlock(world, { start.x + 1.0f,		start.y + y,	start.z });
 
 	glm::vec3 normals = glm::vec3(0);
 
 	float t;
 
 	std::vector<std::pair<float, const Block*>> distances;
-	if (sweptAABB(player, leftZ,	normals, dt, t))	{ distances.push_back({ t, &leftZ });}
-	if (sweptAABB(player, rightZ,	normals, dt, t))	{ distances.push_back({ t, &rightZ }); }
-	if (sweptAABB(player, backX,	normals, dt, t))	{ distances.push_back({ t, &backX }); }
-	if (sweptAABB(player, frontX,	normals, dt, t))	{ distances.push_back({ t, &frontX }); }
-	if (sweptAABB(player, leftFZ,	normals, dt, t))	{ distances.push_back({ t, &leftFZ }); }
-	if (sweptAABB(player, rightFZ,	normals, dt, t))	{ distances.push_back({ t, &rightFZ }); }
-	if (sweptAABB(player, backFX,	normals, dt, t))	{ distances.push_back({ t, &backFX }); }
-	if (sweptAABB(player, frontFX,	normals, dt, t))	{ distances.push_back({ t, &frontFX }); }
-	if (sweptAABB(player, frontLY,	normals, dt, t))	{ distances.push_back({ t, &frontLY }); }
-	if (sweptAABB(player, frontRY,	normals, dt, t))	{ distances.push_back({ t, &frontRY }); }
-	if (sweptAABB(player, backLY,	normals, dt, t))	{ distances.push_back({ t, &backLY }); }
-	if (sweptAABB(player, backRY,	normals, dt, t))	{ distances.push_back({ t, &backRY }); }
+	if (sweptAABB(player, leftZ, normals, dt, t)) { distances.push_back({ t, &leftZ }); }
+	if (sweptAABB(player, rightZ, normals, dt, t)) { distances.push_back({ t, &rightZ }); }
+	if (sweptAABB(player, backX, normals, dt, t)) { distances.push_back({ t, &backX }); }
+	if (sweptAABB(player, frontX, normals, dt, t)) { distances.push_back({ t, &frontX }); }
+	if (sweptAABB(player, leftFZ, normals, dt, t)) { distances.push_back({ t, &leftFZ }); }
+	if (sweptAABB(player, rightFZ, normals, dt, t)) { distances.push_back({ t, &rightFZ }); }
+	if (sweptAABB(player, backFX, normals, dt, t)) { distances.push_back({ t, &backFX }); }
+	if (sweptAABB(player, frontFX, normals, dt, t)) { distances.push_back({ t, &frontFX }); }
+	if (sweptAABB(player, frontLY, normals, dt, t)) { distances.push_back({ t, &frontLY }); }
+	if (sweptAABB(player, frontRY, normals, dt, t)) { distances.push_back({ t, &frontRY }); }
+	if (sweptAABB(player, backLY, normals, dt, t)) { distances.push_back({ t, &backLY }); }
+	if (sweptAABB(player, backRY, normals, dt, t)) { distances.push_back({ t, &backRY }); }
 
-	std::sort( distances.begin(), distances.end(),
+	std::sort(distances.begin(), distances.end(),
 		[](const std::pair<float, const Block*>& a, const std::pair<float, const Block*>& b) {
 			return a.first < b.first;
 		});
 
-	for (auto& pair : distances) 
+	for (auto& pair : distances)
 	{
-		glm::vec3 absoluteVelocity = { std::abs(player.velocity.x), std::abs(player.velocity.y), std::abs(player.velocity.z)};
+		glm::vec3 absoluteVelocity = { std::abs(player.velocity.x), std::abs(player.velocity.y), std::abs(player.velocity.z) };
 		glm::vec3 normals = glm::vec3(0);
 		float t;
-		if (sweptAABB(player, *pair.second, normals, dt, t)) 
-		{ 
+		if (sweptAABB(player, *pair.second, normals, dt, t))
+		{
 			player.velocity += normals * absoluteVelocity * (1 - t);
 		}
 	}
@@ -414,15 +484,15 @@ bool GameModule::isPlayerFalling(World& world, const Player& player, float dt)
 {
 	const glm::vec3 start = { player.pos.x, player.pos.y, player.pos.z };
 
-	const Block& frontLY	= getBlock(world,	{ start.x,				start.y - 1.0f,	start.z + 1.0f });
-	const Block& frontRY	= getBlock(world,	{ start.x + 1.0f,		start.y - 1.0f,	start.z + 1.0f });
-	const Block& backLY		= getBlock(world,	{ start.x,				start.y - 1.0f,	start.z });
-	const Block& backRY		= getBlock(world,	{ start.x + 1.0f,		start.y - 1.0f,	start.z });
+	const Block& frontLY = getBlock(world, { start.x,				start.y - 1.0f,	start.z + 1.0f });
+	const Block& frontRY = getBlock(world, { start.x + 1.0f,		start.y - 1.0f,	start.z + 1.0f });
+	const Block& backLY = getBlock(world, { start.x,				start.y - 1.0f,	start.z });
+	const Block& backRY = getBlock(world, { start.x + 1.0f,		start.y - 1.0f,	start.z });
 
 	glm::vec3 normals;
 	float t;
 
-	return 
+	return
 		!sweptAABB(player, frontLY, normals, dt, t) && !sweptAABB(player, frontRY, normals, dt, t) &&
-		!sweptAABB(player, backLY, normals, dt, t)  && !sweptAABB(player, backRY, normals, dt, t);
+		!sweptAABB(player, backLY, normals, dt, t) && !sweptAABB(player, backRY, normals, dt, t);
 }
