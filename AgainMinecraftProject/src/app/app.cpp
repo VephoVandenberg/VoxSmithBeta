@@ -114,7 +114,7 @@ void Application::initShaders()
 
 	glm::mat4 projection =
 		glm::perspective(
-			glm::radians(45.0f), static_cast<float>(g_width) / static_cast<float>(g_height), 0.1f, 100.0f);
+			glm::radians(45.0f), static_cast<float>(g_width) / static_cast<float>(g_height), 0.1f, 300.0f);
 
 	useShader(m_shaders[s_cubeShader]);
 	setUniform4m(m_shaders[s_cubeShader],		"u_projection",		projection);
@@ -312,11 +312,11 @@ void Application::onUpdate(float dt)
 		m_player.jumpAcceleration -= g_gravity * down.y * dt;
 	}
 	
-	if (isPlayerFalling(m_world, m_player, dt))
+	//if (isPlayerFalling(m_world, m_player, dt))
 	{
 	//	m_player.velocity += down * g_gravity * dt;
 	}
-	else
+	//else
 	{
 		if (!m_keyboard[GLFW_KEY_SPACE] && m_player.isJumping)
 		{
@@ -332,7 +332,7 @@ void Application::onUpdate(float dt)
 	m_player.velocity *= 0.95f;
 	
 	updateCameraView(m_player.camera);
-	processRay(m_world, m_player, ray, m_shaders[s_outlineShader], type);
+	//processRay(m_world, m_player, ray, m_shaders[s_outlineShader], type);
 }
 
 void Application::handleCamera(const double xPos, const double yPos)

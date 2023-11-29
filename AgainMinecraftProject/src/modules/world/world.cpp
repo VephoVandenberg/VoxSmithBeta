@@ -153,6 +153,11 @@ bool collAABB(const Player& player, const Block& block)
 	return collX && collY && collZ;
 }
 
+void GameModule::updateWorld(World& world, Player& player)
+{
+
+}
+
 void GameModule::processRay(World& world, const Player& player, Engine::Ray& ray, Engine::Shader& shader, RayType type)
 {
 	bool		hit = false;

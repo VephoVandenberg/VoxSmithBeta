@@ -42,6 +42,7 @@ namespace GameModule
 
 	void initWorld(World& world);
 	void initChunkFaces(World& world, Chunk& chunk);
+	void updateWorld(World& world, Player& player);
 	void drawWorld(World& world);
 
 	void processRay(World& world, const Player& player, Engine::Ray& ray, Engine::Shader& shader, RayType type);

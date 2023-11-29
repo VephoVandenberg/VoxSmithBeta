@@ -35,7 +35,6 @@ namespace GameModule
 	};
 
 	Chunk	generateChunk(const glm::ivec3 pos);
-	void	initMeshData(Chunk& chunk);
 	void	generateMesh(Chunk& chunk);
 	void	loadChunkMesh(Chunk& chunk);
 
