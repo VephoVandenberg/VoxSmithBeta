@@ -16,8 +16,8 @@ using namespace GameModule;
 
 constexpr glm::ivec3 g_chunkSize = { 16, 256, 16 };
 
-constexpr int32_t g_chunksX = 8;
-constexpr int32_t g_chunksZ = 8;
+constexpr int32_t g_chunksX = 4;
+constexpr int32_t g_chunksZ = 4;
 
 constexpr size_t g_nBlocks = g_chunkSize.x * g_chunkSize.y * g_chunkSize.z;
 
@@ -127,8 +127,6 @@ void GameModule::initChunkFaces(World& world, Chunk& chunk)
 			if (isBlockTrans(world, right)) { setFace(world, pos, Face::FaceType::RIGHT); }
 		}
 	}
-	chunk.mesh.capacity = g_nBlocks * 36 * sizeof(Engine::Renderer::Vertex);
-	chunk.mesh.vertices.reserve(g_nBlocks * 36);
 }
 
 void GameModule::drawWorld(World& world)

@@ -272,7 +272,7 @@ namespace Noise
 	float octavePerlin(glm::vec3 pos, float persistence, int octaves)
 	{
 		float total = 0.0f;
-		float frequency = 0.1f;
+		float frequency = 0.001f;
 		float amplitude = 1.0f;
 		float maxValue = 0.0f;
 
@@ -314,19 +314,17 @@ void GameModule::setType(Block& block)
 
 BlockType getBlockType(const glm::vec3 pos)
 {
-	float heightOffset = 100.0f;
+	float heightOffset = 60.0f;
 
-	float densityMod = (heightOffset - pos.y) / g_chunkSize.y;
-	float density = Noise::octavePerlin(pos, 0.5f, 4);
+	float densityMod = ((heightOffset - pos.y) / g_chunkSize.y) * 2;
+	float density = Noise::octavePerlin(pos, 0.3f, 4);
 
-	if (densityMod > 0.0f|| density > 0.0f)
+	if (densityMod + density > 0.0f)
 	{
 		return BlockType::GRASS;
 	}
-	else
-	{
-		return BlockType::AIR;
-	}
+
+	return BlockType::AIR;
 }
 
 Chunk GameModule::generateChunk(const glm::ivec3 pos)
@@ -335,7 +333,7 @@ Chunk GameModule::generateChunk(const glm::ivec3 pos)
 	chunk.pos = pos;
 	if (chunk.blocks.empty())
 	{
-		chunk.blocks.reserve(g_nBlocks);
+	//	chunk.blocks.reserve(g_nBlocks);
 	}
 
 	for (int32_t y = 0; y < g_chunkSize.y; y++)
@@ -359,10 +357,13 @@ Chunk GameModule::generateChunk(const glm::ivec3 pos)
 	return chunk;
 }
 
-void GameModule::updateFace(Vertex* vertices, const Block& block, uint32_t texID)
+void updateFace(Vertex* vertices, const Block& block, Face::FaceType type)
 {
+	uint32_t texID = block.texIDs[static_cast<uint32_t>(type)];
+
 	for (uint32_t iVertex = 0; iVertex < g_vertexPerFace; iVertex++)
 	{
+		vertices[iVertex] = g_faces[type][iVertex];
 		vertices[iVertex].pos += block.pos;
 		vertices[iVertex].uvw.z = texID;
 	}
@@ -371,14 +372,11 @@ void GameModule::updateFace(Vertex* vertices, const Block& block, uint32_t texID
 void GameModule::setBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type)
 {
 	chunk.updated = false;
-	Vertex vertices[g_vertexPerFace];
-	std::copy(g_faces[type].begin(), g_faces[type].end(), vertices);
-	updateFace(vertices, chunk.blocks[id], chunk.blocks[id].texIDs[static_cast<uint32_t>(type)]);
-
 	Face face_;
 	face_.type = type;
 	face_.blockID = id;
-	std::copy(vertices, vertices + g_vertexPerFace, face_.vertices);
+
+	updateFace(face_.vertices, chunk.blocks[id], type);
 
 	chunk.faces.push_back(face_);
 }

@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 
 #include <unordered_map>
+#include <vector>
 
 #include "../../engine/renderer/mesh.h"
 

@@ -2,9 +2,8 @@
 
 /** TO DO LIST
 * Agenda
-* - Get comfortable with noise algorithms
+* - We need to apply squashing
 * Later
-* - Perlin noise we should find out how 3d noise work
 * - More blocks
 * - Infinite terrain babe
 * - Serialisation
