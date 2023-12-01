@@ -27,7 +27,11 @@ namespace GameModule
 		{
 			size_t operator()(const glm::ivec3& v)const
 			{
-				return std::hash<int>()(v.x) ^ std::hash<int>()(v.y) ^ std::hash<int>()(v.z);
+				size_t h = 0xcf234123f;
+				h ^= std::_Bit_cast<uint32_t>(v.x) + 0x9e3779b9 + (h << 6) + (h >> 2);
+				h ^= std::_Bit_cast<uint32_t>(v.y) + 0x9e3779b9 + (h << 6) + (h >> 2);
+				h ^= std::_Bit_cast<uint32_t>(v.z) + 0x9e3779b9 + (h << 6) + (h >> 2);
+				return h;
 			}
 
 			bool operator()(const glm::ivec3& a, const glm::vec3& b)const

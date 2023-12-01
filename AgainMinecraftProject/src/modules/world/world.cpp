@@ -16,8 +16,8 @@ using namespace GameModule;
 
 constexpr glm::ivec3 g_chunkSize = { 16, 256, 16 };
 
-constexpr int32_t g_chunksX = 4;
-constexpr int32_t g_chunksZ = 4;
+constexpr int32_t g_chunksX = 8 * 3;
+constexpr int32_t g_chunksZ = 8 * 3;
 
 constexpr size_t g_nBlocks = g_chunkSize.x * g_chunkSize.y * g_chunkSize.z;
 
@@ -35,22 +35,21 @@ void GameModule::initWorld(World& world)
 		}
 	}
 
-
 	for (int32_t z = 0; z < g_chunksZ; z++)
 	{
 		for (int32_t x = 0; x < g_chunksX; x++)
 		{
 			glm::ivec3 chunkPos = { x * g_chunkSize.x, 0, z * g_chunkSize.z };
 			initChunkFaces(world, world.chunks[chunkPos]);
-			generateMesh(world.chunks[chunkPos]);
+			//generateMesh(world.chunks[chunkPos]);
 			loadChunkMesh(world.chunks[chunkPos]);
 			world.chunks[chunkPos].updated = true;
 		}
 	}
-
+	int a = 5;
 }
 
-glm::ivec3 getChunkPos(const glm::vec3 pos)
+inline glm::ivec3 getChunkPos(const glm::vec3 pos)
 {
 	return {
 		static_cast<int32_t>(pos.x) / g_chunkSize.x * g_chunkSize.x,
@@ -59,11 +58,16 @@ glm::ivec3 getChunkPos(const glm::vec3 pos)
 	};
 }
 
-uint32_t getId(World& world, const glm::ivec3 pos)
+inline uint32_t getId(World& world, const glm::ivec3 pos)
 {
 	glm::ivec3 iPos = pos - getChunkPos(pos);
 
-	return g_chunkSize.x * (g_chunkSize.z * iPos.y + iPos.z) + iPos.x;
+	return g_chunkSize.x * (g_chunkSize.z * (iPos.y) + iPos.z) + iPos.x;
+}
+
+inline uint32_t getAbsId(glm::ivec3 pos)
+{
+	return g_chunkSize.x * (g_chunkSize.z * pos.y + pos.z) + pos.x;
 }
 
 Block& getBlock(World& world, const glm::vec3 pos)
@@ -73,25 +77,17 @@ Block& getBlock(World& world, const glm::vec3 pos)
 	return world.chunks[getChunkPos(pos)].blocks[getId(world, pos)];
 }
 
-void setFace(World& world, glm::vec3 pos, Face::FaceType type)
+
+inline bool isEdge(World& world, const glm::vec3 pos)
 {
-	auto& chunk = world.chunks[getChunkPos(pos)];
-	setBlockFace(chunk, getId(world, pos), type);
+	return world.chunks.find(getChunkPos(pos)) == world.chunks.end();
 }
 
-bool isBlockTrans(World& world, const glm::vec3 pos)
-{
-	if (world.chunks.find(getChunkPos(pos)) == world.chunks.end())
-	{
-		return false;
-	}
-
-	return getBlock(world, pos).type == BlockType::AIR;
-}
 
 bool isBlockSolid(World& world, const glm::vec3 pos)
 {
-	if (world.chunks.find(getChunkPos(pos)) == world.chunks.end())
+	glm::vec3 chunkPos = getChunkPos(pos);
+	if (world.chunks.find(chunkPos) == world.chunks.end())
 	{
 		return false;
 	}
@@ -99,13 +95,19 @@ bool isBlockSolid(World& world, const glm::vec3 pos)
 	return getBlock(world, pos).type != BlockType::AIR;
 }
 
-void GameModule::initChunkFaces(World& world, Chunk& chunk)
+bool isBlockTrans(World& world, const glm::vec3 pos)
 {
-	if (chunk.faces.empty())
+	glm::vec3 chunkPos = getChunkPos(pos);
+	if (world.chunks.find(chunkPos) == world.chunks.end())
 	{
-		chunk.faces.reserve(g_nBlocks * g_vertexPerFace);
+		return false;
 	}
 
+	return getBlock(world, pos).type == BlockType::AIR;
+}
+
+void GameModule::initChunkFaces(World& world, Chunk& chunk)
+{
 	for (uint32_t iBlock = 0; iBlock < g_nBlocks; iBlock++)
 	{
 		glm::vec3 pos = chunk.blocks[iBlock].pos;
@@ -114,17 +116,78 @@ void GameModule::initChunkFaces(World& world, Chunk& chunk)
 		glm::vec3 front = { pos.x, pos.y, pos.z + 1 };
 		glm::vec3 right = { pos.x + 1, pos.y, pos.z };
 
+		uint32_t topId = getId(world, top);
+		uint32_t rightId = getId(world, right);
+		uint32_t frontId = getId(world, front);
+
 		if (chunk.blocks[iBlock].type == BlockType::AIR)
 		{
-			if (isBlockSolid(world, top)) { setFace(world, top, Face::FaceType::BOTTOM); }
-			if (isBlockSolid(world, front)) { setFace(world, front, Face::FaceType::BACK); }
-			if (isBlockSolid(world, right)) { setFace(world, right, Face::FaceType::LEFT); }
+			if (top.y < g_chunkSize.y && chunk.blocks[topId].type != BlockType::AIR)
+			{ 
+				chunk.blocks[topId].top = true;
+			}
+
+			if (front.z < chunk.pos.z + g_chunkSize.z && chunk.blocks[frontId].type != BlockType::AIR)
+			{
+				chunk.blocks[frontId].back = true;
+			}
+			else
+			{
+				if (isBlockSolid(world, front))
+				{
+					getBlock(world, front).back = true;
+				}
+			}
+
+			if (right.x < chunk.pos.x + g_chunkSize.x && chunk.blocks[rightId].type != BlockType::AIR)
+			{
+				chunk.blocks[rightId].left = true;
+			}
+			else
+			{
+				if (isBlockSolid(world, right))
+				{
+					getBlock(world, right).left = true;
+				}
+			}
 		}
 		else
 		{
-			if (isBlockTrans(world, top)) { setFace(world, pos, Face::FaceType::TOP); }
-			if (isBlockTrans(world, front)) { setFace(world, pos, Face::FaceType::FRONT); }
-			if (isBlockTrans(world, right)) { setFace(world, pos, Face::FaceType::RIGHT); }
+			if (top.y < g_chunkSize.y && chunk.blocks[topId].type == BlockType::AIR)
+			{
+				chunk.blocks[iBlock].top = true;
+			}
+
+			if (front.z < chunk.pos.z + g_chunkSize.z)
+			{
+				if (chunk.blocks[frontId].type == BlockType::AIR)
+				{
+					chunk.blocks[iBlock].front = true;
+				}
+			}
+			else
+			{
+				if (isBlockTrans(world, front))
+				{
+					chunk.blocks[iBlock].front = true;
+				}
+			}
+
+			if (right.x < chunk.pos.x + g_chunkSize.x)
+			{
+				if (chunk.blocks[rightId].type == BlockType::AIR)
+				{
+					chunk.blocks[iBlock].right = true;
+				}
+			}
+			else
+			{
+				if (isBlockTrans(world, right))
+				{
+					chunk.blocks[iBlock].right = true;
+				}
+				
+			}
 		}
 	}
 }
@@ -135,7 +198,7 @@ void GameModule::drawWorld(World& world)
 	{
 		if (!pair.second.updated)
 		{
-			generateMesh(pair.second);
+			//generateMesh(pair.second);
 			loadChunkMesh(pair.second);
 			pair.second.updated = true;
 		}
@@ -238,14 +301,14 @@ void GameModule::traceRay(World& world, glm::vec3 rayPosFrac, Engine::Shader& sh
 		auto& curr = world.chunks[getChunkPos(currBlock)];
 		world.chunks[getChunkPos(currBlock)].blocks[iCurr].type = BlockType::AIR;
 
-		curr.faces.erase(
-			std::remove_if(
-				curr.faces.begin(), curr.faces.end(),
-				[&](const Face& face) {
-					return face.blockID == iCurr;
-				}),
-			curr.faces.end()
-					);
+		//curr.faces.erase(
+		//	std::remove_if(
+		//		curr.faces.begin(), curr.faces.end(),
+		//		[&](const Face& face) {
+		//			return face.blockID == iCurr;
+		//		}),
+		//	curr.faces.end()
+		//			);
 		curr.updated = false;
 
 		if (rightSolid) { setBlockFace(world.chunks[getChunkPos(rightBlock)], iRight, Face::FaceType::LEFT); }

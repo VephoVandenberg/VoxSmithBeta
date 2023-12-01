@@ -183,10 +183,6 @@ namespace Noise
 
 	float perlin3D(float x, float y, float z)
 	{
-		//x += (static_cast<float>(rand()) / (RAND_MAX + 1));
-		//y += (static_cast<float>(rand()) / (RAND_MAX + 1));
-		//z += (static_cast<float>(rand()) / (RAND_MAX + 1));
-
 		auto lerp = [](float a0, float a1, float w) {
 			return (a1 - a0) * w + a0;
 		};
@@ -196,9 +192,6 @@ namespace Noise
 		};
 
 		auto dot_grad = [](int hash, float x, float y, float z) {
-			// In 2D case, the gradient may be any of 8 direction vectors pointing to the
-			// edges of a unit-square. The distance vector is the input offset (relative to
-			// the smallest bound).
 			switch (hash & 0xF)
 			{
 			case 0x0: return  x + y;
@@ -272,7 +265,7 @@ namespace Noise
 	float octavePerlin(glm::vec3 pos, float persistence, int octaves)
 	{
 		float total = 0.0f;
-		float frequency = 0.001f;
+		float frequency = 0.01f;
 		float amplitude = 1.0f;
 		float maxValue = 0.0f;
 
@@ -292,34 +285,17 @@ namespace Noise
 
 void GameModule::setType(Block& block)
 {
-	switch (block.type)
-	{
-	case BlockType::GRASS:
-		block.texIDs[static_cast<uint32_t>(Face::FaceType::TOP)] = 0;
-		block.texIDs[static_cast<uint32_t>(Face::FaceType::RIGHT)] = 1;
-		block.texIDs[static_cast<uint32_t>(Face::FaceType::LEFT)] = 1;
-		block.texIDs[static_cast<uint32_t>(Face::FaceType::FRONT)] = 1;
-		block.texIDs[static_cast<uint32_t>(Face::FaceType::BACK)] = 1;
-		block.texIDs[static_cast<uint32_t>(Face::FaceType::BOTTOM)] = 2;
-		break;
-
-	case BlockType::DIRT:
-		for (int32_t i = 0; i < g_facePerCube; i++)
-		{
-			block.texIDs[i] = 2;
-		}
-		break;
-	}
 }
 
 BlockType getBlockType(const glm::vec3 pos)
 {
-	float heightOffset = 60.0f;
+	float heightOffset = 80.0f;
 
-	float densityMod = ((heightOffset - pos.y) / g_chunkSize.y) * 2;
-	float density = Noise::octavePerlin(pos, 0.3f, 4);
+	//float densityMod = ((heightOffset - pos.y) / g_chunkSize.y) * 2;
+	//float density = Noise::octavePerlin(pos, 0.3f, 2);
 
-	if (densityMod + density > 0.0f)
+	//if (densityMod + density > 0.0f)
+	if (heightOffset > pos.y)
 	{
 		return BlockType::GRASS;
 	}
@@ -333,7 +309,7 @@ Chunk GameModule::generateChunk(const glm::ivec3 pos)
 	chunk.pos = pos;
 	if (chunk.blocks.empty())
 	{
-	//	chunk.blocks.reserve(g_nBlocks);
+		chunk.blocks.reserve(g_nBlocks);
 	}
 
 	for (int32_t y = 0; y < g_chunkSize.y; y++)
@@ -344,11 +320,7 @@ Chunk GameModule::generateChunk(const glm::ivec3 pos)
 			{
 				Block block;
 				block.pos = chunk.pos + glm::vec3(x, y, z);
-				
 				block.type = getBlockType(block.pos);
-
-				setType(block);
-
 				chunk.blocks.push_back(block);
 			}
 		}
@@ -357,53 +329,59 @@ Chunk GameModule::generateChunk(const glm::ivec3 pos)
 	return chunk;
 }
 
-void updateFace(Vertex* vertices, const Block& block, Face::FaceType type)
+void updateFace(Chunk& chunk, Vertex* vertices, const Block& block, Face::FaceType type)
 {
-	uint32_t texID = block.texIDs[static_cast<uint32_t>(type)];
+	uint32_t texID = 0;// block.texIDs[static_cast<uint32_t>(type)];
 
 	for (uint32_t iVertex = 0; iVertex < g_vertexPerFace; iVertex++)
 	{
 		vertices[iVertex] = g_faces[type][iVertex];
 		vertices[iVertex].pos += block.pos;
 		vertices[iVertex].uvw.z = texID;
+
+		chunk.mesh.vertices.push_back(vertices[iVertex]);
 	}
 }
 
 void GameModule::setBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type)
 {
 	chunk.updated = false;
-	Face face_;
-	face_.type = type;
-	face_.blockID = id;
+	Vertex vertices[g_vertexPerFace];
+	updateFace(chunk, vertices, chunk.blocks[id], type);
 
-	updateFace(face_.vertices, chunk.blocks[id], type);
-
-	chunk.faces.push_back(face_);
+	//chunk.faces.push_back(face_);
+	/*
+	chunk.mesh.vertices.insert(
+		chunk.mesh.vertices.end(),
+		vertices, vertices + g_vertexPerFace
+	);
+	*/
 }
 
 void GameModule::removeBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type)
 {
 	chunk.updated = false;
-	chunk.faces.erase(
-		std::remove_if(
-			chunk.faces.begin(), chunk.faces.end(),
-			[&](const Face& face) {
-				return face.blockID == id && face.type == type;
-			}),
-		chunk.faces.end());
+	//chunk.faces.erase(
+	//	std::remove_if(
+	//		chunk.faces.begin(), chunk.faces.end(),
+	//		[&](const Face& face) {
+	//			return face.blockID == id && face.type == type;
+	//		}),
+	//	chunk.faces.end());
 }
 
 void GameModule::generateMesh(Chunk& chunk)
 {
-	chunk.mesh.vertices.clear();
-
+	//chunk.mesh.vertices.clear();
+	/*
 	std::sort(
 		chunk.faces.begin(), chunk.faces.end(),
 		[](const Face& face1, const Face& face2) {
 			return face1.blockID < face2.blockID;
 		}
 	);
-
+	*/
+	/*
 	for (const auto& face : chunk.faces)
 	{
 		chunk.mesh.vertices.insert(
@@ -411,10 +389,47 @@ void GameModule::generateMesh(Chunk& chunk)
 			face.vertices, face.vertices + g_vertexPerFace
 		);
 	}
+	*/
 }
 
 void GameModule::loadChunkMesh(Chunk& chunk)
 {
+	chunk.mesh.vertices.clear();
+
+	for (uint32_t iBlock = 0; iBlock < g_nBlocks; iBlock++)
+	{
+		auto& block = chunk.blocks[iBlock];
+
+		if (block.front)
+		{
+			setBlockFace(chunk, iBlock, Face::FaceType::FRONT);
+		}
+		if (block.back)
+		{
+			setBlockFace(chunk, iBlock, Face::FaceType::BACK);
+
+		}
+		if (block.top)
+		{
+			setBlockFace(chunk, iBlock, Face::FaceType::TOP);
+
+		}
+		if (block.bottom)
+		{
+			setBlockFace(chunk, iBlock, Face::FaceType::BOTTOM);
+
+		}
+		if (block.right)
+		{
+			setBlockFace(chunk, iBlock, Face::FaceType::RIGHT);
+
+		}
+		if (block.left)
+		{
+			setBlockFace(chunk, iBlock, Face::FaceType::LEFT);
+		}
+	}
+
 	loadData(&chunk.mesh);
 }
 

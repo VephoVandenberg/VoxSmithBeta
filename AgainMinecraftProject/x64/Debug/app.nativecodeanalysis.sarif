@@ -7,37 +7,6 @@
         {
           "ruleId": "C26495",
           "message": {
-            "text": "Variable 'GameModule::World::maxBorder' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
-                },
-                "region": {
-                  "startLine": 40,
-                  "startColumn": 2,
-                  "endLine": 40,
-                  "endColumn": 2
-                }
-              },
-              "logicalLocations": [
-                {
-                  "fullyQualifiedName": "GameModule::World::{ctor}",
-                  "decoratedName": "??0World@GameModule@@QEAA@XZ",
-                  "kind": "function"
-                }
-              ]
-            }
-          ],
-          "properties": {
-            "targetSymbol": "GameModule::World::maxBorder"
-          }
-        },
-        {
-          "ruleId": "C26495",
-          "message": {
             "text": "Variable 'GameModule::World::minBorder' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
@@ -47,9 +16,9 @@
                   "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
                 },
                 "region": {
-                  "startLine": 40,
+                  "startLine": 41,
                   "startColumn": 2,
-                  "endLine": 40,
+                  "endLine": 41,
                   "endColumn": 2
                 }
               },
@@ -64,6 +33,37 @@
           ],
           "properties": {
             "targetSymbol": "GameModule::World::minBorder"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "Variable 'GameModule::World::maxBorder' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
+                },
+                "region": {
+                  "startLine": 41,
+                  "startColumn": 2,
+                  "endLine": 41,
+                  "endColumn": 2
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::World::{ctor}",
+                  "decoratedName": "??0World@GameModule@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "GameModule::World::maxBorder"
           }
         }
       ],
@@ -89,7 +89,7 @@
             "resultFile"
           ],
           "hashes": {
-            "sha-256": "3bce7f7eeb16b5adb10988fbbcd3e8e04d6af4d2f3b6dc1a1b5866e5f593baf2"
+            "sha-256": "f5f869191404f8723556013d0614bf8000c984865a9cfcd2d1b94293c3e60812"
           }
         },
         {
@@ -100,7 +100,7 @@
             "analysisTarget"
           ],
           "hashes": {
-            "sha-256": "f03d53d913b2e1bbba8596d6fe7d9fcc31253dca0dd90b24aa8374cab41f4743"
+            "sha-256": "338fced9b54a2cb3f2cddec20699fdf38fbd2ac97d1ded204deb2d018ad793e6"
           }
         },
         {
@@ -1220,7 +1220,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/shader/shader_list.h"
           },
           "hashes": {
-            "sha-256": "afd096d59a8ec08764e3bd0d14f20153d9102a78b762d873acba771a252f02d5"
+            "sha-256": "c2b924c7f0b1172b41eba7f4c99ba96abf082244771134692d165b310f8905d1"
           }
         },
         {
@@ -1308,7 +1308,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/renderer/block_renderer.h"
           },
           "hashes": {
-            "sha-256": "e5d63805c10fcea8f9a7a1ea9d1a4347477b5ea947ae5d8706f2afdb612da2a2"
+            "sha-256": "50ae782551fd1a644ea96293a5ea6c21895db4760a09916559fa517cea399174"
           }
         },
         {
@@ -1316,7 +1316,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/modules/chunk/chunk.h"
           },
           "hashes": {
-            "sha-256": "41f1b2f03519bf513d6f9bdebbe8127b805a674323558d7272f88434e605fc2b"
+            "sha-256": "411d76727cf672e1a97a2fb2997e0ef8cc2bee2604b0f18c5755498b840a9a48"
           }
         },
         {
@@ -1332,7 +1332,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/modules/chunk/block.h"
           },
           "hashes": {
-            "sha-256": "df323cc5e58ee0558394617b07f8ca6565f81eab965171bcd366340b053a7ec5"
+            "sha-256": "aaaa314bdc1713d46dd63d1daa7916c3f961322c8cf3661fc4db2830923503a0"
           }
         },
         {
@@ -1340,7 +1340,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/app/app.h"
           },
           "hashes": {
-            "sha-256": "b9b4d48132fbce8889d814d4a80e5a8dbfdf8e2bbf2754f41aad132cda6a21d4"
+            "sha-256": "7afcfdd865ded9ce5cbf07874068aaedbd04e65abce963e19d7b789985b23a4f"
           }
         },
         {
@@ -1364,7 +1364,15 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/camera/camera.h"
           },
           "hashes": {
-            "sha-256": "a47a1fd4f09a1de782b351657a1dc4f6f51c61de41a6ec0df829472b05889e04"
+            "sha-256": "7411b3854841bee938f2b577a5a5f4c65632b2bda796d16c3378410950572599"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/modules/player/player.h"
+          },
+          "hashes": {
+            "sha-256": "2355bc6b2a9996533f70a2abbbaba5b885aa87e5c09065cac8521291d0d00d20"
           }
         }
       ]

@@ -12,7 +12,7 @@ constexpr uint32_t g_vertexPerFace = g_facePerCube;
 
 namespace GameModule
 {
-	enum class BlockType
+	enum class BlockType : int8_t
 	{
 		AIR,
 		GRASS,
@@ -24,10 +24,16 @@ namespace GameModule
 
 	struct Block
 	{
-		BlockType	type;
 		glm::vec3	pos;
 
-		uint32_t	texIDs[g_vertexPerFace];
+		bool front	= false;
+		bool back	= false;
+		bool right	= false;
+		bool left	= false;
+		bool top	= false;
+		bool bottom = false;
+
+		BlockType	type;
 	};
 
 	struct Face
@@ -49,7 +55,7 @@ namespace GameModule
 	struct EnumHash
 	{
 		template <typename T>
-		size_t operator()(T t) const { return static_cast<size_t>(t); }
+		uint8_t operator()(T t) const { return static_cast<uint8_t>(t); }
 	};
 }
 

@@ -2,7 +2,7 @@
 
 /** TO DO LIST
 * Agenda
-* - We need to apply squashing
+* - Now think about how texture IDs must be set to every block face
 * Later
 * - More blocks
 * - Infinite terrain babe
@@ -13,7 +13,7 @@
 * - Investigate math behind coordinate systems and matrices
 * - Water Walta
 * Works for now but might be improved
-* - We have some working jumping, but it's still shit
+* - We need to apply squashing(Working but might be imrpoved)
 */
 
 int main(int argc, char **argv)

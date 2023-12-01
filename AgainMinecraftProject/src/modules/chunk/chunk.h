@@ -23,7 +23,6 @@ namespace GameModule
 		bool updated = false;
 		glm::vec3 pos;
 		std::vector<Block>		blocks = {};
-		std::vector<Face>		faces = {};
 		Engine::Renderer::Mesh	mesh;
 	};
 

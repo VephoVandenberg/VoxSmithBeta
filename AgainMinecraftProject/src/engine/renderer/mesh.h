@@ -19,7 +19,6 @@ namespace Engine
 			uint32_t VAO;
 			uint32_t VBO;
 
-			size_t capacity;
 			std::vector<Vertex> vertices;
 		};
 

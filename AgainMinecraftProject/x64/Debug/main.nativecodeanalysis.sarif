@@ -26,7 +26,7 @@
             "analysisTarget"
           ],
           "hashes": {
-            "sha-256": "df76ec6626cccf0226dc44efe8d846e2f9f1eee434b6983b1dec144259073a20"
+            "sha-256": "8e3210194cc87d94313d3ddfa16a012030cd3d94d65113d0836c3ee854b10ad8"
           }
         },
         {
@@ -34,7 +34,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/app/app.h"
           },
           "hashes": {
-            "sha-256": "b9b4d48132fbce8889d814d4a80e5a8dbfdf8e2bbf2754f41aad132cda6a21d4"
+            "sha-256": "7afcfdd865ded9ce5cbf07874068aaedbd04e65abce963e19d7b789985b23a4f"
           }
         },
         {
@@ -1122,7 +1122,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/camera/camera.h"
           },
           "hashes": {
-            "sha-256": "a47a1fd4f09a1de782b351657a1dc4f6f51c61de41a6ec0df829472b05889e04"
+            "sha-256": "7411b3854841bee938f2b577a5a5f4c65632b2bda796d16c3378410950572599"
           }
         },
         {
@@ -1135,10 +1135,26 @@
         },
         {
           "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/renderer/block_renderer.h"
+          },
+          "hashes": {
+            "sha-256": "50ae782551fd1a644ea96293a5ea6c21895db4760a09916559fa517cea399174"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/modules/player/player.h"
+          },
+          "hashes": {
+            "sha-256": "2355bc6b2a9996533f70a2abbbaba5b885aa87e5c09065cac8521291d0d00d20"
+          }
+        },
+        {
+          "location": {
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/modules/world/world.h"
           },
           "hashes": {
-            "sha-256": "3bce7f7eeb16b5adb10988fbbcd3e8e04d6af4d2f3b6dc1a1b5866e5f593baf2"
+            "sha-256": "f5f869191404f8723556013d0614bf8000c984865a9cfcd2d1b94293c3e60812"
           }
         }
       ]

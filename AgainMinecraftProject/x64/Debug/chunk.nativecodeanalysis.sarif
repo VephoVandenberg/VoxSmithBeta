@@ -7,7 +7,7 @@
         {
           "ruleId": "C26495",
           "message": {
-            "text": "Variable 'Engine::Renderer::Mesh::capacity' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'Engine::Renderer::Mesh::VAO' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
@@ -32,7 +32,7 @@
             }
           ],
           "properties": {
-            "targetSymbol": "Engine::Renderer::Mesh::capacity"
+            "targetSymbol": "Engine::Renderer::Mesh::VAO"
           }
         },
         {
@@ -69,7 +69,7 @@
         {
           "ruleId": "C26495",
           "message": {
-            "text": "Variable 'Engine::Renderer::Mesh::VAO' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'Engine::Renderer::Mesh::capacity' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
@@ -94,7 +94,7 @@
             }
           ],
           "properties": {
-            "targetSymbol": "Engine::Renderer::Mesh::VAO"
+            "targetSymbol": "Engine::Renderer::Mesh::capacity"
           }
         },
         {
@@ -162,7 +162,7 @@
             "resultFile"
           ],
           "hashes": {
-            "sha-256": "41f1b2f03519bf513d6f9bdebbe8127b805a674323558d7272f88434e605fc2b"
+            "sha-256": "411d76727cf672e1a97a2fb2997e0ef8cc2bee2604b0f18c5755498b840a9a48"
           }
         },
         {
@@ -173,7 +173,7 @@
             "analysisTarget"
           ],
           "hashes": {
-            "sha-256": "c73b5db3f79e0c9682247b24b8c0dc46db33baaff748ab60496b93af02aa8dba"
+            "sha-256": "6e3b7ab14536d8461e88a8f86a0e74b09fcaf0058f1f5e9210a737fdfef5605c"
           }
         },
         {
@@ -1253,7 +1253,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/modules/chunk/block.h"
           },
           "hashes": {
-            "sha-256": "df323cc5e58ee0558394617b07f8ca6565f81eab965171bcd366340b053a7ec5"
+            "sha-256": "aaaa314bdc1713d46dd63d1daa7916c3f961322c8cf3661fc4db2830923503a0"
           }
         }
       ]
