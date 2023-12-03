@@ -11,7 +11,8 @@ namespace Engine
 		struct Vertex
 		{
 			glm::vec3 pos;
-			glm::vec3 uvw;
+			int8_t coordInd;
+			int8_t texId;
 		};
 		
 		struct Mesh

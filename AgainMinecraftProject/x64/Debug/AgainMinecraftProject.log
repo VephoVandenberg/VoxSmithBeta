@@ -1,7 +1,16 @@
 ﻿  world.cpp
 D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(30,10): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(56,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(488,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(489,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(490,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(55,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(129,25): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(131,26): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(133,27): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(360,8): warning C4101: 'dxExit': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(359,26): warning C4101: 'dyEntry': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(359,8): warning C4101: 'dxEntry': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(360,16): warning C4101: 'dzExit': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(359,17): warning C4101: 'dzEntry': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(360,24): warning C4101: 'dyExit': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(500,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(501,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(502,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
   AgainMinecraftProject.vcxproj -> D:\Working\AgainMinecraftProject\x64\Debug\AgainMinecraftProject.exe

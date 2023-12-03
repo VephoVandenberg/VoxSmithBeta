@@ -26,6 +26,14 @@ namespace GameModule
 		Engine::Renderer::Mesh	mesh;
 	};
 
+	enum class ChunkDir : int8_t
+	{
+		NORTH,
+		SOUTH,
+		EAST,
+		WEST
+	};
+
 	enum class RayType
 	{
 		IDLE,
@@ -39,10 +47,8 @@ namespace GameModule
 	void	updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2);
 
 	void	setType(Block& block);
-	void	setBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type);
+	void	setBlockFace(Chunk& chunk, const glm::vec3& pos, Face::FaceType type);
 	void	removeBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type);
-	//void	updateFace(Engine::Renderer::Vertex* vertices, const Block& block, uint32_t texID);
-
 
 	void	drawChunk(const Chunk& chunk);
 }

@@ -24,8 +24,6 @@ namespace GameModule
 
 	struct Block
 	{
-		glm::vec3	pos;
-
 		bool front	= false;
 		bool back	= false;
 		bool right	= false;

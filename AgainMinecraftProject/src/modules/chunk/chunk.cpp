@@ -3,11 +3,8 @@
 * check and update neighbour chunks if needed.
 *
 * 1. Generate blocks.
-* 2. Init mesh data,
-*	 that means we are loading up faces
-*	 to the array with the correspoding vertices, also we store the block ID(index),
-*	 and type of face that will be drawn.
-* 3. Sort the faces array by block id, then generate the mesh.
+* 2. Init mesh data
+* 3. Load mesh data.
 */
 
 #include <algorithm>
@@ -35,63 +32,63 @@ constexpr float g_rayDeltaMag = 0.1f;
 using VertexArray = std::array<Vertex, g_vertexPerFace>;
 
 constexpr VertexArray back{ {
-	{{ 0, 0, 0 }, { 0, 0, -1 }},
-	{{ 0, 1, 0 }, { 0, 1, -1 }},
-	{{ 1, 0, 0 }, { 1, 0, -1 }},
+	{{ 0, 0, 0 }, 0, -1},
+	{{ 0, 1, 0 }, 2, -1},
+	{{ 1, 0, 0 }, 1, -1},
 
-	{{ 1, 0, 0 }, { 1, 0, -1 }},
-	{{ 0, 1, 0 }, { 0, 1, -1 }},
-	{{ 1, 1, 0 }, { 1, 1, -1 }},
+	{{ 1, 0, 0 }, 1, -1},
+	{{ 0, 1, 0 }, 2, -1},
+	{{ 1, 1, 0 }, 3, -1},
 } };
 
 constexpr VertexArray front{ {
-	{{ 0, 0, 1 }, { 0, 0, -1 }},
-	{{ 1, 0, 1 }, { 1, 0, -1 }},
-	{{ 0, 1, 1 }, { 0, 1, -1 }},
+	{{ 0, 0, 1 }, 0, -1 },
+	{{ 1, 0, 1 }, 1, -1 },
+	{{ 0, 1, 1 }, 2, -1 },
 
-	{{ 1, 0, 1 }, { 1, 0, -1 }},
-	{{ 1, 1, 1 }, { 1, 1, -1 }},
-	{{ 0, 1, 1 }, { 0, 1, -1 }},
+	{{ 1, 0, 1 }, 1, -1 },
+	{{ 1, 1, 1 }, 3, -1 },
+	{{ 0, 1, 1 }, 1, -1 },
 } };
 
 constexpr VertexArray top{ {
-	{{ 0, 1, 1 }, { 0, 0, -1 }},
-	{{ 1, 1, 1 }, { 1, 0, -1 }},
-	{{ 0, 1, 0 }, { 0, 1, -1 }},
+	{{ 0, 1, 1 }, 0, -1 },
+	{{ 1, 1, 1 }, 1, -1 },
+	{{ 0, 1, 0 }, 2, -1 },
 
-	{{ 1, 1, 1 }, { 1, 0, -1 }},
-	{{ 1, 1, 0 }, { 1, 1, -1 }},
-	{{ 0, 1, 0 }, { 0, 1, -1 }},
+	{{ 1, 1, 1 }, 1, -1 },
+	{{ 1, 1, 0 }, 3, -1 },
+	{{ 0, 1, 0 }, 2, -1 },
 } };
 
 constexpr VertexArray bottom{ {
-	{{ 0, 0, 1 }, { 0, 0, -1 }},
-	{{ 0, 0, 0 }, { 0, 1, -1 }},
-	{{ 1, 0, 1 }, { 1, 0, -1 }},
+	{{ 0, 0, 1 }, 0, -1 },
+	{{ 0, 0, 0 }, 2, -1 },
+	{{ 1, 0, 1 }, 1, -1 },
 
-	{{ 1, 0, 0 }, { 1, 1, -1 }},
-	{{ 1, 0, 1 }, { 1, 0, -1 }},
-	{{ 0, 0, 0 }, { 0, 1, -1 }},
+	{{ 1, 0, 0 }, 3, -1 },
+	{{ 1, 0, 1 }, 1, -1 },
+	{{ 0, 0, 0 }, 2, -1 },
 } };
 
 constexpr VertexArray left{ {
-	{{ 0, 0, 0 }, { 0, 0, -1 }},
-	{{ 0, 0, 1 }, { 1, 0, -1 }},
-	{{ 0, 1, 0 }, { 0, 1, -1 }},
-
-	{{ 0, 0, 1 }, { 1, 0, -1 }},
-	{{ 0, 1, 1 }, { 1, 1, -1 }},
-	{{ 0, 1, 0 }, { 0, 1, -1 }},
+	{{ 0, 0, 0 }, 0, -1 },
+	{{ 0, 0, 1 }, 1, -1 },
+	{{ 0, 1, 0 }, 2, -1 },
+						   
+	{{ 0, 0, 1 }, 1, -1 },
+	{{ 0, 1, 1 }, 3, -1 },
+	{{ 0, 1, 0 }, 2, -1 },
 } };
 
 constexpr VertexArray right{ {
-	{{ 1, 0, 1 }, { 0, 0, -1 }},
-	{{ 1, 0, 0 }, { 1, 0, -1 }},
-	{{ 1, 1, 1 }, { 0, 1, -1 }},
+	{{ 1, 0, 1 }, 0, -1 },
+	{{ 1, 0, 0 }, 1, -1 },
+	{{ 1, 1, 1 }, 2, -1 },
 
-	{{ 1, 0, 0 }, { 1, 0, -1 }},
-	{{ 1, 1, 0 }, { 1, 1, -1 }},
-	{{ 1, 1, 1 }, { 0, 1, -1 }}
+	{{ 1, 0, 0 }, 1, -1 },
+	{{ 1, 1, 0 }, 3, -1 },
+	{{ 1, 1, 1 }, 2, -1 }
 } };
 
 using FaceMap = std::unordered_map<Face::FaceType, const VertexArray, EnumHash>;
@@ -502,8 +499,7 @@ Chunk GameModule::generateChunk(const glm::ivec3 pos)
 			for (int32_t x = 0; x < g_chunkSize.x; x++)
 			{
 				Block block;
-				block.pos = chunk.pos + glm::vec3(x, y, z);
-				block.type = getBlockType(block.pos);
+				block.type = getBlockType(chunk.pos + glm::vec3(x, y, z));
 				chunk.blocks.push_back(block);
 			}
 		}
@@ -512,31 +508,25 @@ Chunk GameModule::generateChunk(const glm::ivec3 pos)
 	return chunk;
 }
 
-void updateFace(Chunk& chunk, const Block& block, Face::FaceType type)
+void updateFace(Chunk& chunk, const glm::vec3 pos, Face::FaceType type)
 {
-	uint32_t texID = 0;// block.texIDs[static_cast<uint32_t>(type)];
+	int8_t texID = 0;// block.texIDs[static_cast<uint32_t>(type)];
 
 	for (uint32_t iVertex = 0; iVertex < g_vertexPerFace; iVertex++)
 	{
-		//Vertex vertex = g_faces[type][iVertex];
-		//vertices[iVertex].pos += block.pos;
-		//vertices[iVertex].uvw.z = texID;
-
-		glm::vec3 tex = g_faces[type][iVertex].uvw;
-		tex.z = 0;
-
 		chunk.mesh.vertices.push_back({ 
-				g_faces[type][iVertex].pos + block.pos,  
-				tex
+				g_faces[type][iVertex].pos + pos,  
+				g_faces[type][iVertex].coordInd,
+				0
 			}
 		);
 	}
 }
 
-void GameModule::setBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type)
+void GameModule::setBlockFace(Chunk& chunk, const glm::vec3& pos, Face::FaceType type)
 {
 	chunk.updated = false;
-	updateFace(chunk, chunk.blocks[id], type);
+	updateFace(chunk, pos, type);
 }
 
 void GameModule::removeBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type)
@@ -581,29 +571,35 @@ void GameModule::loadChunkMesh(Chunk& chunk)
 	{
 		auto& block = chunk.blocks[iBlock];
 
+		glm::vec3 pos = chunk.pos + glm::vec3(
+			(iBlock % g_chunkSize.y) % g_chunkSize.x,
+			iBlock / (g_chunkSize.y),
+			(iBlock % g_chunkSize.y) / g_chunkSize.x
+		);
+
 		if (block.front)
 		{
-			setBlockFace(chunk, iBlock, Face::FaceType::FRONT);
+			setBlockFace(chunk, pos, Face::FaceType::FRONT);
 		}
 		if (block.back)
 		{
-			setBlockFace(chunk, iBlock, Face::FaceType::BACK);
+			setBlockFace(chunk, pos, Face::FaceType::BACK);
 		}
 		if (block.top)
 		{
-			setBlockFace(chunk, iBlock, Face::FaceType::TOP);
+			setBlockFace(chunk, pos, Face::FaceType::TOP);
 		}
 		if (block.bottom)
 		{
-			setBlockFace(chunk, iBlock, Face::FaceType::BOTTOM);
+			setBlockFace(chunk, pos, Face::FaceType::BOTTOM);
 		}
 		if (block.right)
 		{
-			setBlockFace(chunk, iBlock, Face::FaceType::RIGHT);
+			setBlockFace(chunk, pos, Face::FaceType::RIGHT);
 		}
 		if (block.left)
 		{
-			setBlockFace(chunk, iBlock, Face::FaceType::LEFT);
+			setBlockFace(chunk, pos, Face::FaceType::LEFT);
 		}
 	}
 
