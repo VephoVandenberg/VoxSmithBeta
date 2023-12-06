@@ -4,6 +4,9 @@
 #include <array>
 #include <thread>
 #include <glfw3.h>
+#include <mutex>
+#include <algorithm>
+#include <functional>
 
 #include "../../engine/ray/ray.h"
 #include "../../engine/shader/shader.h"
@@ -23,6 +26,25 @@ constexpr int32_t g_chunksZ = 32;
 
 constexpr size_t g_nBlocks = g_chunkSize.x * g_chunkSize.y * g_chunkSize.z;
 
+std::mutex g_worldMutex;
+
+void initParallelChunks(World& world, const glm::vec3& min, const glm::vec3& max)
+{
+	for (int32_t z = min.z; z < max.z; z += g_chunkSize.z)
+	{
+		for (int32_t x = min.x; x < max.x; x += g_chunkSize.x)
+		{
+			glm::ivec3 chunkPos = { x, 0, z };
+			Chunk chunk = generateChunk(chunkPos);
+			initChunkFaces(world, chunk);
+			
+			g_worldMutex.lock();
+			world.chunks[chunkPos] = std::move(chunk);
+			g_worldMutex.unlock();
+		}
+	}
+}
+
 void GameModule::initWorld(World& world)
 {
 	world.minBorder = glm::ivec3(0);
@@ -30,16 +52,57 @@ void GameModule::initWorld(World& world)
 
 	float t = glfwGetTime();
 	
-	std::vector<std::thread> threads(std::thread::hardware_concurrency() - 1);
+	int32_t maxThreads = std::thread::hardware_concurrency();
+	int32_t availableThreads = maxThreads - 1;
+	std::vector<std::thread> threads;
 
+	const float step = g_chunkSize.z * g_chunksZ / 2;
+
+	int32_t minX, minZ;
+
+	for (minZ = world.minBorder.z; 
+		minZ <= world.maxBorder.z - step; 
+		minZ += step)
+	{
+		for (minX = world.minBorder.x;
+			minX <= world.maxBorder.x - step;
+			minX += step)
+		{
+			if (threads.size() >= availableThreads)
+			{
+				initParallelChunks(world, glm::vec3(minX, 0, minZ), world.maxBorder);
+			}
+			else
+			{
+				threads.push_back(
+					std::move(
+						std::thread(initParallelChunks,
+							std::ref(world), glm::vec3(minX, 0, minZ), glm::vec3(minX + step, 0, minZ + step))));
+			}
+		}
+	}
+
+
+	for (auto& t : threads)
+	{
+		if (t.joinable())
+		{
+			t.join();
+		}
+	}
+
+	std::cout << glfwGetTime() - t << std::endl;
+	t = glfwGetTime();
 	for (int32_t z = 0; z < world.maxBorder.z; z += g_chunkSize.z)
 	{
 		for (int32_t x = 0; x < world.maxBorder.x; x += g_chunkSize.x)
 		{
 			glm::ivec3 chunkPos = { x, 0, z };
 
-			world.chunks[chunkPos] = generateChunk(chunkPos);
-			initChunkFaces(world, world.chunks[chunkPos]);
+			//if (world.chunks.find(chunkPos) == world.chunks.end())
+			{
+			//	continue;
+			}
 
 			glm::ivec3 pos = { x - g_chunkSize.x, 0, z };
 			if (world.chunks.find(pos) != world.chunks.end())
@@ -55,7 +118,6 @@ void GameModule::initWorld(World& world)
 		}
 	}
 	std::cout << glfwGetTime() - t << std::endl;
-
 	for (int32_t z = 0; z < g_chunksZ; z++)
 	{
 		for (int32_t x = 0; x < g_chunksX; x++)

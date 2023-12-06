@@ -467,15 +467,15 @@ void GameModule::setType(Block& block)
 {
 }
 
-BlockType getBlockType(Chunk& chunk, const glm::vec3 pos)
+BlockType getBlockType(Chunk& chunk, const glm::vec3& pos)
 {
 	float heightOffset = 80.0f;
 
-	float densityMod = ((heightOffset - pos.y) / g_chunkSize.y) * 2;
-	float density = Noise::octavePerlin(pos, 0.5f, 2);
+	//float densityMod = ((heightOffset - pos.y) / g_chunkSize.y) * 2;
+	//float density = Noise::octavePerlin(pos, 0.5f, 2);
 
-	if (densityMod + density > 0.0f)
-	//if (heightOffset > pos.y)
+	//if (densityMod + density > 0.0f)
+	if (heightOffset > pos.y)
 	{
 		return BlockType::GRASS;
 	}
