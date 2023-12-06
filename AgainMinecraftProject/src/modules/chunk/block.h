@@ -24,14 +24,7 @@ namespace GameModule
 
 	struct Block
 	{
-		bool front	= false;
-		bool back	= false;
-		bool right	= false;
-		bool left	= false;
-		bool top	= false;
-		bool bottom = false;
-
-		BlockType	type;
+		BlockType type;
 	};
 
 	struct Face
@@ -45,9 +38,6 @@ namespace GameModule
 			LEFT,
 			RIGHT
 		} type;
-
-		int32_t						blockID;
-		Engine::Renderer::Vertex	vertices[g_vertexPerFace];
 	};
 
 	struct EnumHash

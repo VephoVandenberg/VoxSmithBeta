@@ -2,6 +2,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include <array>
+#include <thread>
 #include <glfw3.h>
 
 #include "../../engine/ray/ray.h"
@@ -28,6 +29,8 @@ void GameModule::initWorld(World& world)
 	world.maxBorder = glm::ivec3(g_chunkSize.x * g_chunksX, 0, g_chunkSize.z * g_chunksZ);
 
 	float t = glfwGetTime();
+	
+	std::vector<std::thread> threads(std::thread::hardware_concurrency() - 1);
 
 	for (int32_t z = 0; z < world.maxBorder.z; z += g_chunkSize.z)
 	{
@@ -52,7 +55,6 @@ void GameModule::initWorld(World& world)
 		}
 	}
 	std::cout << glfwGetTime() - t << std::endl;
-	t = glfwGetTime();
 
 	for (int32_t z = 0; z < g_chunksZ; z++)
 	{
@@ -63,7 +65,6 @@ void GameModule::initWorld(World& world)
 			loadChunkMesh(world.chunks[chunkPos]);
 		}
 	}
-	std::cout << glfwGetTime() - t << std::endl;
 }
 
 inline glm::ivec3 getChunkPos(const glm::vec3 pos)
@@ -126,9 +127,9 @@ bool isBlockTrans(World& world, const glm::vec3 pos)
 
 void GameModule::initChunkFaces(World& world, Chunk& chunk)
 {
-	for (uint32_t z = 0; z < g_chunkSize.z; z++)
+	for (uint32_t y = 0; y < g_chunkSize.y; y++)
 	{
-		for (uint32_t y = 0; y < g_chunkSize.y; y++)
+		for (uint32_t z = 0; z < g_chunkSize.z; z++)
 		{
 			for (uint32_t x = 0; x < g_chunkSize.x; x++)
 			{
@@ -146,24 +147,23 @@ void GameModule::initChunkFaces(World& world, Chunk& chunk)
 
 				if (chunk.blocks[getAbsId(pos)].type == BlockType::AIR)
 				{
-
 					bool topSolid = top.y < g_chunkSize.y && chunk.blocks[topId].type != BlockType::AIR;
 					bool frontSolid = front.z < chunk.pos.z + g_chunkSize.z && chunk.blocks[frontId].type != BlockType::AIR;
 					bool rightSolid = right.x < chunk.pos.x + g_chunkSize.x && chunk.blocks[rightId].type != BlockType::AIR;
 
 					if (topSolid)
 					{
-						chunk.blocks[topId].bottom = true;
+						setBlockFace(chunk, top, Face::FaceType::BOTTOM);
 					}
 
 					if (frontSolid)
 					{
-						chunk.blocks[frontId].back = true;
+						setBlockFace(chunk, front, Face::FaceType::BACK);
 					}
 
 					if (rightSolid)
 					{
-						chunk.blocks[rightId].left = true;
+						setBlockFace(chunk, right, Face::FaceType::LEFT);
 					}
 				}
 				else
@@ -174,17 +174,17 @@ void GameModule::initChunkFaces(World& world, Chunk& chunk)
 
 					if (topTrans)
 					{
-						chunk.blocks[iBlock].top = true;
+						setBlockFace(chunk, pos, Face::FaceType::TOP);
 					}
 
 					if (frontTrans)
 					{
-						chunk.blocks[iBlock].front = true;
+						setBlockFace(chunk, pos, Face::FaceType::FRONT);
 					}
 
 					if (rightTrans)
 					{
-						chunk.blocks[iBlock].right = true;
+						setBlockFace(chunk, pos, Face::FaceType::RIGHT);
 					}
 				}
 			}
@@ -198,7 +198,6 @@ void GameModule::drawWorld(World& world)
 	{
 		if (!pair.second.updated)
 		{
-			//generateMesh(pair.second);
 			loadChunkMesh(pair.second);
 			pair.second.updated = true;
 		}
@@ -246,19 +245,19 @@ void GameModule::processRay(World& world, const Player& player, Engine::Ray& ray
 
 		if (world.chunks[currChunkPos].blocks[id].type != BlockType::AIR)
 		{
-			/*
 			if (type == RayType::PLACE)
 			{
 				currPos -= dl * dir;
 				currChunkPos = getChunkPos(currPos);
 				iPos = static_cast<glm::ivec3>(currPos) - currChunkPos;
+				currPos -= currChunkPos;
 				id = g_chunkSize.x * (g_chunkSize.x * iPos.y + iPos.z) + iPos.x;
-				if (collAABB(player, world.chunks[currChunkPos].blocks[id]))
+				if (collAABB(player, currPos))
 				{
 					break;
 				}
 			}
-			*/
+			
 			traceRay(world, currPos, shader, type);
 			hit = true;
 			break;
