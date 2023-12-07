@@ -7,37 +7,6 @@
         {
           "ruleId": "C26495",
           "message": {
-            "text": "Variable 'Engine::Renderer::Mesh::VAO' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/engine/renderer/mesh.h"
-                },
-                "region": {
-                  "startLine": 24,
-                  "startColumn": 3,
-                  "endLine": 24,
-                  "endColumn": 3
-                }
-              },
-              "logicalLocations": [
-                {
-                  "fullyQualifiedName": "Engine::Renderer::Mesh::{ctor}",
-                  "decoratedName": "??0Mesh@Renderer@Engine@@QEAA@XZ",
-                  "kind": "function"
-                }
-              ]
-            }
-          ],
-          "properties": {
-            "targetSymbol": "Engine::Renderer::Mesh::VAO"
-          }
-        },
-        {
-          "ruleId": "C26495",
-          "message": {
             "text": "Variable 'Engine::Renderer::Mesh::VBO' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
@@ -69,7 +38,7 @@
         {
           "ruleId": "C26495",
           "message": {
-            "text": "Variable 'Engine::Renderer::Mesh::capacity' is uninitialized. Always initialize a member variable (type.6)."
+            "text": "Variable 'Engine::Renderer::Mesh::VAO' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
             {
@@ -94,7 +63,7 @@
             }
           ],
           "properties": {
-            "targetSymbol": "Engine::Renderer::Mesh::capacity"
+            "targetSymbol": "Engine::Renderer::Mesh::VAO"
           }
         },
         {
@@ -109,9 +78,9 @@
                   "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.h"
                 },
                 "region": {
-                  "startLine": 28,
+                  "startLine": 27,
                   "startColumn": 2,
-                  "endLine": 28,
+                  "endLine": 27,
                   "endColumn": 2
                 }
               },
@@ -151,7 +120,7 @@
             "resultFile"
           ],
           "hashes": {
-            "sha-256": "86b1c9f3b96f229f6fa7fab5c26b0de140f1a15dcfc9480cc4515b15419ad943"
+            "sha-256": "40a4a3d3fa4a65c569f533da1121c9fdc82840ecb48e09396ad9a9ce8ba828d4"
           }
         },
         {
@@ -162,7 +131,7 @@
             "resultFile"
           ],
           "hashes": {
-            "sha-256": "411d76727cf672e1a97a2fb2997e0ef8cc2bee2604b0f18c5755498b840a9a48"
+            "sha-256": "eea2ed825e9b6fce68c058f726593a620d7670cd1085ab060fd1b2223546da68"
           }
         },
         {
@@ -173,7 +142,7 @@
             "analysisTarget"
           ],
           "hashes": {
-            "sha-256": "6e3b7ab14536d8461e88a8f86a0e74b09fcaf0058f1f5e9210a737fdfef5605c"
+            "sha-256": "e8dc227bf65892d8fd530cb02a4f9b2d562a96f555e189619c2a7b91a5acf215"
           }
         },
         {
@@ -1253,7 +1222,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/modules/chunk/block.h"
           },
           "hashes": {
-            "sha-256": "aaaa314bdc1713d46dd63d1daa7916c3f961322c8cf3661fc4db2830923503a0"
+            "sha-256": "47c21709abc488c9b8e36bf832d7752f0f813d92fff3ddee5cc7e1a3f3db131b"
           }
         }
       ]
