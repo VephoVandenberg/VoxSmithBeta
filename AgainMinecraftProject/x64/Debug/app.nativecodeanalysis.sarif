@@ -5,6 +5,90 @@
     {
       "results": [
         {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
+                },
+                "region": {
+                  "startLine": 31,
+                  "startColumn": 15,
+                  "endLine": 31,
+                  "endColumn": 42
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::World::KeyFuncs::()",
+                  "decoratedName": "??RKeyFuncs@World@GameModule@@QEBA_KAEBU?$vec@$02H$0A@@glm@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
+                },
+                "region": {
+                  "startLine": 32,
+                  "startColumn": 15,
+                  "endLine": 32,
+                  "endColumn": 42
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::World::KeyFuncs::()",
+                  "decoratedName": "??RKeyFuncs@World@GameModule@@QEBA_KAEBU?$vec@$02H$0A@@glm@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
+                },
+                "region": {
+                  "startLine": 33,
+                  "startColumn": 15,
+                  "endLine": 33,
+                  "endColumn": 42
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::World::KeyFuncs::()",
+                  "decoratedName": "??RKeyFuncs@World@GameModule@@QEBA_KAEBU?$vec@$02H$0A@@glm@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "ruleId": "C26495",
           "message": {
             "text": "Variable 'GameModule::World::minBorder' is uninitialized. Always initialize a member variable (type.6)."
@@ -16,9 +100,9 @@
                   "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
                 },
                 "region": {
-                  "startLine": 41,
+                  "startLine": 45,
                   "startColumn": 2,
-                  "endLine": 41,
+                  "endLine": 45,
                   "endColumn": 2
                 }
               },
@@ -47,9 +131,9 @@
                   "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
                 },
                 "region": {
-                  "startLine": 41,
+                  "startLine": 45,
                   "startColumn": 2,
-                  "endLine": 41,
+                  "endLine": 45,
                   "endColumn": 2
                 }
               },
@@ -89,7 +173,7 @@
             "resultFile"
           ],
           "hashes": {
-            "sha-256": "f5f869191404f8723556013d0614bf8000c984865a9cfcd2d1b94293c3e60812"
+            "sha-256": "fa2a6c210b857d82fb62593d82381dca903349e3a7b1511e5d6817d2973ac979"
           }
         },
         {
@@ -100,7 +184,7 @@
             "analysisTarget"
           ],
           "hashes": {
-            "sha-256": "338fced9b54a2cb3f2cddec20699fdf38fbd2ac97d1ded204deb2d018ad793e6"
+            "sha-256": "7f2609b15317ab39155edb2ae1430c658b299ad2395a313b552904d584f45e3e"
           }
         },
         {
@@ -1228,7 +1312,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/texture/texture_list.h"
           },
           "hashes": {
-            "sha-256": "827c49cbae14f73812d31af346533846958447c14e27313db1ba137b67731867"
+            "sha-256": "df09790db160a96f8ab3b34e8206c2a6fbea24ce36ec6aeac36907538d8c6831"
           }
         },
         {
@@ -1316,7 +1400,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/modules/chunk/chunk.h"
           },
           "hashes": {
-            "sha-256": "411d76727cf672e1a97a2fb2997e0ef8cc2bee2604b0f18c5755498b840a9a48"
+            "sha-256": "eea2ed825e9b6fce68c058f726593a620d7670cd1085ab060fd1b2223546da68"
           }
         },
         {
@@ -1324,7 +1408,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/renderer/mesh.h"
           },
           "hashes": {
-            "sha-256": "86b1c9f3b96f229f6fa7fab5c26b0de140f1a15dcfc9480cc4515b15419ad943"
+            "sha-256": "40a4a3d3fa4a65c569f533da1121c9fdc82840ecb48e09396ad9a9ce8ba828d4"
           }
         },
         {
@@ -1332,7 +1416,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/modules/chunk/block.h"
           },
           "hashes": {
-            "sha-256": "aaaa314bdc1713d46dd63d1daa7916c3f961322c8cf3661fc4db2830923503a0"
+            "sha-256": "47c21709abc488c9b8e36bf832d7752f0f813d92fff3ddee5cc7e1a3f3db131b"
           }
         },
         {

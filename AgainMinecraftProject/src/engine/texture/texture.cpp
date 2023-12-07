@@ -47,7 +47,7 @@ bool Engine::initTextureArray(TextureArray& tArray, const std::vector<const char
 	glBindTexture(GL_TEXTURE_2D_ARRAY, tArray.id);
 
 	glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, 64, 64, paths.size());
-	for (uint32_t index = 0; index < paths.size(); index++)
+	for (uint8_t index = 0; index < paths.size(); index++)
 	{
 		stbi_set_flip_vertically_on_load(true);
 		unsigned char* data = stbi_load(paths[index], &tArray.width, &tArray.height, &tArray.nrChannels, 0);

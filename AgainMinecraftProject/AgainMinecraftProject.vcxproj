@@ -74,6 +74,9 @@
     <IncludePath>D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\glm;D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\GLAD\include;D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\GLFW\include\GLFW;$(IncludePath)</IncludePath>
     <LibraryPath>D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\GLFW\bin;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LibraryPath>D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\GLFW\bin;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -123,12 +126,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\glm;D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\GLAD\include;D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\GLFW\include\GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

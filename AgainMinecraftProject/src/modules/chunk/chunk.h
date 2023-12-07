@@ -41,13 +41,13 @@ namespace GameModule
 		PLACE
 	};
 
-	Chunk	generateChunk(const glm::ivec3 pos);
+	Chunk	generateChunk(const glm::ivec3& pos);
 	void	generateMesh(Chunk& chunk);
 	void	loadChunkMesh(Chunk& chunk);
 	void	updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2);
 
 	void	setType(Block& block);
-	void	setBlockFace(Chunk& chunk, const glm::vec3& pos, Face::FaceType type);
+	void	setBlockFace(Chunk& chunk, const glm::vec3& pos, BlockType type, Face::FaceType face);
 	void	removeBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type);
 
 	void	drawChunk(const Chunk& chunk);

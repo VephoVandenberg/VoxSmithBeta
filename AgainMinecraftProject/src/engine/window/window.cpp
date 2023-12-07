@@ -14,8 +14,6 @@ GLFWwindow* Engine::getWindow(const char* title, size_t width, size_t height)
 		exit(EXIT_FAILURE);
 	}
 
-
-
 	GLFWwindow* window = glfwCreateWindow(width, height, title, nullptr, nullptr);
 	glfwMakeContextCurrent(window);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

@@ -2,9 +2,9 @@
 
 /** TO DO LIST
 * Agenda
-* - Think about chunk rendering and storing blocks only about blocktype and face bools
-* - Now think about how texture IDs must be set to every block face
 * Later
+* - Block layering how to do that
+* - Reducing vertex data
 * - More blocks
 * - Infinite terrain babe
 * - Serialisation

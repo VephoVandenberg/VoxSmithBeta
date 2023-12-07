@@ -10,6 +10,8 @@ namespace Engine
 	{
 		struct Vertex
 		{
+			// x : 4 bits, y: 8 bits, z : 4 bits 
+			// int16_t localData
 			glm::vec3 pos;
 			int8_t coordInd;
 			int8_t texId;

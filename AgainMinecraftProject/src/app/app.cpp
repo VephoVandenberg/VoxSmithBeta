@@ -32,8 +32,8 @@ const char* g_title = "Azamat's making Minecraft fucking again";
 constexpr size_t g_width = 1240;
 constexpr size_t g_height = 720;
 
-constexpr size_t g_numberOfChunksX = 8;
-constexpr size_t g_numberOfChunksZ = 8;
+constexpr size_t g_numberOfChunksX = 32;
+constexpr size_t g_numberOfChunksZ = 32;
 
 constexpr size_t g_jumpHeight = 3;
 
@@ -138,6 +138,7 @@ void Application::initTextures()
 	Texture texture;
 	initTexture(texture, "textures/grass.png");
 	m_textures["grass"] = texture;
+	
 
 	initTextureArray(m_tArray, s_tPaths);
 }

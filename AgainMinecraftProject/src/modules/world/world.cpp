@@ -2,7 +2,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include <array>
+#include <thread>
 #include <glfw3.h>
+#include <mutex>
+#include <algorithm>
+#include <functional>
 
 #include "../../engine/ray/ray.h"
 #include "../../engine/shader/shader.h"
@@ -22,21 +26,66 @@ constexpr int32_t g_chunksZ = 32;
 
 constexpr size_t g_nBlocks = g_chunkSize.x * g_chunkSize.y * g_chunkSize.z;
 
+std::mutex g_worldMutex;
+
+void initParallelChunks(World& world, const glm::vec3& min, const glm::vec3& max)
+{
+	for (int32_t z = min.z; z < max.z; z += g_chunkSize.z)
+	{
+		for (int32_t x = min.x; x < max.x; x += g_chunkSize.x)
+		{
+			glm::ivec3 chunkPos = { x, 0, z };
+			Chunk chunk = generateChunk(chunkPos);
+			initChunkFaces(chunk);
+			
+			g_worldMutex.lock();
+			world.chunks[chunkPos] = std::move(chunk);
+			g_worldMutex.unlock();
+		}
+	}
+}
+
 void GameModule::initWorld(World& world)
 {
 	world.minBorder = glm::ivec3(0);
 	world.maxBorder = glm::ivec3(g_chunkSize.x * g_chunksX, 0, g_chunkSize.z * g_chunksZ);
+	
+	int32_t maxThreads = std::thread::hardware_concurrency();
+	int32_t availableThreads = maxThreads - 1;
+	std::vector<std::thread> threads;
 
-	float t = glfwGetTime();
+	const float step = g_chunkSize.z * g_chunksZ / 2;
+
+	int32_t minX, minZ;
+
+	for (minZ = world.minBorder.z; 
+		minZ <= world.maxBorder.z - step; 
+		minZ += step)
+	{
+		for (minX = world.minBorder.x;
+			minX <= world.maxBorder.x - step;
+			minX += step)
+		{
+			if (threads.size() >= availableThreads)
+			{
+				initParallelChunks(world, glm::vec3(minX, 0, minZ), world.maxBorder);
+			}
+			else
+			{
+				threads.push_back(
+					std::move(
+						std::thread(initParallelChunks,
+							std::ref(world), glm::vec3(minX, 0, minZ), glm::vec3(minX + step, 0, minZ + step))));
+			}
+		}
+	}
+	for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
 
 	for (int32_t z = 0; z < world.maxBorder.z; z += g_chunkSize.z)
 	{
 		for (int32_t x = 0; x < world.maxBorder.x; x += g_chunkSize.x)
 		{
 			glm::ivec3 chunkPos = { x, 0, z };
-
-			world.chunks[chunkPos] = generateChunk(chunkPos);
-			initChunkFaces(world, world.chunks[chunkPos]);
 
 			glm::ivec3 pos = { x - g_chunkSize.x, 0, z };
 			if (world.chunks.find(pos) != world.chunks.end())
@@ -51,8 +100,6 @@ void GameModule::initWorld(World& world)
 			}
 		}
 	}
-	std::cout << glfwGetTime() - t << std::endl;
-	t = glfwGetTime();
 
 	for (int32_t z = 0; z < g_chunksZ; z++)
 	{
@@ -63,7 +110,6 @@ void GameModule::initWorld(World& world)
 			loadChunkMesh(world.chunks[chunkPos]);
 		}
 	}
-	std::cout << glfwGetTime() - t << std::endl;
 }
 
 inline glm::ivec3 getChunkPos(const glm::vec3 pos)
@@ -82,11 +128,13 @@ inline uint32_t getId(World& world, const glm::ivec3 pos)
 	return g_chunkSize.x * (g_chunkSize.z * (iPos.y) + iPos.z) + iPos.x;
 }
 
-inline uint32_t getAbsId(glm::ivec3 pos)
+inline uint32_t getAbsId(const glm::ivec3& pos)
 {
 	return 
 		g_chunkSize.x * (g_chunkSize.z * (pos.y % g_chunkSize.y) + pos.z % g_chunkSize.z) + pos.x % g_chunkSize.x;
 }
+
+#define GET_ABS_ID(pos, size) size.x * (size.z * (pos.y % size.y) + pos.z % size.z) + pos.x % size.x
 
 Block& getBlock(World& world, const glm::vec3 pos)
 {
@@ -124,67 +172,64 @@ bool isBlockTrans(World& world, const glm::vec3 pos)
 	return getBlock(world, pos).type == BlockType::AIR;
 }
 
-void GameModule::initChunkFaces(World& world, Chunk& chunk)
+void GameModule::initChunkFaces(Chunk& chunk)
 {
-	for (uint32_t z = 0; z < g_chunkSize.z; z++)
+	for (uint32_t y = 0; y < g_chunkSize.y; y++)
 	{
-		for (uint32_t y = 0; y < g_chunkSize.y; y++)
+		for (uint32_t z = 0; z < g_chunkSize.z; z++)
 		{
 			for (uint32_t x = 0; x < g_chunkSize.x; x++)
 			{
-				glm::vec3 pos = chunk.pos + glm::vec3( x, y, z );
+				glm::vec3 pos = glm::vec3( x, y, z );
 
 				glm::vec3 top = { pos.x, pos.y + 1, pos.z };
 				glm::vec3 front = { pos.x, pos.y, pos.z + 1 };
 				glm::vec3 right = { pos.x + 1, pos.y, pos.z };
 
-				uint32_t iBlock = getAbsId(pos);
+				uint32_t iBlock = g_chunkSize.x * ( y * g_chunkSize.z + z ) + x;
 
-				uint32_t topId = getAbsId(top);
-				uint32_t rightId = getAbsId(right);
-				uint32_t frontId = getAbsId(front);
+				uint32_t topId = g_chunkSize.x * (top.y * g_chunkSize.z + top.z) + top.x;	
+				uint32_t rightId = g_chunkSize.x * (right.y * g_chunkSize.z + right.z) + right.x; 
+				uint32_t frontId = g_chunkSize.x * (front.y * g_chunkSize.z + front.z) + front.x; 
 
-				if (chunk.blocks[getAbsId(pos)].type == BlockType::AIR)
+				if (chunk.blocks[iBlock].type == BlockType::AIR)
 				{
-
-					bool topSolid = top.y < g_chunkSize.y && chunk.blocks[topId].type != BlockType::AIR;
-					bool frontSolid = front.z < chunk.pos.z + g_chunkSize.z && chunk.blocks[frontId].type != BlockType::AIR;
-					bool rightSolid = right.x < chunk.pos.x + g_chunkSize.x && chunk.blocks[rightId].type != BlockType::AIR;
-
-					if (topSolid)
+					if (top.y < g_chunkSize.y &&
+						chunk.blocks[topId].type != BlockType::AIR)
 					{
-						chunk.blocks[topId].bottom = true;
+						setBlockFace(chunk, chunk.pos + top, chunk.blocks[topId].type, Face::FaceType::BOTTOM);
 					}
 
-					if (frontSolid)
+					if (front.z < g_chunkSize.z && 
+						chunk.blocks[frontId].type != BlockType::AIR)
 					{
-						chunk.blocks[frontId].back = true;
+						setBlockFace(chunk, chunk.pos + front, chunk.blocks[frontId].type, Face::FaceType::BACK);
 					}
 
-					if (rightSolid)
+					if (right.x < g_chunkSize.x && 
+						chunk.blocks[rightId].type != BlockType::AIR)
 					{
-						chunk.blocks[rightId].left = true;
+						setBlockFace(chunk, chunk.pos + right, chunk.blocks[rightId].type, Face::FaceType::LEFT);
 					}
 				}
 				else
 				{
-					bool topTrans = top.y < g_chunkSize.y && chunk.blocks[topId].type == BlockType::AIR;
-					bool frontTrans = front.z < chunk.pos.z + g_chunkSize.z && chunk.blocks[frontId].type == BlockType::AIR;
-					bool rightTrans = right.x < chunk.pos.x + g_chunkSize.x && chunk.blocks[rightId].type == BlockType::AIR;
-
-					if (topTrans)
+					if (top.y < g_chunkSize.y && 
+						chunk.blocks[topId].type == BlockType::AIR)
 					{
-						chunk.blocks[iBlock].top = true;
+						setBlockFace(chunk, chunk.pos + pos, chunk.blocks[iBlock].type, Face::FaceType::TOP);
 					}
 
-					if (frontTrans)
+					if (front.z < g_chunkSize.z && 
+						chunk.blocks[frontId].type == BlockType::AIR)
 					{
-						chunk.blocks[iBlock].front = true;
+						setBlockFace(chunk, chunk.pos + pos, chunk.blocks[iBlock].type, Face::FaceType::FRONT);
 					}
 
-					if (rightTrans)
+					if (right.x < g_chunkSize.x && 
+						chunk.blocks[rightId].type == BlockType::AIR)
 					{
-						chunk.blocks[iBlock].right = true;
+						setBlockFace(chunk, chunk.pos + pos, chunk.blocks[iBlock].type, Face::FaceType::RIGHT);
 					}
 				}
 			}
@@ -198,7 +243,6 @@ void GameModule::drawWorld(World& world)
 	{
 		if (!pair.second.updated)
 		{
-			//generateMesh(pair.second);
 			loadChunkMesh(pair.second);
 			pair.second.updated = true;
 		}
@@ -246,19 +290,19 @@ void GameModule::processRay(World& world, const Player& player, Engine::Ray& ray
 
 		if (world.chunks[currChunkPos].blocks[id].type != BlockType::AIR)
 		{
-			/*
 			if (type == RayType::PLACE)
 			{
 				currPos -= dl * dir;
 				currChunkPos = getChunkPos(currPos);
 				iPos = static_cast<glm::ivec3>(currPos) - currChunkPos;
+				currPos -= currChunkPos;
 				id = g_chunkSize.x * (g_chunkSize.x * iPos.y + iPos.z) + iPos.x;
-				if (collAABB(player, world.chunks[currChunkPos].blocks[id]))
+				if (collAABB(player, currPos))
 				{
 					break;
 				}
 			}
-			*/
+			
 			traceRay(world, currPos, shader, type);
 			hit = true;
 			break;
