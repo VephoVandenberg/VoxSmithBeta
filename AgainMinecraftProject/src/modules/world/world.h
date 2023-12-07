@@ -45,7 +45,7 @@ namespace GameModule
 	};
 
 	void initWorld(World& world);
-	void initChunkFaces(World& world, Chunk& chunk);
+	void initChunkFaces(Chunk& chunk);
 	void updateWorld(World& world, Player& player);
 	void drawWorld(World& world);
 

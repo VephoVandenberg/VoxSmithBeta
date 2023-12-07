@@ -32,63 +32,63 @@ constexpr float g_rayDeltaMag = 0.1f;
 using VertexArray = std::array<Vertex, g_vertexPerFace>;
 
 constexpr VertexArray back{ {
-	{{ 0, 0, 0 }, 0, -1},
-	{{ 0, 1, 0 }, 2, -1},
-	{{ 1, 0, 0 }, 1, -1},
+	{{ 0, 0, 0 }, 0, 0 },
+	{{ 0, 1, 0 }, 2, 0 },
+	{{ 1, 0, 0 }, 1, 0 },
 
-	{{ 1, 0, 0 }, 1, -1},
-	{{ 0, 1, 0 }, 2, -1},
-	{{ 1, 1, 0 }, 3, -1},
+	{{ 1, 0, 0 }, 1, 0 },
+	{{ 0, 1, 0 }, 2, 0 },
+	{{ 1, 1, 0 }, 3, 0 },
 } };
 
 constexpr VertexArray front{ {
-	{{ 0, 0, 1 }, 0, -1 },
-	{{ 1, 0, 1 }, 1, -1 },
-	{{ 0, 1, 1 }, 2, -1 },
+	{{ 0, 0, 1 }, 0, 0 },
+	{{ 1, 0, 1 }, 1, 0 },
+	{{ 0, 1, 1 }, 2, 0 },
 
-	{{ 1, 0, 1 }, 1, -1 },
-	{{ 1, 1, 1 }, 3, -1 },
-	{{ 0, 1, 1 }, 2, -1 },
+	{{ 1, 0, 1 }, 1, 0 },
+	{{ 1, 1, 1 }, 3, 0 },
+	{{ 0, 1, 1 }, 2, 0 },
 } };
 
 constexpr VertexArray top{ {
-	{{ 0, 1, 1 }, 0, -1 },
-	{{ 1, 1, 1 }, 1, -1 },
-	{{ 0, 1, 0 }, 2, -1 },
+	{{ 0, 1, 1 }, 0, 0 },
+	{{ 1, 1, 1 }, 1, 0 },
+	{{ 0, 1, 0 }, 2, 0 },
 
-	{{ 1, 1, 1 }, 1, -1 },
-	{{ 1, 1, 0 }, 3, -1 },
-	{{ 0, 1, 0 }, 2, -1 },
+	{{ 1, 1, 1 }, 1, 0 },
+	{{ 1, 1, 0 }, 3, 0 },
+	{{ 0, 1, 0 }, 2, 0 },
 } };
 
 constexpr VertexArray bottom{ {
-	{{ 0, 0, 1 }, 0, -1 },
-	{{ 0, 0, 0 }, 2, -1 },
-	{{ 1, 0, 1 }, 1, -1 },
+	{{ 0, 0, 1 }, 0, 0 },
+	{{ 0, 0, 0 }, 2, 0 },
+	{{ 1, 0, 1 }, 1, 0 },
 
-	{{ 1, 0, 0 }, 3, -1 },
-	{{ 1, 0, 1 }, 1, -1 },
-	{{ 0, 0, 0 }, 2, -1 },
+	{{ 1, 0, 0 }, 3, 0 },
+	{{ 1, 0, 1 }, 1, 0 },
+	{{ 0, 0, 0 }, 2, 0 },
 } };
 
 constexpr VertexArray left{ {
-	{{ 0, 0, 0 }, 0, -1 },
-	{{ 0, 0, 1 }, 1, -1 },
-	{{ 0, 1, 0 }, 2, -1 },
+	{{ 0, 0, 0 }, 0, 0 },
+	{{ 0, 0, 1 }, 1, 0 },
+	{{ 0, 1, 0 }, 2, 0 },
 						   
-	{{ 0, 0, 1 }, 1, -1 },
-	{{ 0, 1, 1 }, 3, -1 },
-	{{ 0, 1, 0 }, 2, -1 },
+	{{ 0, 0, 1 }, 1, 0 },
+	{{ 0, 1, 1 }, 3, 0 },
+	{{ 0, 1, 0 }, 2, 0 },
 } };
 
 constexpr VertexArray right{ {
-	{{ 1, 0, 1 }, 0, -1 },
-	{{ 1, 0, 0 }, 1, -1 },
-	{{ 1, 1, 1 }, 2, -1 },
+	{{ 1, 0, 1 }, 0, 0 },
+	{{ 1, 0, 0 }, 1, 0 },
+	{{ 1, 1, 1 }, 2, 0 },
 
-	{{ 1, 0, 0 }, 1, -1 },
-	{{ 1, 1, 0 }, 3, -1 },
-	{{ 1, 1, 1 }, 2, -1 }
+	{{ 1, 0, 0 }, 1, 0 },
+	{{ 1, 1, 0 }, 3, 0 },
+	{{ 1, 1, 1 }, 2, 0 }
 } };
 
 using FaceMap = std::unordered_map<Face::FaceType, const VertexArray, EnumHash>;
@@ -253,8 +253,6 @@ namespace Noise
 		x1 = lerp(dot_grad(h001, xf0, yf0, zf1), dot_grad(h101, xf1, yf0, zf1), u);
 		x2 = lerp(dot_grad(h011, xf0, yf1, zf1), dot_grad(h111, xf1, yf1, zf1), u);
 		y2 = lerp(x1, x2, v);
-
-		float val = lerp(y1, y2, w);
 
 		return lerp(y1, y2, w);
 	}
@@ -472,7 +470,7 @@ BlockType getBlockType(Chunk& chunk, const glm::vec3& pos)
 	float heightOffset = 80.0f;
 
 	float densityMod = ((heightOffset - pos.y) / g_chunkSize.y) * 2;
-	float density = Noise::octavePerlin(pos, 0.5f, 2);
+	float density = Noise::octavePerlin(pos, 0.5f, 4);
 
 	if (densityMod + density > 0.0f)
 	//if (heightOffset > pos.y)
@@ -483,7 +481,8 @@ BlockType getBlockType(Chunk& chunk, const glm::vec3& pos)
 	return BlockType::AIR;
 }
 
-Chunk GameModule::generateChunk(const glm::ivec3 pos)
+
+Chunk GameModule::generateChunk(const glm::ivec3& pos)
 {
 	Chunk chunk;
 	chunk.pos = pos;
@@ -508,37 +507,54 @@ Chunk GameModule::generateChunk(const glm::ivec3 pos)
 	return chunk;
 }
 
-void updateFace(Chunk& chunk, const glm::vec3 pos, Face::FaceType type)
+int8_t getFaceId(BlockType type, Face::FaceType face)
 {
-	int8_t texID = 0;// block.texIDs[static_cast<uint32_t>(type)];
+	if (type == BlockType::GRASS)
+	{
+		switch (face)
+		{
+		case Face::FaceType::TOP:
+			return 0;
+		case Face::FaceType::BOTTOM:
+			return 2;
+		case Face::FaceType::RIGHT:
+		case Face::FaceType::LEFT:
+		case Face::FaceType::FRONT:
+		case Face::FaceType::BACK:
+			return 1;
+		}
+	}
+	
+	if (type == BlockType::DIRT)
+	{
+		return 2;
+	}
+}
+
+void updateFace(Chunk& chunk, const glm::vec3 pos, BlockType type, Face::FaceType face)
+{
+	int8_t texID = getFaceId(type, face);
 
 	for (uint32_t iVertex = 0; iVertex < g_vertexPerFace; iVertex++)
 	{
 		chunk.mesh.vertices.push_back({ 
-				g_faces[type][iVertex].pos + pos,  
-				g_faces[type][iVertex].coordInd,
-				0
+				g_faces[face][iVertex].pos + pos,  
+				g_faces[face][iVertex].coordInd,
+				texID
 			}
 		);
 	}
 }
 
-void GameModule::setBlockFace(Chunk& chunk, const glm::vec3& pos, Face::FaceType type)
+void GameModule::setBlockFace(Chunk& chunk, const glm::vec3& pos, BlockType type, Face::FaceType face)
 {
 	chunk.updated = false;
-	updateFace(chunk, pos, type);
+	updateFace(chunk, pos, type, face);
 }
 
 void GameModule::removeBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type)
 {
 	chunk.updated = false;
-	//chunk.faces.erase(
-	//	std::remove_if(
-	//		chunk.faces.begin(), chunk.faces.end(),
-	//		[&](const Face& face) {
-	//			return face.blockID == id && face.type == type;
-	//		}),
-	//	chunk.faces.end());
 }
 
 void GameModule::generateMesh(Chunk& chunk)
@@ -563,7 +579,6 @@ void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
 		{
 			for (uint32_t z = 0; z < g_chunkSize.z; z++)
 			{
-
 				uint32_t iLess = 
 					g_chunkSize.x * (y * g_chunkSize.z + z + 1) - 1;
 				uint32_t iMore = 
@@ -575,6 +590,7 @@ void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
 					setBlockFace(
 						more,
 						more.pos + glm::vec3(0, y, z),
+						more.blocks[iMore].type,
 						Face::FaceType::LEFT);
 				}
 				else if (less.blocks[iLess].type != BlockType::AIR &&
@@ -583,6 +599,7 @@ void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
 					setBlockFace(
 						less, 
 						less.pos + glm::vec3(g_chunkSize.x - 1, y, z),
+						less.blocks[iLess].type,
 						Face::FaceType::RIGHT);
 				}
 			}
@@ -605,6 +622,7 @@ void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
 					setBlockFace(
 						more, 
 						more.pos + glm::vec3(x, y, 0), 
+						more.blocks[iMore].type,
 						Face::FaceType::BACK);
 				}
 				else if (less.blocks[iLess].type != BlockType::AIR &&
@@ -613,6 +631,7 @@ void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
 					setBlockFace(
 						less,
 						less.pos + glm::vec3(x, y, g_chunkSize.z - 1),
+						less.blocks[iLess].type,
 						Face::FaceType::FRONT);
 				}
 			}

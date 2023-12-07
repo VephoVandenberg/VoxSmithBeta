@@ -2,10 +2,9 @@
 
 /** TO DO LIST
 * Agenda
-* - Make a new branch and see if you can load vertices and not affect the way vertices are stored
-* - Now think about how texture IDs must be set to every block face
-* - Multithreading
 * Later
+* - Block layering how to do that
+* - Reducing vertex data
 * - More blocks
 * - Infinite terrain babe
 * - Serialisation

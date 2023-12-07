@@ -36,7 +36,7 @@ void initParallelChunks(World& world, const glm::vec3& min, const glm::vec3& max
 		{
 			glm::ivec3 chunkPos = { x, 0, z };
 			Chunk chunk = generateChunk(chunkPos);
-			initChunkFaces(world, chunk);
+			initChunkFaces(chunk);
 			
 			g_worldMutex.lock();
 			world.chunks[chunkPos] = std::move(chunk);
@@ -58,7 +58,6 @@ void GameModule::initWorld(World& world)
 
 	int32_t minX, minZ;
 
-	float t = glfwGetTime();
 	for (minZ = world.minBorder.z; 
 		minZ <= world.maxBorder.z - step; 
 		minZ += step)
@@ -80,16 +79,8 @@ void GameModule::initWorld(World& world)
 			}
 		}
 	}
+	for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
 
-
-	for (auto& t : threads)
-	{
-		if (t.joinable())
-		{
-			t.join();
-		}
-	}
-	std::cout << glfwGetTime() - t << std::endl;
 	for (int32_t z = 0; z < world.maxBorder.z; z += g_chunkSize.z)
 	{
 		for (int32_t x = 0; x < world.maxBorder.x; x += g_chunkSize.x)
@@ -109,6 +100,7 @@ void GameModule::initWorld(World& world)
 			}
 		}
 	}
+
 	for (int32_t z = 0; z < g_chunksZ; z++)
 	{
 		for (int32_t x = 0; x < g_chunksX; x++)
@@ -136,7 +128,7 @@ inline uint32_t getId(World& world, const glm::ivec3 pos)
 	return g_chunkSize.x * (g_chunkSize.z * (iPos.y) + iPos.z) + iPos.x;
 }
 
-inline uint32_t getAbsId(glm::ivec3 pos)
+inline uint32_t getAbsId(const glm::ivec3& pos)
 {
 	return 
 		g_chunkSize.x * (g_chunkSize.z * (pos.y % g_chunkSize.y) + pos.z % g_chunkSize.z) + pos.x % g_chunkSize.x;
@@ -180,7 +172,7 @@ bool isBlockTrans(World& world, const glm::vec3 pos)
 	return getBlock(world, pos).type == BlockType::AIR;
 }
 
-void GameModule::initChunkFaces(World& world, Chunk& chunk)
+void GameModule::initChunkFaces(Chunk& chunk)
 {
 	for (uint32_t y = 0; y < g_chunkSize.y; y++)
 	{
@@ -195,52 +187,49 @@ void GameModule::initChunkFaces(World& world, Chunk& chunk)
 				glm::vec3 right = { pos.x + 1, pos.y, pos.z };
 
 				uint32_t iBlock = g_chunkSize.x * ( y * g_chunkSize.z + z ) + x;
-				//uint32_t iBlock = getAbsId(pos);
 
-				uint32_t topId = g_chunkSize.x * (top.y * g_chunkSize.z + top.z) + top.x;	//getAbsId(top);
-				uint32_t rightId = g_chunkSize.x * (right.y * g_chunkSize.z + right.z) + right.x; //getAbsId(right);
-				uint32_t frontId = g_chunkSize.x * (front.y * g_chunkSize.z + front.z) + front.x; //getAbsId(front);
+				uint32_t topId = g_chunkSize.x * (top.y * g_chunkSize.z + top.z) + top.x;	
+				uint32_t rightId = g_chunkSize.x * (right.y * g_chunkSize.z + right.z) + right.x; 
+				uint32_t frontId = g_chunkSize.x * (front.y * g_chunkSize.z + front.z) + front.x; 
 
 				if (chunk.blocks[iBlock].type == BlockType::AIR)
 				{
-					//bool topSolid = top.y < g_chunkSize.y && chunk.blocks[topId].type != BlockType::AIR;
-					//bool frontSolid = front.z < g_chunkSize.z && chunk.blocks[frontId].type != BlockType::AIR;
-					//bool rightSolid = right.x < g_chunkSize.x && chunk.blocks[rightId].type != BlockType::AIR;
-
-					if (top.y < g_chunkSize.y && chunk.blocks[topId].type != BlockType::AIR)
+					if (top.y < g_chunkSize.y &&
+						chunk.blocks[topId].type != BlockType::AIR)
 					{
-						setBlockFace(chunk, chunk.pos + top, Face::FaceType::BOTTOM);
+						setBlockFace(chunk, chunk.pos + top, chunk.blocks[topId].type, Face::FaceType::BOTTOM);
 					}
 
-					if (front.z < g_chunkSize.z && chunk.blocks[frontId].type != BlockType::AIR)
+					if (front.z < g_chunkSize.z && 
+						chunk.blocks[frontId].type != BlockType::AIR)
 					{
-						setBlockFace(chunk, chunk.pos + front, Face::FaceType::BACK);
+						setBlockFace(chunk, chunk.pos + front, chunk.blocks[frontId].type, Face::FaceType::BACK);
 					}
 
-					if (right.x < g_chunkSize.x && chunk.blocks[rightId].type != BlockType::AIR)
+					if (right.x < g_chunkSize.x && 
+						chunk.blocks[rightId].type != BlockType::AIR)
 					{
-						setBlockFace(chunk, chunk.pos + right, Face::FaceType::LEFT);
+						setBlockFace(chunk, chunk.pos + right, chunk.blocks[rightId].type, Face::FaceType::LEFT);
 					}
 				}
 				else
 				{
-					//bool topTrans = top.y < g_chunkSize.y && chunk.blocks[topId].type == BlockType::AIR;
-					//bool frontTrans = front.z < g_chunkSize.z && chunk.blocks[frontId].type == BlockType::AIR;
-					//bool rightTrans = right.x < g_chunkSize.x && chunk.blocks[rightId].type == BlockType::AIR;
-
-					if (top.y < g_chunkSize.y && chunk.blocks[topId].type == BlockType::AIR)
+					if (top.y < g_chunkSize.y && 
+						chunk.blocks[topId].type == BlockType::AIR)
 					{
-						setBlockFace(chunk, chunk.pos + pos, Face::FaceType::TOP);
+						setBlockFace(chunk, chunk.pos + pos, chunk.blocks[iBlock].type, Face::FaceType::TOP);
 					}
 
-					if (front.z < g_chunkSize.z && chunk.blocks[frontId].type == BlockType::AIR)
+					if (front.z < g_chunkSize.z && 
+						chunk.blocks[frontId].type == BlockType::AIR)
 					{
-						setBlockFace(chunk, chunk.pos + pos, Face::FaceType::FRONT);
+						setBlockFace(chunk, chunk.pos + pos, chunk.blocks[iBlock].type, Face::FaceType::FRONT);
 					}
 
-					if (right.x < g_chunkSize.x && chunk.blocks[rightId].type == BlockType::AIR)
+					if (right.x < g_chunkSize.x && 
+						chunk.blocks[rightId].type == BlockType::AIR)
 					{
-						setBlockFace(chunk, chunk.pos + pos, Face::FaceType::RIGHT);
+						setBlockFace(chunk, chunk.pos + pos, chunk.blocks[iBlock].type, Face::FaceType::RIGHT);
 					}
 				}
 			}

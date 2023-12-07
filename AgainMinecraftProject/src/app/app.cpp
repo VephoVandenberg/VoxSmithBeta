@@ -138,6 +138,7 @@ void Application::initTextures()
 	Texture texture;
 	initTexture(texture, "textures/grass.png");
 	m_textures["grass"] = texture;
+	
 
 	initTextureArray(m_tArray, s_tPaths);
 }
