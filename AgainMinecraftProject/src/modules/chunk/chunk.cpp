@@ -27,6 +27,8 @@ constexpr glm::ivec3 g_chunkSize = { 16, 256, 16 };
 constexpr uint32_t g_nBlocks = g_chunkSize.x * g_chunkSize.y * g_chunkSize.z;
 constexpr uint32_t g_vertexPerCube = 36;
 
+constexpr uint32_t g_heightOffset = 100;
+
 constexpr float g_rayDeltaMag = 0.1f;
 
 using VertexArray = std::array<Vertex, g_vertexPerFace>;
@@ -257,173 +259,11 @@ namespace Noise
 		return lerp(y1, y2, w);
 	}
 
-	float simplex3D(float x, float y, float z) 
-	{
-		float n0, n1, n2, n3; // Noise contributions from the four corners
 
-		// Skewing/Unskewing factors for 3D
-		static const float F3 = 1.0f / 3.0f;
-		static const float G3 = 1.0f / 6.0f;
-
-		// Skew the input space to determine which simplex cell we're in
-		float s = (x + y + z) * F3; // Very nice and simple skew factor for 3D
-		int i = std::floor(x + s);
-		int j = std::floor(y + s);
-		int k = std::floor(z + s);
-		float t = (i + j + k) * G3;
-		float X0 = i - t; // Unskew the cell origin back to (x,y,z) space
-		float Y0 = j - t;
-		float Z0 = k - t;
-		float x0 = x - X0; // The x,y,z distances from the cell origin
-		float y0 = y - Y0;
-		float z0 = z - Z0;
-
-		// For the 3D case, the simplex shape is a slightly irregular tetrahedron.
-		// Determine which simplex we are in.
-		int i1, j1, k1; // Offsets for second corner of simplex in (i,j,k) coords
-		int i2, j2, k2; // Offsets for third corner of simplex in (i,j,k) coords
-		if (x0 >= y0) 
-		{
-			if (y0 >= z0) 
-			{
-				i1 = 1; 
-				j1 = 0; 
-				k1 = 0;
-				i2 = 1; 
-				j2 = 1;
-				k2 = 0; // X Y Z order
-			}
-			else if (x0 >= z0) 
-			{
-				i1 = 1;
-				j1 = 0;
-				k1 = 0; 
-				i2 = 1; 
-				j2 = 0;
-				k2 = 1; // X Z Y order
-			}
-			else 
-			{
-				i1 = 0; 
-				j1 = 0;
-				k1 = 1;
-				i2 = 1; 
-				j2 = 0; 
-				k2 = 1; // Z X Y order
-			}
-		}
-		else 
-		{ // x0<y0
-			if (y0 < z0) 
-			{
-				i1 = 0; 
-				j1 = 0; 
-				k1 = 1; 
-				i2 = 0; 
-				j2 = 1; 
-				k2 = 1; // Z Y X order
-			}
-			else if (x0 < z0) 
-			{
-				i1 = 0; 
-				j1 = 1; 
-				k1 = 0; 
-				i2 = 0; 
-				j2 = 1; 
-				k2 = 1; // Y Z X order
-			}
-			else {
-				i1 = 0; 
-				j1 = 1; 
-				k1 = 0; 
-				i2 = 1; 
-				j2 = 1; 
-				k2 = 0; // Y X Z order
-			}
-		}
-
-		// A step of (1,0,0) in (i,j,k) means a step of (1-c,-c,-c) in (x,y,z),
-		// a step of (0,1,0) in (i,j,k) means a step of (-c,1-c,-c) in (x,y,z), and
-		// a step of (0,0,1) in (i,j,k) means a step of (-c,-c,1-c) in (x,y,z), where
-		// c = 1/6.
-		float x1 = x0 - i1 + G3; // Offsets for second corner in (x,y,z) coords
-		float y1 = y0 - j1 + G3;
-		float z1 = z0 - k1 + G3;
-		float x2 = x0 - i2 + 2.0f * G3; // Offsets for third corner in (x,y,z) coords
-		float y2 = y0 - j2 + 2.0f * G3;
-		float z2 = z0 - k2 + 2.0f * G3;
-		float x3 = x0 - 1.0f + 3.0f * G3; // Offsets for last corner in (x,y,z) coords
-		float y3 = y0 - 1.0f + 3.0f * G3;
-		float z3 = z0 - 1.0f + 3.0f * G3;
-
-		auto hash = [](int32_t i) {
-			return p[static_cast<uint8_t>(i)];
-		};
-
-		// Work out the hashed gradient indices of the four simplex corners
-		int gi0 = hash(i + hash(j + hash(k)));
-		int gi1 = hash(i + i1 + hash(j + j1 + hash(k + k1)));
-		int gi2 = hash(i + i2 + hash(j + j2 + hash(k + k2)));
-		int gi3 = hash(i + 1 + hash(j + 1 + hash(k + 1)));
-
-		auto grad = [](int32_t hash, float x, float y, float z) {
-			int h = hash & 15;     // Convert low 4 bits of hash code into 12 simple
-			float u = h < 8 ? x : y; // gradient directions, and compute dot product.
-			float v = h < 4 ? y : h == 12 || h == 14 ? x : z; // Fix repeats at h = 12 to 15
-			return ((h & 1) ? -u : u) + ((h & 2) ? -v : v);
-		};
-
-		// Calculate the contribution from the four corners
-		float t0 = 0.6f - x0 * x0 - y0 * y0 - z0 * z0;
-		if (t0 < 0) 
-		{
-			n0 = 0.0;
-		}
-		else 
-		{
-			t0 *= t0;
-			n0 = t0 * t0 * grad(gi0, x0, y0, z0);
-		}
-		float t1 = 0.6f - x1 * x1 - y1 * y1 - z1 * z1;
-		if (t1 < 0) 
-		{
-			n1 = 0.0;
-		}
-		else 
-		{
-			t1 *= t1;
-			n1 = t1 * t1 * grad(gi1, x1, y1, z1);
-		}
-		float t2 = 0.6f - x2 * x2 - y2 * y2 - z2 * z2;
-		if (t2 < 0) 
-		{
-			n2 = 0.0;
-		}
-		else 
-		{
-			t2 *= t2;
-			n2 = t2 * t2 * grad(gi2, x2, y2, z2);
-		}
-		float t3 = 0.6f - x3 * x3 - y3 * y3 - z3 * z3;
-		if (t3 < 0)
-		{
-			n3 = 0.0;
-		}
-		else 
-		{
-			t3 *= t3;
-			n3 = t3 * t3 * grad(gi3, x3, y3, z3);
-		}
-		// Add contributions from each corner to get the final noise value.
-		// The result is scaled to stay just inside [-1,1]
-		return 32.0f * (n0 + n1 + n2 + n3);
-	}
-
-
-	float octavePerlin(glm::vec3 pos, float persistence, int octaves)
+	float octavePerlin3D(const glm::vec3& pos, float persistence, int octaves)
 	{
 		float total = 0.0f;
-		float frequency = 0.01f;
+		float frequency = 0.1f;
 		float amplitude = 1.0f;
 		float maxValue = 0.0f;
 
@@ -434,30 +274,78 @@ namespace Noise
 			maxValue += amplitude;
 
 			amplitude *= persistence;
-			frequency *= 2;
+			frequency /= persistence;
 		}
 
 		return  total / maxValue;
 	}
 
-	float octaveSimplex(glm::vec3 pos, float persistence, int octaves)
+	float octavePerlin2D(const glm::vec3& pos, float persistence, int octaves)
 	{
 		float total = 0.0f;
-		float frequency = 1.0f;
+		float frequency = 0.01f;
 		float amplitude = 1.0f;
 		float maxValue = 0.0f;
 
 		for (uint32_t i = 0; i < octaves; i++)
 		{
-			total += simplex3D(pos.x * frequency, pos.y * frequency, pos.z * frequency) * amplitude;
+			total += amplitude * perlin2D(pos.x * frequency, pos.z * frequency);
 
 			maxValue += amplitude;
 
 			amplitude *= persistence;
-			frequency *= 2;
+			frequency /= persistence;
 		}
 
-		return  total / maxValue;
+		return total / maxValue;
+	}
+
+	float octaveRigid2D(const glm::vec3& pos, float persistence, int octaves)
+	{
+		float total = 0.0f;
+		float frequency = 0.01f;
+		float amplitude = 1.0f;
+		float maxValue = 0.0f;
+
+		auto riged = [](float x, float z) {
+			return 2 * (0.5f - abs(0.5f - perlin2D(x, z)));
+		};
+
+		for (uint32_t i = 0; i < octaves; i++)
+		{
+			total += amplitude * riged(pos.x * frequency, pos.z * frequency);
+
+			maxValue += amplitude;
+
+			amplitude *= persistence;
+			frequency /= persistence;
+		}
+
+		return std::pow(total / maxValue, 3);
+	}
+
+	float octaveTerraces(const glm::vec3& pos, float persistence, int octaves)
+	{
+		float total = 0.0f;
+		float frequency = 0.01f;
+		float amplitude = 1.0f;
+		float maxValue = 0.0f;
+
+		auto ridged = [](float x, float z) {
+			return 2 * (0.5 - abs(0.5 - perlin2D(x, z)));
+		};
+
+		for (uint32_t i = 0; i < octaves; i++)
+		{
+			total += amplitude * ridged(pos.x * frequency, pos.z * frequency);
+
+			maxValue += amplitude;
+
+			amplitude *= persistence;
+			frequency /= persistence;
+		}
+
+		return std::round(total / maxValue * 2) / 2;
 	}
 }
 
@@ -465,15 +353,9 @@ void GameModule::setType(Block& block)
 {
 }
 
-BlockType getBlockType(Chunk& chunk, const glm::vec3& pos)
+BlockType getBlockType(Chunk& chunk, const glm::vec3& pos, float height)
 {
-	float heightOffset = 80.0f;
-
-	float densityMod = ((heightOffset - pos.y) / g_chunkSize.y) * 2;
-	float density = Noise::octavePerlin(pos, 0.5f, 4);
-
-	if (densityMod + density > 0.0f)
-	//if (heightOffset > pos.y)
+	if (height > pos.y)
 	{
 		return BlockType::GRASS;
 	}
@@ -491,6 +373,20 @@ Chunk GameModule::generateChunk(const glm::ivec3& pos)
 		chunk.blocks.reserve(g_nBlocks);
 	}
 
+	std::vector<uint32_t> heightMap;
+	for (int32_t z = 0; z < g_chunkSize.z; z++)
+	{
+		for (int32_t x = 0; x < g_chunkSize.x; x++)
+		{
+			float simple = Noise::octavePerlin2D({ pos.x + x, 0, pos.z + z }, 0.3f, 3); 
+			float rigid = Noise::octaveRigid2D({ pos.x + x, 0, pos.z + z }, 0.4f, 6);
+			float terrace = Noise::octaveTerraces({ pos.x + x, 0, pos.z + z }, 0.5f, 4);
+
+			heightMap.push_back(
+				g_heightOffset + 80 * rigid + 5 * terrace + 10 * simple);
+		}
+	}
+
 	for (int32_t y = 0; y < g_chunkSize.y; y++)
 	{
 		for (int32_t z = 0; z < g_chunkSize.z; z++)
@@ -498,7 +394,8 @@ Chunk GameModule::generateChunk(const glm::ivec3& pos)
 			for (int32_t x = 0; x < g_chunkSize.x; x++)
 			{
 				Block block;
-				block.type = getBlockType(chunk, chunk.pos + glm::vec3(x, y, z));
+				uint32_t heightId = g_chunkSize.x * z + x;
+				block.type = getBlockType(chunk, chunk.pos + glm::vec3(x, y, z), heightMap[heightId]);
 				chunk.blocks.push_back(block);
 			}
 		}

@@ -50,7 +50,7 @@ void GameModule::initWorld(World& world)
 	world.minBorder = glm::ivec3(0);
 	world.maxBorder = glm::ivec3(g_chunkSize.x * g_chunksX, 0, g_chunkSize.z * g_chunksZ);
 	
-	int32_t maxThreads = std::thread::hardware_concurrency();
+	int32_t maxThreads = 2 * std::thread::hardware_concurrency();
 	int32_t availableThreads = maxThreads - 1;
 	std::vector<std::thread> threads;
 

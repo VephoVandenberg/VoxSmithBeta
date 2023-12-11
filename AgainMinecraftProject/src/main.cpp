@@ -2,9 +2,10 @@
 
 /** TO DO LIST
 * Agenda
-* Later
-* - Block layering how to do that
 * - Reducing vertex data
+* Later
+* - Use FastNoise lib for the terrain(We might be ok with our implementation)...
+* - Block layering how to do that
 * - More blocks
 * - Infinite terrain babe
 * - Serialisation
