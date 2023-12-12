@@ -197,19 +197,19 @@ void GameModule::initChunkFaces(Chunk& chunk)
 					if (top.y < g_chunkSize.y &&
 						chunk.blocks[topId].type != BlockType::AIR)
 					{
-						setBlockFace(chunk, chunk.pos + top, chunk.blocks[topId].type, Face::FaceType::BOTTOM);
+						setBlockFace(chunk, top, chunk.blocks[topId].type, Face::FaceType::BOTTOM);
 					}
 
 					if (front.z < g_chunkSize.z && 
 						chunk.blocks[frontId].type != BlockType::AIR)
 					{
-						setBlockFace(chunk, chunk.pos + front, chunk.blocks[frontId].type, Face::FaceType::BACK);
+						setBlockFace(chunk, front, chunk.blocks[frontId].type, Face::FaceType::BACK);
 					}
 
 					if (right.x < g_chunkSize.x && 
 						chunk.blocks[rightId].type != BlockType::AIR)
 					{
-						setBlockFace(chunk, chunk.pos + right, chunk.blocks[rightId].type, Face::FaceType::LEFT);
+						setBlockFace(chunk, right, chunk.blocks[rightId].type, Face::FaceType::LEFT);
 					}
 				}
 				else
@@ -217,19 +217,19 @@ void GameModule::initChunkFaces(Chunk& chunk)
 					if (top.y < g_chunkSize.y && 
 						chunk.blocks[topId].type == BlockType::AIR)
 					{
-						setBlockFace(chunk, chunk.pos + pos, chunk.blocks[iBlock].type, Face::FaceType::TOP);
+						setBlockFace(chunk, pos, chunk.blocks[iBlock].type, Face::FaceType::TOP);
 					}
 
 					if (front.z < g_chunkSize.z && 
 						chunk.blocks[frontId].type == BlockType::AIR)
 					{
-						setBlockFace(chunk, chunk.pos + pos, chunk.blocks[iBlock].type, Face::FaceType::FRONT);
+						setBlockFace(chunk, pos, chunk.blocks[iBlock].type, Face::FaceType::FRONT);
 					}
 
 					if (right.x < g_chunkSize.x && 
 						chunk.blocks[rightId].type == BlockType::AIR)
 					{
-						setBlockFace(chunk, chunk.pos + pos, chunk.blocks[iBlock].type, Face::FaceType::RIGHT);
+						setBlockFace(chunk, pos, chunk.blocks[iBlock].type, Face::FaceType::RIGHT);
 					}
 				}
 			}
@@ -237,7 +237,7 @@ void GameModule::initChunkFaces(Chunk& chunk)
 	}
 }
 
-void GameModule::drawWorld(World& world)
+void GameModule::drawWorld(World& world, Engine::Shader& shader)
 {
 	for (auto& pair : world.chunks)
 	{
@@ -246,6 +246,7 @@ void GameModule::drawWorld(World& world)
 			loadChunkMesh(pair.second);
 			pair.second.updated = true;
 		}
+		Engine::setUniform3f(shader, "u_chunkPos", pair.second.pos);
 		drawChunk(pair.second);
 	}
 }

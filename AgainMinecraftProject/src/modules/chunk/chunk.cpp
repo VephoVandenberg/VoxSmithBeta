@@ -25,72 +25,77 @@ using namespace GameModule;
 constexpr glm::ivec3 g_chunkSize = { 16, 256, 16 };
 
 constexpr uint32_t g_nBlocks = g_chunkSize.x * g_chunkSize.y * g_chunkSize.z;
-constexpr uint32_t g_vertexPerCube = 36;
 
 constexpr uint32_t g_heightOffset = 100;
 
 constexpr float g_rayDeltaMag = 0.1f;
 
-using VertexArray = std::array<Vertex, g_vertexPerFace>;
+struct BlockVert
+{
+	glm::ivec3 pos;
+	uint8_t coordInd;
+};
+
+using VertexArray = std::array<BlockVert, g_vertexPerFace>;
 
 constexpr VertexArray back{ {
-	{{ 0, 0, 0 }, 0, 0 },
-	{{ 0, 1, 0 }, 2, 0 },
-	{{ 1, 0, 0 }, 1, 0 },
+	{{ 0, 0, 0 }, 0 },
+	{{ 0, 1, 0 }, 2 },
+	{{ 1, 0, 0 }, 1 },
 
-	{{ 1, 0, 0 }, 1, 0 },
-	{{ 0, 1, 0 }, 2, 0 },
-	{{ 1, 1, 0 }, 3, 0 },
+	{{ 1, 0, 0 }, 1 },
+	{{ 0, 1, 0 }, 2 },
+	{{ 1, 1, 0 }, 3 },
 } };
 
 constexpr VertexArray front{ {
-	{{ 0, 0, 1 }, 0, 0 },
-	{{ 1, 0, 1 }, 1, 0 },
-	{{ 0, 1, 1 }, 2, 0 },
+	{{ 0, 0, 1 }, 0 },
+	{{ 1, 0, 1 }, 1 },
+	{{ 0, 1, 1 }, 2 },
 
-	{{ 1, 0, 1 }, 1, 0 },
-	{{ 1, 1, 1 }, 3, 0 },
-	{{ 0, 1, 1 }, 2, 0 },
+	{{ 1, 0, 1 }, 1 },
+	{{ 1, 1, 1 }, 3 },
+	{{ 0, 1, 1 }, 2 },
 } };
 
 constexpr VertexArray top{ {
-	{{ 0, 1, 1 }, 0, 0 },
-	{{ 1, 1, 1 }, 1, 0 },
-	{{ 0, 1, 0 }, 2, 0 },
+	{{ 0, 1, 1 }, 0 },
+	{{ 1, 1, 1 }, 1 },
+	{{ 0, 1, 0 }, 2 },
 
-	{{ 1, 1, 1 }, 1, 0 },
-	{{ 1, 1, 0 }, 3, 0 },
-	{{ 0, 1, 0 }, 2, 0 },
+	{{ 1, 1, 1 }, 1 },
+	{{ 1, 1, 0 }, 3 },
+	{{ 0, 1, 0 }, 2 },
 } };
 
 constexpr VertexArray bottom{ {
-	{{ 0, 0, 1 }, 0, 0 },
-	{{ 0, 0, 0 }, 2, 0 },
-	{{ 1, 0, 1 }, 1, 0 },
+	{{ 0, 0, 1 }, 0 },
+	{{ 0, 0, 0 }, 2 },
+	{{ 1, 0, 1 }, 1 },
 
-	{{ 1, 0, 0 }, 3, 0 },
-	{{ 1, 0, 1 }, 1, 0 },
-	{{ 0, 0, 0 }, 2, 0 },
+	{{ 1, 0, 0 }, 3 },
+	{{ 1, 0, 1 }, 1 },
+	{{ 0, 0, 0 }, 2 },
 } };
 
 constexpr VertexArray left{ {
-	{{ 0, 0, 0 }, 0, 0 },
-	{{ 0, 0, 1 }, 1, 0 },
-	{{ 0, 1, 0 }, 2, 0 },
-						   
-	{{ 0, 0, 1 }, 1, 0 },
-	{{ 0, 1, 1 }, 3, 0 },
-	{{ 0, 1, 0 }, 2, 0 },
+	{{ 0, 0, 0 }, 0 },
+	{{ 0, 0, 1 }, 1 },
+	{{ 0, 1, 0 }, 2 },
+				  
+	{{ 0, 0, 1 }, 1 },
+	{{ 0, 1, 1 }, 3 },
+	{{ 0, 1, 0 }, 2 },
 } };
 
 constexpr VertexArray right{ {
-	{{ 1, 0, 1 }, 0, 0 },
-	{{ 1, 0, 0 }, 1, 0 },
-	{{ 1, 1, 1 }, 2, 0 },
+	{{ 1, 0, 1 }, 0 },
+	{{ 1, 0, 0 }, 1 },
+	{{ 1, 1, 1 }, 2 },
 
-	{{ 1, 0, 0 }, 1, 0 },
-	{{ 1, 1, 0 }, 3, 0 },
-	{{ 1, 1, 1 }, 2, 0 }
+	{{ 1, 0, 0 }, 1 },
+	{{ 1, 1, 0 }, 3 },
+	{{ 1, 1, 1 }, 2 }
 } };
 
 using FaceMap = std::unordered_map<Face::FaceType, const VertexArray, EnumHash>;
@@ -404,7 +409,7 @@ Chunk GameModule::generateChunk(const glm::ivec3& pos)
 	return chunk;
 }
 
-int8_t getFaceId(BlockType type, Face::FaceType face)
+uint8_t getFaceId(BlockType type, Face::FaceType face)
 {
 	if (type == BlockType::GRASS)
 	{
@@ -428,18 +433,23 @@ int8_t getFaceId(BlockType type, Face::FaceType face)
 	}
 }
 
-void updateFace(Chunk& chunk, const glm::vec3 pos, BlockType type, Face::FaceType face)
+void updateFace(Chunk& chunk, const glm::ivec3 pos, BlockType type, Face::FaceType face)
 {
-	int8_t texID = getFaceId(type, face);
+	uint8_t texID = getFaceId(type, face);
 
 	for (uint32_t iVertex = 0; iVertex < g_vertexPerFace; iVertex++)
 	{
-		chunk.mesh.vertices.push_back({ 
-				g_faces[face][iVertex].pos + pos,  
-				g_faces[face][iVertex].coordInd,
-				texID
-			}
-		);
+		glm::ivec3 posData = pos + g_faces[face][iVertex].pos;
+
+		int32_t data = 0;
+		data |= (posData.x) & 0x1F;		  // x
+		data |= (posData.y & 0x1FF) << 5; // y
+		data |= (posData.z & 0x1F) << 14; // z
+
+		data |= (g_faces[face][iVertex].coordInd & 0x3) << 19;	// Coord ind
+		data |= (texID & 0xF) << 21;							// tex id
+
+		chunk.mesh.vertices.push_back({data});
 	}
 }
 
@@ -486,7 +496,7 @@ void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
 				{
 					setBlockFace(
 						more,
-						more.pos + glm::vec3(0, y, z),
+						glm::vec3(0, y, z),
 						more.blocks[iMore].type,
 						Face::FaceType::LEFT);
 				}
@@ -495,7 +505,7 @@ void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
 				{
 					setBlockFace(
 						less, 
-						less.pos + glm::vec3(g_chunkSize.x - 1, y, z),
+						glm::vec3(g_chunkSize.x - 1, y, z),
 						less.blocks[iLess].type,
 						Face::FaceType::RIGHT);
 				}
@@ -518,7 +528,7 @@ void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
 				{
 					setBlockFace(
 						more, 
-						more.pos + glm::vec3(x, y, 0), 
+						glm::vec3(x, y, 0), 
 						more.blocks[iMore].type,
 						Face::FaceType::BACK);
 				}
@@ -527,7 +537,7 @@ void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
 				{
 					setBlockFace(
 						less,
-						less.pos + glm::vec3(x, y, g_chunkSize.z - 1),
+						glm::vec3(x, y, g_chunkSize.z - 1),
 						less.blocks[iLess].type,
 						Face::FaceType::FRONT);
 				}

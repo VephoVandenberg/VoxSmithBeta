@@ -245,7 +245,7 @@ void Application::onRender()
 
 	setUniform4m(m_shaders[s_meshShader],		"u_view", m_player.camera.view);
 	useTextureArray(m_tArray);
-	drawWorld(m_world);
+	drawWorld(m_world, m_shaders[s_meshShader]);
 
 #ifdef _DEBUG
 	setUniform4m(m_shaders[s_rayShader],		"u_view", m_player.camera.view);

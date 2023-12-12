@@ -15,14 +15,8 @@ void Engine::Renderer::loadData(Mesh* mesh)
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->VBO);
 	glBufferData(GL_ARRAY_BUFFER, mesh->vertices.size() * sizeof(Vertex), mesh->vertices.data(), GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+	glVertexAttribIPointer(0, 1, GL_UNSIGNED_INT, sizeof(Vertex), (void*)0);
 	glEnableVertexAttribArray(0);
-
-	glVertexAttribIPointer(1, 1, GL_BYTE, sizeof(Vertex), (void*)offsetof(Vertex, coordInd));
-	glEnableVertexAttribArray(1);
-
-	glVertexAttribIPointer(2, 1, GL_BYTE, sizeof(Vertex), (void*)offsetof(Vertex, texId));
-	glEnableVertexAttribArray(2);
 }
 
 void Engine::Renderer::renderMesh(const Mesh* mesh)
