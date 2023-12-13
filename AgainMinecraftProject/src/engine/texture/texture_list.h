@@ -8,7 +8,8 @@ namespace Engine
 		// Paths to textures			Indicies in Texture array
 		"textures/grass.png",		//	0
 		"textures/dirt_grass.png",	//	1
-		"textures/dirt.png"			//	2
+		"textures/dirt.png",		//	2
+		"textures/stone.png"		//	3
 	};
 
 

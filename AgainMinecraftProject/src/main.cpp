@@ -1,10 +1,8 @@
 /** TO DO LIST
 * Agenda
-* - Reducing vertex data
+* - Find the way noise applys to peaks, valleys, etc(play with noise more) 
 * Later
-* - Use FastNoise lib for the terrain(We might be ok with our implementation)...
-* - Block layering how to do that
-* - More blocks
+* - Enable back physics and raycast
 * - Infinite terrain babe
 * - Serialisation
 * - Octrees
@@ -20,11 +18,6 @@
 
 int main(int argc, char **argv)
 {
-	int32_t a = 0;
-	a |= 14 << 12;
-	a |= 122 << 4;
-	a |= 4;
-
 	App::Application* app = new App::Application;
 	app->run();
 	delete app;

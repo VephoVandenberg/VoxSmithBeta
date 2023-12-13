@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\glm;D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\GLAD\include;D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\GLFW\include\GLFW;$(IncludePath)</IncludePath>
+    <IncludePath>D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\glm;D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\GLAD\include;D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\GLFW\include\GLFW;D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\FastNoise\include;$(IncludePath)</IncludePath>
     <LibraryPath>D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\GLFW\bin;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\noise\noise.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\app\app.cpp" />
     <ClCompile Include="src\engine\camera\camera.cpp" />
@@ -152,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="src\app\app.h" />
     <ClInclude Include="src\engine\camera\camera.h" />
+    <ClInclude Include="src\engine\noise\noise.h" />
     <ClInclude Include="src\engine\ray\ray.h" />
     <ClInclude Include="src\engine\renderer\block_renderer.h" />
     <ClInclude Include="src\engine\renderer\mesh.h" />
