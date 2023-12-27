@@ -1,6 +1,5 @@
 /** TO DO LIST
 * Agenda
-* - Find the way noise applys to peaks, valleys, etc(play with noise more) 
 * Later
 * - Enable back physics and raycast
 * - Infinite terrain babe
@@ -11,7 +10,7 @@
 * - Investigate math behind coordinate systems and matrices
 * - Water Walta
 * Works for now but might be improved
-* - We need to apply squashing(Working but might be imrpoved)
+* - We are okay for now with therrain gen but might be better
 */
 
 #include "app/app.h"

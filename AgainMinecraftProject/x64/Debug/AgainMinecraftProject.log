@@ -1,18 +1,19 @@
-﻿  chunk.cpp
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(121,21): warning C4305: 'initializing': truncation from 'double' to 'float'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(179,56): warning C4244: 'argument': conversion from 'float' to '_Ty', possible loss of data
+﻿  main.cpp
+  chunk.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(195,21): warning C4244: '=': conversion from 'float' to '_Ty', possible loss of data
           with
           [
               _Ty=uint32_t
           ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(191,88): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(207,88): warning C4244: 'argument': conversion from '_Ty' to 'float', possible loss of data
           with
           [
               _Ty=uint32_t
           ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(278,26): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(280,27): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(310,26): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(312,27): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(227): warning C4715: 'getFaceId': not all control paths return a value
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(294,26): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(296,27): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(326,26): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(328,27): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(243): warning C4715: 'getFaceId': not all control paths return a value
   AgainMinecraftProject.vcxproj -> D:\Working\AgainMinecraftProject\x64\Debug\AgainMinecraftProject.exe

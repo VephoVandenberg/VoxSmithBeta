@@ -6,6 +6,13 @@
 using namespace Engine;
 using namespace Noise;
 
+// This code is my own implementation of noise
+// We will work it out some day
+// For now it will stay like that
+
+#define TOKEN 0
+#ifdef TOKEN
+
 static constexpr uint32_t p[512] = {
    151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69, 142,
    8, 99, 37, 240, 21, 10, 23, 190, 6, 148, 247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203,
@@ -251,3 +258,4 @@ float Engine::Noise::octaveTerraces(const glm::vec3& pos, float persistence, int
 	return std::round(total / maxValue * 2) / 2;
 }
 
+#endif

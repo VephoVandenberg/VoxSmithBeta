@@ -115,24 +115,20 @@ void GameModule::setType(Block& block)
 
 BlockType getBlockType(Chunk& chunk, const glm::vec3& pos, float height)
 {
-	float max = height / g_chunkSize.y;
-	float e = pos.y / g_chunkSize.y;
+	float stoneHeight = height - 5;
+	float dirtHeight = height - 1;
 
-	float mountan = 0.8;
-	float rock = 0.2f;
-	float beach = 0.4f;
-
-	if (e < max && (e > 0.8f || e < 0.2f))
+	if (pos.y < stoneHeight)
 	{
 		return BlockType::STONE;
 	}
-	
-	if (e < max)
+
+	if (pos.y < dirtHeight)
 	{
 		return BlockType::DIRT;
 	}
 
-	if (e == max && e > 0.35f)
+	if (pos.y == dirtHeight)
 	{
 		return BlockType::GRASS;
 	}
@@ -149,34 +145,54 @@ Chunk GameModule::generateChunk(const glm::ivec3& pos)
 		chunk.blocks.reserve(g_nBlocks);
 	}
 
-	std::vector<uint32_t> heightMap;
-	FastNoiseLite genFlat;
-	FastNoiseLite genMount;
+	std::array<uint32_t, g_chunkSize.x * g_chunkSize.z> heightMap;
+	FastNoiseLite generator1;
+	generator1.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+	generator1.SetFractalType(FastNoiseLite::FractalType_FBm);
+	generator1.SetFractalOctaves(6);
+	generator1.SetFrequency(0.004f);
+	generator1.SetFractalLacunarity(1.1f);
+	generator1.SetFractalWeightedStrength(1.0f);
+
+	FastNoiseLite generator2;
+	generator2.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+	generator2.SetFractalType(FastNoiseLite::FractalType_Ridged);
+	generator2.SetFractalOctaves(5);
+	generator2.SetFrequency(0.0014f);
+	generator2.SetFractalLacunarity(0.9f);
+	generator2.SetFractalWeightedStrength(0.7f);
+
+	FastNoiseLite generator3;
+	generator3.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+	generator3.SetFractalType(FastNoiseLite::FractalType_FBm);
+	generator3.SetFractalOctaves(4);
+	generator3.SetFrequency(0.015f);
+	generator3.SetFractalLacunarity(1.3f);
+	generator3.SetFractalWeightedStrength(1.1f);
 
 	for (int32_t z = 0; z < g_chunkSize.z; z++)
 	{
 		for (int32_t x = 0; x < g_chunkSize.x; x++)
 		{
-			genFlat.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
-			genFlat.SetFractalType(FastNoiseLite::FractalType_FBm);
-			genFlat.SetFractalOctaves(4);
-			genFlat.SetFrequency(0.01f);
-			float continentallness = genFlat.GetNoise(
+			float noise1 = generator1.GetNoise(
 				static_cast<float>(pos.x + x),
 				static_cast<float>(pos.z + z));
 
-			genMount.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
-			genMount.SetFractalType(FastNoiseLite::FractalType_Ridged);
-			genMount.SetFractalOctaves(2);
-			genMount.SetFractalGain(2.0f);
-			genMount.SetFrequency(0.001f);
-			float ridged = genMount.GetNoise(
+			float noise2 = generator2.GetNoise(
 				static_cast<float>(pos.x + x),
 				static_cast<float>(pos.z + z));
 
-			//std::cout << "continentallness " << continentallness << " ridged " << ridged << std::endl;
+			float noise3 = generator3.GetNoise(
+				static_cast<float>(pos.x + x),
+				static_cast<float>(pos.z + z));
 
-			heightMap.push_back(g_heightOffset + 60.0f * ridged + 10.0f * continentallness);
+			float blendedNoise = (noise1 + noise2 + noise3) / 3.343f + 0.5f;
+			blendedNoise = glm::pow(blendedNoise, 3.0f);
+				
+
+			heightMap[g_chunkSize.x * z + x] =
+				//(g_heightOffset + 40.0f * noise1 + 40.0f * noise2 + 40.0f * noise3);
+				(g_heightOffset + 100.0f * blendedNoise);
 		}
 	}
 
