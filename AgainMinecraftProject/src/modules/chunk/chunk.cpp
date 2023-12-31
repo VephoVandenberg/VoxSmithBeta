@@ -118,6 +118,9 @@ BlockType getBlockType(Chunk& chunk, const glm::vec3& pos, float height)
 	float stoneHeight = height - 5;
 	float dirtHeight = height - 1;
 
+	float rockHeight = 185.0f;
+
+
 	if (pos.y < stoneHeight)
 	{
 		return BlockType::STONE;
@@ -126,6 +129,11 @@ BlockType getBlockType(Chunk& chunk, const glm::vec3& pos, float height)
 	if (pos.y < dirtHeight)
 	{
 		return BlockType::DIRT;
+	}
+
+	if (pos.y <= rockHeight && pos.y < height)
+	{
+	//	return BlockType::STONE;
 	}
 
 	if (pos.y == dirtHeight)
@@ -150,7 +158,7 @@ Chunk GameModule::generateChunk(const glm::ivec3& pos)
 	generator1.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
 	generator1.SetFractalType(FastNoiseLite::FractalType_FBm);
 	generator1.SetFractalOctaves(6);
-	generator1.SetFrequency(0.004f);
+	generator1.SetFrequency(0.0024f);
 	generator1.SetFractalLacunarity(1.1f);
 	generator1.SetFractalWeightedStrength(1.0f);
 
@@ -158,7 +166,7 @@ Chunk GameModule::generateChunk(const glm::ivec3& pos)
 	generator2.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
 	generator2.SetFractalType(FastNoiseLite::FractalType_Ridged);
 	generator2.SetFractalOctaves(5);
-	generator2.SetFrequency(0.0014f);
+	generator2.SetFrequency(0.00143f);
 	generator2.SetFractalLacunarity(0.9f);
 	generator2.SetFractalWeightedStrength(0.7f);
 
@@ -168,7 +176,7 @@ Chunk GameModule::generateChunk(const glm::ivec3& pos)
 	generator3.SetFractalOctaves(4);
 	generator3.SetFrequency(0.015f);
 	generator3.SetFractalLacunarity(1.3f);
-	generator3.SetFractalWeightedStrength(1.1f);
+	generator3.SetFractalWeightedStrength(0.7f);
 
 	for (int32_t z = 0; z < g_chunkSize.z; z++)
 	{
@@ -187,11 +195,10 @@ Chunk GameModule::generateChunk(const glm::ivec3& pos)
 				static_cast<float>(pos.z + z));
 
 			float blendedNoise = (noise1 + noise2 + noise3) / 3.343f + 0.5f;
-			blendedNoise = glm::pow(blendedNoise, 3.0f);
+			blendedNoise = glm::pow(blendedNoise, 2.477f);
 				
 
 			heightMap[g_chunkSize.x * z + x] =
-				//(g_heightOffset + 40.0f * noise1 + 40.0f * noise2 + 40.0f * noise3);
 				(g_heightOffset + 100.0f * blendedNoise);
 		}
 	}

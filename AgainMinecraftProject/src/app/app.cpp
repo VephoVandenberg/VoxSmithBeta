@@ -32,8 +32,8 @@ const char* g_title = "Azamat's making Minecraft fucking again";
 constexpr size_t g_width = 1240;
 constexpr size_t g_height = 720;
 
-constexpr size_t g_numberOfChunksX = 32;
-constexpr size_t g_numberOfChunksZ = 32;
+constexpr size_t g_numberOfChunksX = 8;
+constexpr size_t g_numberOfChunksZ = 8;
 
 constexpr size_t g_jumpHeight = 3;
 
@@ -332,6 +332,7 @@ void Application::onUpdate(float dt)
 
 	m_player.velocity *= 0.95f;
 	
+	updateWorld(m_world, m_player);
 	updateCameraView(m_player.camera);
 	//processRay(m_world, m_player, ray, m_shaders[s_outlineShader], type);
 }

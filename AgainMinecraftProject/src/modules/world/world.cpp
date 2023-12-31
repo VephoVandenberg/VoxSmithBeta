@@ -17,14 +17,17 @@
 
 #include "world.h"
 
+
 using namespace GameModule;
 
 constexpr glm::ivec3 g_chunkSize = { 16, 256, 16 };
 
-constexpr int32_t g_chunksX = 32;
-constexpr int32_t g_chunksZ = 32;
+constexpr int32_t g_chunksX = 8;
+constexpr int32_t g_chunksZ = 8;
 
 constexpr size_t g_nBlocks = g_chunkSize.x * g_chunkSize.y * g_chunkSize.z;
+
+constexpr size_t g_updateDistance = g_chunkSize.x * (g_chunksX / 2 - 1);
 
 std::mutex g_worldMutex;
 
@@ -49,6 +52,7 @@ void GameModule::initWorld(World& world)
 {
 	world.minBorder = glm::ivec3(0);
 	world.maxBorder = glm::ivec3(g_chunkSize.x * g_chunksX, 0, g_chunkSize.z * g_chunksZ);
+
 	
 	int32_t maxThreads = std::thread::hardware_concurrency();
 	int32_t availableThreads = maxThreads - 1;
@@ -237,6 +241,50 @@ void GameModule::initChunkFaces(Chunk& chunk)
 	}
 }
 
+void GameModule::updateWorld(World& world, Player& player)
+{
+	glm::vec3 updatePos = player.pos;
+	updatePos.y = 0.0f;
+
+	if (glm::abs(player.pos.x - world.minBorder.x) < g_updateDistance)
+	{
+		world.minBorder.x -= g_chunkSize.x;
+		world.maxBorder.x -= g_chunkSize.x;
+
+		for (int32_t z = world.minBorder.z; z < world.maxBorder.z; z += g_chunkSize.z)
+		{
+			glm::ivec3 chunkAddPos = { world.minBorder.x, 0, z };
+			glm::ivec3 chunkRemovePos = { world.maxBorder.x, 0, z };
+
+			Chunk chunk = generateChunk(chunkAddPos);
+			generateMesh(chunk);
+			initChunkFaces(chunk);
+
+			world.chunks[chunkAddPos] = chunk;
+			world.chunks.erase(chunkRemovePos);
+
+			glm::ivec3 pos = { world.minBorder.x + g_chunkSize.x, 0, z };
+			if (world.chunks.find(pos) != world.chunks.end())
+			{
+				updateChunkNeighbourFace(world.chunks[chunkAddPos], world.chunks[pos]);
+			}
+
+			pos = { world.minBorder.x, 0, z - g_chunkSize.z };
+			if (world.chunks.find(pos) != world.chunks.end())
+			{
+				updateChunkNeighbourFace(world.chunks[chunkAddPos], world.chunks[pos]);
+			}
+			chunk.updated = false;
+		}
+	}	
+
+	if (glm::abs(player.pos.z - world.maxBorder.z) < g_updateDistance ||
+		glm::abs(player.pos.z - world.minBorder.z) < g_updateDistance)
+	{
+		int b = 6;
+	}
+}
+
 void GameModule::drawWorld(World& world, Engine::Shader& shader)
 {
 	for (auto& pair : world.chunks)
@@ -257,11 +305,6 @@ bool collAABB(const Player& player, const glm::vec3& pos)
 	bool collZ = player.pos.z + player.size.z > pos.z && pos.z + 1 > player.pos.z;
 	bool collY = player.pos.y + player.size.y > pos.y && pos.y + 1 > player.pos.y;
 	return collX && collY && collZ;
-}
-
-void GameModule::updateWorld(World& world, Player& player)
-{
-
 }
 
 void GameModule::processRay(World& world, const Player& player, Engine::Ray& ray, Engine::Shader& shader, RayType type)

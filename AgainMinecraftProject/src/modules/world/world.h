@@ -22,6 +22,8 @@ namespace GameModule
 	{
 		glm::ivec3 minBorder;
 		glm::ivec3 maxBorder;
+
+		float updateRadius;
 		
 		struct KeyFuncs
 		{
