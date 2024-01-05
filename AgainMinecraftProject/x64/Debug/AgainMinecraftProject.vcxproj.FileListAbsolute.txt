@@ -1,0 +1,2 @@
+D:\Working\AgainMinecraftProject\x64\Debug\AgainMinecraftProject.exe.lastcodeanalysissucceeded
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\x64\Debug\NativeCodeAnalysis.read.1.tlog

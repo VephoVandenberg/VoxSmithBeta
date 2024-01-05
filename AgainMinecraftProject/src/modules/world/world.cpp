@@ -17,7 +17,6 @@
 
 #include "world.h"
 
-
 using namespace GameModule;
 
 constexpr glm::ivec3 g_chunkSize = { 16, 256, 16 };
@@ -30,6 +29,7 @@ constexpr size_t g_nBlocks = g_chunkSize.x * g_chunkSize.y * g_chunkSize.z;
 constexpr size_t g_updateDistance = g_chunkSize.x * (g_chunksX / 2 - 1);
 
 std::mutex g_worldMutex;
+std::vector<std::thread> g_threads;
 
 void initParallelChunks(World& world, const glm::vec3& min, const glm::vec3& max)
 {
@@ -40,7 +40,7 @@ void initParallelChunks(World& world, const glm::vec3& min, const glm::vec3& max
 			glm::ivec3 chunkPos = { x, 0, z };
 			Chunk chunk = generateChunk(chunkPos);
 			initChunkFaces(chunk);
-			
+
 			g_worldMutex.lock();
 			world.chunks[chunkPos] = std::move(chunk);
 			g_worldMutex.unlock();
@@ -53,17 +53,18 @@ void GameModule::initWorld(World& world)
 	world.minBorder = glm::ivec3(0);
 	world.maxBorder = glm::ivec3(g_chunkSize.x * g_chunksX, 0, g_chunkSize.z * g_chunksZ);
 
-	
-	int32_t maxThreads = std::thread::hardware_concurrency();
-	int32_t availableThreads = maxThreads - 1;
+
+	uint32_t maxThreads = std::thread::hardware_concurrency();
+	uint32_t availableThreads = maxThreads - 1;
+	world.threadsAvailable = availableThreads;
 	std::vector<std::thread> threads;
 
 	const float step = g_chunkSize.z * g_chunksZ / 2;
 
 	int32_t minX, minZ;
 
-	for (minZ = world.minBorder.z; 
-		minZ <= world.maxBorder.z - step; 
+	for (minZ = world.minBorder.z;
+		minZ <= world.maxBorder.z - step;
 		minZ += step)
 	{
 		for (minX = world.minBorder.x;
@@ -110,7 +111,7 @@ void GameModule::initWorld(World& world)
 		for (int32_t x = 0; x < g_chunksX; x++)
 		{
 			glm::ivec3 chunkPos = { x * g_chunkSize.x, 0, z * g_chunkSize.z };
-			
+
 			loadChunkMesh(world.chunks[chunkPos]);
 		}
 	}
@@ -134,7 +135,7 @@ inline uint32_t getId(World& world, const glm::ivec3 pos)
 
 inline uint32_t getAbsId(const glm::ivec3& pos)
 {
-	return 
+	return
 		g_chunkSize.x * (g_chunkSize.z * (pos.y % g_chunkSize.y) + pos.z % g_chunkSize.z) + pos.x % g_chunkSize.x;
 }
 
@@ -184,17 +185,17 @@ void GameModule::initChunkFaces(Chunk& chunk)
 		{
 			for (uint32_t x = 0; x < g_chunkSize.x; x++)
 			{
-				glm::vec3 pos = glm::vec3( x, y, z );
+				glm::vec3 pos = glm::vec3(x, y, z);
 
 				glm::vec3 top = { pos.x, pos.y + 1, pos.z };
 				glm::vec3 front = { pos.x, pos.y, pos.z + 1 };
 				glm::vec3 right = { pos.x + 1, pos.y, pos.z };
 
-				uint32_t iBlock = g_chunkSize.x * ( y * g_chunkSize.z + z ) + x;
+				uint32_t iBlock = g_chunkSize.x * (y * g_chunkSize.z + z) + x;
 
-				uint32_t topId = g_chunkSize.x * (top.y * g_chunkSize.z + top.z) + top.x;	
-				uint32_t rightId = g_chunkSize.x * (right.y * g_chunkSize.z + right.z) + right.x; 
-				uint32_t frontId = g_chunkSize.x * (front.y * g_chunkSize.z + front.z) + front.x; 
+				uint32_t topId = g_chunkSize.x * (top.y * g_chunkSize.z + top.z) + top.x;
+				uint32_t rightId = g_chunkSize.x * (right.y * g_chunkSize.z + right.z) + right.x;
+				uint32_t frontId = g_chunkSize.x * (front.y * g_chunkSize.z + front.z) + front.x;
 
 				if (chunk.blocks[iBlock].type == BlockType::AIR)
 				{
@@ -204,13 +205,13 @@ void GameModule::initChunkFaces(Chunk& chunk)
 						setBlockFace(chunk, top, chunk.blocks[topId].type, Face::FaceType::BOTTOM);
 					}
 
-					if (front.z < g_chunkSize.z && 
+					if (front.z < g_chunkSize.z &&
 						chunk.blocks[frontId].type != BlockType::AIR)
 					{
 						setBlockFace(chunk, front, chunk.blocks[frontId].type, Face::FaceType::BACK);
 					}
 
-					if (right.x < g_chunkSize.x && 
+					if (right.x < g_chunkSize.x &&
 						chunk.blocks[rightId].type != BlockType::AIR)
 					{
 						setBlockFace(chunk, right, chunk.blocks[rightId].type, Face::FaceType::LEFT);
@@ -218,19 +219,19 @@ void GameModule::initChunkFaces(Chunk& chunk)
 				}
 				else
 				{
-					if (top.y < g_chunkSize.y && 
+					if (top.y < g_chunkSize.y &&
 						chunk.blocks[topId].type == BlockType::AIR)
 					{
 						setBlockFace(chunk, pos, chunk.blocks[iBlock].type, Face::FaceType::TOP);
 					}
 
-					if (front.z < g_chunkSize.z && 
+					if (front.z < g_chunkSize.z&&
 						chunk.blocks[frontId].type == BlockType::AIR)
 					{
 						setBlockFace(chunk, pos, chunk.blocks[iBlock].type, Face::FaceType::FRONT);
 					}
 
-					if (right.x < g_chunkSize.x && 
+					if (right.x < g_chunkSize.x&&
 						chunk.blocks[rightId].type == BlockType::AIR)
 					{
 						setBlockFace(chunk, pos, chunk.blocks[iBlock].type, Face::FaceType::RIGHT);
@@ -241,52 +242,136 @@ void GameModule::initChunkFaces(Chunk& chunk)
 	}
 }
 
+void updateBorderX(World& world, const glm::ivec3 addPos, const glm::ivec3 removePos)
+{
+	int32_t sign = addPos.x > removePos.x ? -1 : 1;
+	int32_t min = addPos.x > removePos.x ? removePos.z : addPos.z;
+	int32_t max = addPos.x > removePos.x ? addPos.z : removePos.z;
+
+	for (int32_t z = min; z < max; z += g_chunkSize.z)
+	{
+		glm::ivec3 chunkAddPos = { addPos.x, 0, z };
+		glm::ivec3 chunkRemovePos = { removePos.x, 0, z };
+
+		Chunk chunk = generateChunk(chunkAddPos);
+		generateMesh(chunk);
+		initChunkFaces(chunk);
+
+		std::lock_guard<std::mutex> lock(g_worldMutex);
+		glm::ivec3 pos = { addPos.x + sign * g_chunkSize.x, 0, z };
+		if (world.chunks.find(pos) != world.chunks.end())
+		{
+			updateChunkNeighbourFace(chunk, world.chunks[pos]);
+		}
+
+		pos = { addPos.x, 0, z - g_chunkSize.z };
+		if (world.chunks.find(pos) != world.chunks.end())
+		{
+			updateChunkNeighbourFace(chunk, world.chunks[pos]);
+		}
+
+		chunk.updated = false;
+		world.chunks[chunkAddPos] = std::move(chunk);
+		world.chunks.erase(chunkRemovePos);
+	}
+}
+
+void updateBorderZ(World& world, const glm::ivec3 addPos, const glm::ivec3 removePos)
+{
+	int32_t sign = addPos.z > removePos.z ? -1 : 1;
+	int32_t min = addPos.z > removePos.z ? removePos.x : addPos.x;
+	int32_t max = addPos.z > removePos.z ? addPos.x : removePos.x;
+
+	for (int32_t x = min; x < max; x += g_chunkSize.x)
+	{
+		glm::ivec3 chunkAddPos = { x, 0, addPos.z };
+		glm::ivec3 chunkRemovePos = { x, 0, removePos.z };
+
+		Chunk chunk = generateChunk(chunkAddPos);
+		generateMesh(chunk);
+		initChunkFaces(chunk);
+
+		glm::ivec3 pos = { x, 0, chunkAddPos.z + sign * g_chunkSize.z };
+		g_worldMutex.lock();
+		if (world.chunks.find(pos) != world.chunks.end())
+		{
+			updateChunkNeighbourFace(chunk, world.chunks[pos]);
+		}
+
+		pos = { x - g_chunkSize.x, 0, chunkAddPos.z };
+		if (world.chunks.find(pos) != world.chunks.end())
+		{
+			updateChunkNeighbourFace(chunk, world.chunks[pos]);
+		}
+
+		chunk.updated = false;
+		world.chunks[chunkAddPos] = chunk;
+		world.chunks.erase(chunkRemovePos);
+		g_worldMutex.unlock();
+	}
+
+}
+
 void GameModule::updateWorld(World& world, Player& player)
 {
-	glm::vec3 updatePos = player.pos;
-	updatePos.y = 0.0f;
-
-	if (glm::abs(player.pos.x - world.minBorder.x) < g_updateDistance)
+	if (world.threadsAvailable > 0)
 	{
-		world.minBorder.x -= g_chunkSize.x;
-		world.maxBorder.x -= g_chunkSize.x;
-
-		for (int32_t z = world.minBorder.z; z < world.maxBorder.z; z += g_chunkSize.z)
+		if (glm::abs(player.pos.x - world.maxBorder.x) < g_updateDistance)
 		{
-			glm::ivec3 chunkAddPos = { world.minBorder.x, 0, z };
-			glm::ivec3 chunkRemovePos = { world.maxBorder.x, 0, z };
+			g_threads.push_back(std::move(
+				std::thread(updateBorderX, std::ref(world), world.maxBorder, world.minBorder)));
 
-			Chunk chunk = generateChunk(chunkAddPos);
-			generateMesh(chunk);
-			initChunkFaces(chunk);
-
-			world.chunks[chunkAddPos] = chunk;
-			world.chunks.erase(chunkRemovePos);
-
-			glm::ivec3 pos = { world.minBorder.x + g_chunkSize.x, 0, z };
-			if (world.chunks.find(pos) != world.chunks.end())
-			{
-				updateChunkNeighbourFace(world.chunks[chunkAddPos], world.chunks[pos]);
-			}
-
-			pos = { world.minBorder.x, 0, z - g_chunkSize.z };
-			if (world.chunks.find(pos) != world.chunks.end())
-			{
-				updateChunkNeighbourFace(world.chunks[chunkAddPos], world.chunks[pos]);
-			}
-			chunk.updated = false;
+			world.minBorder.x += g_chunkSize.x;
+			world.maxBorder.x += g_chunkSize.x;
 		}
-	}	
+		else if (glm::abs(player.pos.x - world.minBorder.x) < g_updateDistance)
+		{
+			world.minBorder.x -= g_chunkSize.x;
+			world.maxBorder.x -= g_chunkSize.x;
 
-	if (glm::abs(player.pos.z - world.maxBorder.z) < g_updateDistance ||
-		glm::abs(player.pos.z - world.minBorder.z) < g_updateDistance)
+			g_threads.push_back(std::move(
+				std::thread(updateBorderX, std::ref(world), world.minBorder, world.maxBorder)));
+		}
+	}
+
+	if (world.threadsAvailable > 0)
 	{
-		int b = 6;
+		if (glm::abs(player.pos.z - world.maxBorder.z) < g_updateDistance)
+		{
+			g_threads.push_back(std::move(
+				std::thread(updateBorderZ, std::ref(world), world.maxBorder, world.minBorder)));
+
+			world.minBorder.z += g_chunkSize.z;
+			world.maxBorder.z += g_chunkSize.z;
+		}
+		else if (glm::abs(player.pos.z - world.minBorder.z) < g_updateDistance)
+		{
+			world.minBorder.z -= g_chunkSize.z;
+			world.maxBorder.z -= g_chunkSize.z;
+
+			g_threads.push_back(std::move(
+				std::thread(updateBorderZ, std::ref(world), world.minBorder, world.maxBorder)));
+		}
+	}
+
+	if (g_threads.size() > 0)
+	{
+		g_threads.erase(
+			std::remove_if(g_threads.begin(), g_threads.end(), [](std::thread& thread) {
+				if (thread.joinable())
+				{
+					thread.detach();
+					return true;
+				}
+				return false;
+				}),
+			g_threads.end());
 	}
 }
 
 void GameModule::drawWorld(World& world, Engine::Shader& shader)
 {
+	std::lock_guard<std::mutex> lock(g_worldMutex);
 	for (auto& pair : world.chunks)
 	{
 		if (!pair.second.updated)
@@ -346,7 +431,7 @@ void GameModule::processRay(World& world, const Player& player, Engine::Ray& ray
 					break;
 				}
 			}
-			
+
 			traceRay(world, currPos, shader, type);
 			hit = true;
 			break;

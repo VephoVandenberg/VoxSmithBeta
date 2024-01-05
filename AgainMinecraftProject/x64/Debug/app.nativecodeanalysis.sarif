@@ -16,62 +16,6 @@
                   "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
                 },
                 "region": {
-                  "startLine": 31,
-                  "startColumn": 15,
-                  "endLine": 31,
-                  "endColumn": 42
-                }
-              },
-              "logicalLocations": [
-                {
-                  "fullyQualifiedName": "GameModule::World::KeyFuncs::()",
-                  "decoratedName": "??RKeyFuncs@World@GameModule@@QEBA_KAEBU?$vec@$02H$0A@@glm@@@Z",
-                  "kind": "function"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "ruleId": "C26451",
-          "message": {
-            "text": "Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
-                },
-                "region": {
-                  "startLine": 32,
-                  "startColumn": 15,
-                  "endLine": 32,
-                  "endColumn": 42
-                }
-              },
-              "logicalLocations": [
-                {
-                  "fullyQualifiedName": "GameModule::World::KeyFuncs::()",
-                  "decoratedName": "??RKeyFuncs@World@GameModule@@QEBA_KAEBU?$vec@$02H$0A@@glm@@@Z",
-                  "kind": "function"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "ruleId": "C26451",
-          "message": {
-            "text": "Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
-                },
-                "region": {
                   "startLine": 33,
                   "startColumn": 15,
                   "endLine": 33,
@@ -89,6 +33,93 @@
           ]
         },
         {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
+                },
+                "region": {
+                  "startLine": 34,
+                  "startColumn": 15,
+                  "endLine": 34,
+                  "endColumn": 42
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::World::KeyFuncs::()",
+                  "decoratedName": "??RKeyFuncs@World@GameModule@@QEBA_KAEBU?$vec@$02H$0A@@glm@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
+                },
+                "region": {
+                  "startLine": 35,
+                  "startColumn": 15,
+                  "endLine": 35,
+                  "endColumn": 42
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::World::KeyFuncs::()",
+                  "decoratedName": "??RKeyFuncs@World@GameModule@@QEBA_KAEBU?$vec@$02H$0A@@glm@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "Variable 'GameModule::World::updateRadius' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
+                },
+                "region": {
+                  "startLine": 49,
+                  "startColumn": 2,
+                  "endLine": 49,
+                  "endColumn": 2
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::World::{ctor}",
+                  "decoratedName": "??0World@GameModule@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "GameModule::World::updateRadius"
+          }
+        },
+        {
           "ruleId": "C26495",
           "message": {
             "text": "Variable 'GameModule::World::minBorder' is uninitialized. Always initialize a member variable (type.6)."
@@ -100,9 +131,9 @@
                   "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
                 },
                 "region": {
-                  "startLine": 45,
+                  "startLine": 49,
                   "startColumn": 2,
-                  "endLine": 45,
+                  "endLine": 49,
                   "endColumn": 2
                 }
               },
@@ -131,9 +162,9 @@
                   "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
                 },
                 "region": {
-                  "startLine": 45,
+                  "startLine": 49,
                   "startColumn": 2,
-                  "endLine": 45,
+                  "endLine": 49,
                   "endColumn": 2
                 }
               },
@@ -148,6 +179,37 @@
           ],
           "properties": {
             "targetSymbol": "GameModule::World::maxBorder"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "Variable 'GameModule::World::threadsAvailable' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
+                },
+                "region": {
+                  "startLine": 49,
+                  "startColumn": 2,
+                  "endLine": 49,
+                  "endColumn": 2
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::World::{ctor}",
+                  "decoratedName": "??0World@GameModule@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "GameModule::World::threadsAvailable"
           }
         }
       ],
@@ -173,7 +235,7 @@
             "resultFile"
           ],
           "hashes": {
-            "sha-256": "fa2a6c210b857d82fb62593d82381dca903349e3a7b1511e5d6817d2973ac979"
+            "sha-256": "7ff8537e04e2c0cb7ab89dcce7a1922afcee798c5a87d68ac9037476cf264b34"
           }
         },
         {
@@ -184,7 +246,7 @@
             "analysisTarget"
           ],
           "hashes": {
-            "sha-256": "7f2609b15317ab39155edb2ae1430c658b299ad2395a313b552904d584f45e3e"
+            "sha-256": "544e102686b1f7775f42dddeba94127e2b294e730310c21960dfbcc53eb50777"
           }
         },
         {
@@ -1312,7 +1374,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/texture/texture_list.h"
           },
           "hashes": {
-            "sha-256": "df09790db160a96f8ab3b34e8206c2a6fbea24ce36ec6aeac36907538d8c6831"
+            "sha-256": "34799777acc537a2636b6d091f4aa81e48dd098ddfb55a9d2e436c5934ca0c54"
           }
         },
         {
@@ -1400,7 +1462,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/modules/chunk/chunk.h"
           },
           "hashes": {
-            "sha-256": "eea2ed825e9b6fce68c058f726593a620d7670cd1085ab060fd1b2223546da68"
+            "sha-256": "619435c74b8bfe8e15396074747664c4c07c787c93edfeeaba4dc5ef7a4d133c"
           }
         },
         {
@@ -1408,7 +1470,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/renderer/mesh.h"
           },
           "hashes": {
-            "sha-256": "40a4a3d3fa4a65c569f533da1121c9fdc82840ecb48e09396ad9a9ce8ba828d4"
+            "sha-256": "7f01c62dba716c5f68264d09646e42005d3a734ce29d2e8dd8b121826c198735"
           }
         },
         {

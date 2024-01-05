@@ -1,9 +1,8 @@
 /** TO DO LIST
 * Agenda
-* - Infinite terrain babe(Maybe we will introduce thread pool)
-* Later
 * - More blocks
 * - Biomes
+* Later
 * - Trees
 * - Let there be light
 * - Perhaps we need some kind of enabling physics
@@ -17,8 +16,9 @@
 * Works for now but might be improved
 * - We are okay for now with therrain gen but might be better
 * 
-* @NOTES:
-* We might have some swiftness over the biomes with the exponent and division stuff.
+* NOTES:
+* - We might have some swiftness over the biomes with the exponent and division stuff.
+* - Multithreading works but still some bugs occur, also consider threadpool, and using futures instead threads
 */
 
 #include "app/app.h"

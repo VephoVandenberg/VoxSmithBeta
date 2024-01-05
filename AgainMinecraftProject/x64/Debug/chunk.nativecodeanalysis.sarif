@@ -16,9 +16,9 @@
                   "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/engine/renderer/mesh.h"
                 },
                 "region": {
-                  "startLine": 24,
+                  "startLine": 25,
                   "startColumn": 3,
-                  "endLine": 24,
+                  "endLine": 25,
                   "endColumn": 3
                 }
               },
@@ -47,9 +47,9 @@
                   "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/engine/renderer/mesh.h"
                 },
                 "region": {
-                  "startLine": 24,
+                  "startLine": 25,
                   "startColumn": 3,
-                  "endLine": 24,
+                  "endLine": 25,
                   "endColumn": 3
                 }
               },
@@ -96,6 +96,62 @@
           "properties": {
             "targetSymbol": "GameModule::Chunk::pos"
           }
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '+' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '+' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                },
+                "region": {
+                  "startLine": 201,
+                  "startColumn": 14,
+                  "endLine": 201,
+                  "endColumn": 34
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::generateChunk",
+                  "decoratedName": "?generateChunk@GameModule@@YA?AUChunk@1@AEBU?$vec@$02H$0A@@glm@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ruleId": "C26451",
+          "message": {
+            "text": "Arithmetic overflow: Using operator '*' on a 4 byte value and then casting the result to a 8 byte value. Cast the value to the wider type before calling operator '*' to avoid overflow (io.2)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
+                },
+                "region": {
+                  "startLine": 201,
+                  "startColumn": 14,
+                  "endLine": 201,
+                  "endColumn": 30
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::generateChunk",
+                  "decoratedName": "?generateChunk@GameModule@@YA?AUChunk@1@AEBU?$vec@$02H$0A@@glm@@@Z",
+                  "kind": "function"
+                }
+              ]
+            }
+          ]
         }
       ],
       "tool": {
@@ -120,7 +176,7 @@
             "resultFile"
           ],
           "hashes": {
-            "sha-256": "40a4a3d3fa4a65c569f533da1121c9fdc82840ecb48e09396ad9a9ce8ba828d4"
+            "sha-256": "7f01c62dba716c5f68264d09646e42005d3a734ce29d2e8dd8b121826c198735"
           }
         },
         {
@@ -131,18 +187,19 @@
             "resultFile"
           ],
           "hashes": {
-            "sha-256": "eea2ed825e9b6fce68c058f726593a620d7670cd1085ab060fd1b2223546da68"
+            "sha-256": "619435c74b8bfe8e15396074747664c4c07c787c93edfeeaba4dc5ef7a4d133c"
           }
         },
         {
           "location": {
-            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/modules/chunk/chunk.cpp"
+            "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
           },
           "roles": [
-            "analysisTarget"
+            "analysisTarget",
+            "resultFile"
           ],
           "hashes": {
-            "sha-256": "e8dc227bf65892d8fd530cb02a4f9b2d562a96f555e189619c2a7b91a5acf215"
+            "sha-256": "9c54bb5f05c7b9453588c715d5ef3beb1373d95cdc4c75d32000687c7bf8efbe"
           }
         },
         {
@@ -1207,6 +1264,14 @@
           },
           "hashes": {
             "sha-256": "161a37183e7d111564d59ae8e93d3e1d9c875813af4ed89af476bfc60ea97efe"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///d:/working/againminecraftproject/againminecraftproject/vendor/fastnoise/include/fastnoiselite.h"
+          },
+          "hashes": {
+            "sha-256": "3faf87ccfa1b46a2d5af402ba0439a13a73a3e567b80c375be1dcf700d86fc6e"
           }
         },
         {

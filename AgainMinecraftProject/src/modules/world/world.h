@@ -44,6 +44,8 @@ namespace GameModule
 
 		using ChunkMap = std::unordered_map<glm::ivec3, Chunk, KeyFuncs>;
 		ChunkMap chunks;
+
+		uint32_t threadsAvailable;
 	};
 
 	void initWorld(World& world);
