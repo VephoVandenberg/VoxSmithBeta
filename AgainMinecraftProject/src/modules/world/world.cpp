@@ -21,8 +21,8 @@ using namespace GameModule;
 
 constexpr glm::ivec3 g_chunkSize = { 16, 256, 16 };
 
-constexpr int32_t g_chunksX = 8;
-constexpr int32_t g_chunksZ = 8;
+constexpr int32_t g_chunksX = 32;
+constexpr int32_t g_chunksZ = 32;
 
 constexpr size_t g_nBlocks = g_chunkSize.x * g_chunkSize.y * g_chunkSize.z;
 

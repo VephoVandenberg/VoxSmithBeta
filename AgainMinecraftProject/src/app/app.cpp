@@ -32,8 +32,8 @@ const char* g_title = "Azamat's making Minecraft fucking again";
 constexpr size_t g_width = 1240;
 constexpr size_t g_height = 720;
 
-constexpr size_t g_numberOfChunksX = 8;
-constexpr size_t g_numberOfChunksZ = 8;
+constexpr size_t g_numberOfChunksX = 32;
+constexpr size_t g_numberOfChunksZ = 32;
 
 constexpr size_t g_jumpHeight = 3;
 
@@ -114,7 +114,7 @@ void Application::initShaders()
 
 	glm::mat4 projection =
 		glm::perspective(
-			glm::radians(45.0f), static_cast<float>(g_width) / static_cast<float>(g_height), 0.1f, 300.0f);
+			glm::radians(45.0f), static_cast<float>(g_width) / static_cast<float>(g_height), 0.1f, 400.0f);
 
 	useShader(m_shaders[s_cubeShader]);
 	setUniform4m(m_shaders[s_cubeShader],		"u_projection",		projection);

@@ -1,18 +1,18 @@
 /** TO DO LIST
 * Agenda
-* - More blocks
 * - Biomes
 * Later
-* - Trees
+* - Fix the bug with terrain gen
 * - Let there be light
+* - Water Walta
 * - Perhaps we need some kind of enabling physics
+* - Trees
 * - Serialisation
 * - FOG
 * - Octrees
 * - Greedy Meshing
 * - SkyBox or maybe clouds, maybe Moon and Sun
 * - Investigate math behind coordinate systems and matrices
-* - Water Walta
 * Works for now but might be improved
 * - We are okay for now with therrain gen but might be better
 * 

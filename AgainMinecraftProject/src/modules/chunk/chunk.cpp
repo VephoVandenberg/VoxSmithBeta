@@ -113,32 +113,38 @@ void GameModule::setType(Block& block)
 {
 }
 
-BlockType getBlockType(Chunk& chunk, const glm::vec3& pos, float height)
+BlockType getBlockType(Chunk& chunk, const glm::vec3& pos, const float height)
 {
-	float stoneHeight = height - 5;
-	float dirtHeight = height - 1;
-
-	float rockHeight = 185.0f;
-
-
-	if (pos.y < stoneHeight)
+	if (pos.y <= height)
 	{
+		float dirtHeight = height - 3;
+		float waterLevel = 105.0f;
+		float mountainLevel = 145.0f;
+		float peakLevel = 150.0f;
+		
+		if (pos.y > peakLevel)
+		{
+			return BlockType::SNOW;
+		}
+		if (pos.y > mountainLevel)
+		{
+			return BlockType::STONE;
+		}
+		
+		if (pos.y == height)
+		{
+			if (pos.y > waterLevel + 1)
+			{
+				return BlockType::GRASS;
+			}
+			return BlockType::SAND;
+		}
+		if (pos.y > dirtHeight)
+		{
+			return BlockType::DIRT;
+		}
+
 		return BlockType::STONE;
-	}
-
-	if (pos.y < dirtHeight)
-	{
-		return BlockType::DIRT;
-	}
-
-	if (pos.y <= rockHeight && pos.y < height)
-	{
-	//	return BlockType::STONE;
-	}
-
-	if (pos.y == dirtHeight)
-	{
-		return BlockType::GRASS;
 	}
 
 	return BlockType::AIR;
@@ -166,9 +172,9 @@ Chunk GameModule::generateChunk(const glm::ivec3& pos)
 	generator2.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
 	generator2.SetFractalType(FastNoiseLite::FractalType_Ridged);
 	generator2.SetFractalOctaves(5);
-	generator2.SetFrequency(0.00143f);
+	generator2.SetFrequency(0.00247f);
 	generator2.SetFractalLacunarity(0.9f);
-	generator2.SetFractalWeightedStrength(0.7f);
+	generator2.SetFractalWeightedStrength(0.6f);
 
 	FastNoiseLite generator3;
 	generator3.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
@@ -246,6 +252,16 @@ uint8_t getFaceId(BlockType type, Face::FaceType face)
 	if (type == BlockType::DIRT)
 	{
 		return 2;
+	}
+
+	if (type == BlockType::SNOW)
+	{
+		return 6;
+	}
+
+	if (type == BlockType::SAND)
+	{
+		return 4;
 	}
 }
 
