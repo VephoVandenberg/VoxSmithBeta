@@ -1,9 +1,8 @@
 /** TO DO LIST
 * Agenda
-* - Biomes
 * Later
-* - Fix the bug with terrain gen
 * - Let there be light
+* - Fix the bug with terrain gen
 * - Water Walta
 * - Perhaps we need some kind of enabling physics
 * - Trees
@@ -19,6 +18,7 @@
 * NOTES:
 * - We might have some swiftness over the biomes with the exponent and division stuff.
 * - Multithreading works but still some bugs occur, also consider threadpool, and using futures instead threads
+* - Biomes will work for now, but it can be better
 */
 
 #include "app/app.h"
