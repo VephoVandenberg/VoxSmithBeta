@@ -26,5 +26,6 @@ namespace Engine
 
 		void loadData(Mesh* mesh);
 		void renderMesh(const Mesh* mesh);
+		void deleteMesh(Mesh* mesh);
 	}
 }

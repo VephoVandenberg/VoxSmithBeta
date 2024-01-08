@@ -1,8 +1,7 @@
 /** TO DO LIST
-* Agenda
-* Later
+* AGENDA
 * - Let there be light
-* - Fix the bug with terrain gen
+* LATER
 * - Water Walta
 * - Perhaps we need some kind of enabling physics
 * - Trees
@@ -11,10 +10,7 @@
 * - Octrees
 * - Greedy Meshing
 * - SkyBox or maybe clouds, maybe Moon and Sun
-* - Investigate math behind coordinate systems and matrices
-* Works for now but might be improved
-* - We are okay for now with therrain gen but might be better
-* 
+* - Investigate math behind coordinate systems and matrices 
 * NOTES:
 * - We might have some swiftness over the biomes with the exponent and division stuff.
 * - Multithreading works but still some bugs occur, also consider threadpool, and using futures instead threads

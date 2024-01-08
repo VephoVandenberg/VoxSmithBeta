@@ -20,6 +20,9 @@ namespace GameModule
 
 	struct Chunk
 	{
+		Chunk() = default;
+		~Chunk() { deleteMesh(&mesh); }
+
 		bool updated = false;
 		glm::vec3 pos;
 		std::vector<Block>		blocks = {};

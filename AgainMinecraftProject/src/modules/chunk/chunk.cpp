@@ -119,7 +119,7 @@ BlockType getBlockType(Chunk& chunk, const glm::vec3& pos, const float height)
 	{
 		float dirtHeight = height - 3;
 		float waterLevel = 105.0f;
-		float mountainLevel = 145.0f;
+		float mountainLevel = 135.0f;
 		float peakLevel = 150.0f;
 		
 		if (pos.y > peakLevel)
