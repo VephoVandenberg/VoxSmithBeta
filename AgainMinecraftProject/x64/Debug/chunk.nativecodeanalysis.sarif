@@ -78,10 +78,10 @@
                   "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.h"
                 },
                 "region": {
-                  "startLine": 27,
-                  "startColumn": 2,
-                  "endLine": 27,
-                  "endColumn": 2
+                  "startLine": 23,
+                  "startColumn": 3,
+                  "endLine": 23,
+                  "endColumn": 3
                 }
               },
               "logicalLocations": [
@@ -109,9 +109,9 @@
                   "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                 },
                 "region": {
-                  "startLine": 201,
+                  "startLine": 208,
                   "startColumn": 14,
-                  "endLine": 201,
+                  "endLine": 208,
                   "endColumn": 34
                 }
               },
@@ -137,9 +137,9 @@
                   "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/chunk/chunk.cpp"
                 },
                 "region": {
-                  "startLine": 201,
+                  "startLine": 208,
                   "startColumn": 14,
-                  "endLine": 201,
+                  "endLine": 208,
                   "endColumn": 30
                 }
               },
@@ -176,7 +176,7 @@
             "resultFile"
           ],
           "hashes": {
-            "sha-256": "7f01c62dba716c5f68264d09646e42005d3a734ce29d2e8dd8b121826c198735"
+            "sha-256": "023b57ee5338b8c58fd5209d8ad413dbe4bb905a02e983d7e3b026fa86827b52"
           }
         },
         {
@@ -187,7 +187,7 @@
             "resultFile"
           ],
           "hashes": {
-            "sha-256": "619435c74b8bfe8e15396074747664c4c07c787c93edfeeaba4dc5ef7a4d133c"
+            "sha-256": "018721523487b9f58c812b303e07d0409f02a670a93930245007ae576e93e586"
           }
         },
         {
@@ -199,7 +199,7 @@
             "resultFile"
           ],
           "hashes": {
-            "sha-256": "9c54bb5f05c7b9453588c715d5ef3beb1373d95cdc4c75d32000687c7bf8efbe"
+            "sha-256": "a6001fe013a9863baa877d2fa43a357d6c8146f06fec13993d20c50d4e35f31d"
           }
         },
         {

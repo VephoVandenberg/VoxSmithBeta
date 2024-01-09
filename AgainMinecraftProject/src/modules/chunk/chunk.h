@@ -23,9 +23,14 @@ namespace GameModule
 		Chunk() = default;
 		~Chunk() { deleteMesh(&mesh); }
 
-		bool updated = false;
-		glm::vec3 pos;
-		std::vector<Block>		blocks = {};
+		Chunk*					front		= nullptr;
+		Chunk*					back		= nullptr;
+		Chunk*					left		= nullptr;
+		Chunk*					right		= nullptr;
+
+		bool					updated		= false;
+		glm::vec3				pos;
+		std::vector<Block>		blocks		= {};
 		Engine::Renderer::Mesh	mesh;
 	};
 

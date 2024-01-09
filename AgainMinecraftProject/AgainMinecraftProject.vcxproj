@@ -126,7 +126,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\glm;D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\GLAD\include;D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\GLFW\include\GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\glm;D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\GLAD\include;D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\GLFW\include\GLFW;D:\Working\AgainMinecraftProject\AgainMinecraftProject\vendor\FastNoise\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

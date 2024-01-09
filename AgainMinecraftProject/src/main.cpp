@@ -1,6 +1,6 @@
 /** TO DO LIST
 * AGENDA
-* - Let there be light
+* - Let there be light(ambient light for now)
 * LATER
 * - Water Walta
 * - Perhaps we need some kind of enabling physics

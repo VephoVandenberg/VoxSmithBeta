@@ -27,7 +27,7 @@ constexpr glm::ivec3 g_chunkSize = { 16, 256, 16 };
 
 constexpr uint32_t g_nBlocks = g_chunkSize.x * g_chunkSize.y * g_chunkSize.z;
 
-constexpr uint32_t g_heightOffset = 100;
+constexpr uint32_t g_heightOffset = 80;
 
 constexpr float g_rayDeltaMag = 0.1f;
 
@@ -35,68 +35,69 @@ struct BlockVert
 {
 	glm::ivec3 pos;
 	uint8_t coordInd;
+	float ambient;
 };
 
 using VertexArray = std::array<BlockVert, g_vertexPerFace>;
 
 constexpr VertexArray back{ {
-	{{ 0, 0, 0 }, 0 },
-	{{ 0, 1, 0 }, 2 },
-	{{ 1, 0, 0 }, 1 },
-
-	{{ 1, 0, 0 }, 1 },
-	{{ 0, 1, 0 }, 2 },
-	{{ 1, 1, 0 }, 3 },
+	{{ 0, 0, 0 }, 0, 0.7f },
+	{{ 0, 1, 0 }, 2, 0.7f },
+	{{ 1, 0, 0 }, 1, 0.7f },
+				  
+	{{ 1, 0, 0 }, 1, 0.7f },
+	{{ 0, 1, 0 }, 2, 0.7f },
+	{{ 1, 1, 0 }, 3, 0.7f },
 } };
 
 constexpr VertexArray front{ {
-	{{ 0, 0, 1 }, 0 },
-	{{ 1, 0, 1 }, 1 },
-	{{ 0, 1, 1 }, 2 },
+	{{ 0, 0, 1 }, 0, 0.7f },
+	{{ 1, 0, 1 }, 1, 0.7f },
+	{{ 0, 1, 1 }, 2, 0.7f },
 
-	{{ 1, 0, 1 }, 1 },
-	{{ 1, 1, 1 }, 3 },
-	{{ 0, 1, 1 }, 2 },
+	{{ 1, 0, 1 }, 1, 0.7f },
+	{{ 1, 1, 1 }, 3, 0.7f },
+	{{ 0, 1, 1 }, 2, 0.7f },
 } };
 
 constexpr VertexArray top{ {
-	{{ 0, 1, 1 }, 0 },
-	{{ 1, 1, 1 }, 1 },
-	{{ 0, 1, 0 }, 2 },
+	{{ 0, 1, 1 }, 0, 1.0f },
+	{{ 1, 1, 1 }, 1, 1.0f },
+	{{ 0, 1, 0 }, 2, 1.0f },
 
-	{{ 1, 1, 1 }, 1 },
-	{{ 1, 1, 0 }, 3 },
-	{{ 0, 1, 0 }, 2 },
+	{{ 1, 1, 1 }, 1, 1.0f },
+	{{ 1, 1, 0 }, 3, 1.0f },
+	{{ 0, 1, 0 }, 2, 1.0f },
 } };
 
 constexpr VertexArray bottom{ {
-	{{ 0, 0, 1 }, 0 },
-	{{ 0, 0, 0 }, 2 },
-	{{ 1, 0, 1 }, 1 },
+	{{ 0, 0, 1 }, 0, 0.2f },
+	{{ 0, 0, 0 }, 2, 0.2f },
+	{{ 1, 0, 1 }, 1, 0.2f },
 
-	{{ 1, 0, 0 }, 3 },
-	{{ 1, 0, 1 }, 1 },
-	{{ 0, 0, 0 }, 2 },
+	{{ 1, 0, 0 }, 3, 0.2f },
+	{{ 1, 0, 1 }, 1, 0.2f },
+	{{ 0, 0, 0 }, 2, 0.2f },
 } };
 
 constexpr VertexArray left{ {
-	{{ 0, 0, 0 }, 0 },
-	{{ 0, 0, 1 }, 1 },
-	{{ 0, 1, 0 }, 2 },
+	{{ 0, 0, 0 }, 0, 0.4f },
+	{{ 0, 0, 1 }, 1, 0.4f },
+	{{ 0, 1, 0 }, 2, 0.4f },
 				  
-	{{ 0, 0, 1 }, 1 },
-	{{ 0, 1, 1 }, 3 },
-	{{ 0, 1, 0 }, 2 },
+	{{ 0, 0, 1 }, 1, 0.4f },
+	{{ 0, 1, 1 }, 3, 0.4f },
+	{{ 0, 1, 0 }, 2, 0.4f },
 } };
 
 constexpr VertexArray right{ {
-	{{ 1, 0, 1 }, 0 },
-	{{ 1, 0, 0 }, 1 },
-	{{ 1, 1, 1 }, 2 },
+	{{ 1, 0, 1 }, 0, 0.9f },
+	{{ 1, 0, 0 }, 1, 0.9f },
+	{{ 1, 1, 1 }, 2, 0.9f },
 
-	{{ 1, 0, 0 }, 1 },
-	{{ 1, 1, 0 }, 3 },
-	{{ 1, 1, 1 }, 2 }
+	{{ 1, 0, 0 }, 1, 0.9f },
+	{{ 1, 1, 0 }, 3, 0.9f },
+	{{ 1, 1, 1 }, 2, 0.9f }
 } };
 
 using FaceMap = std::unordered_map<Face::FaceType, const VertexArray, EnumHash>;
@@ -126,7 +127,7 @@ BlockType getBlockType(Chunk& chunk, const glm::vec3& pos, const float height)
 		{
 			return BlockType::SNOW;
 		}
-		if (pos.y > mountainLevel)
+		if (height > mountainLevel)
 		{
 			return BlockType::STONE;
 		}
@@ -173,7 +174,7 @@ Chunk GameModule::generateChunk(const glm::ivec3& pos)
 	generator2.SetFractalType(FastNoiseLite::FractalType_Ridged);
 	generator2.SetFractalOctaves(5);
 	generator2.SetFrequency(0.00247f);
-	generator2.SetFractalLacunarity(0.9f);
+	generator2.SetFractalLacunarity(1.0f);
 	generator2.SetFractalWeightedStrength(0.6f);
 
 	FastNoiseLite generator3;
@@ -205,7 +206,7 @@ Chunk GameModule::generateChunk(const glm::ivec3& pos)
 				
 
 			heightMap[g_chunkSize.x * z + x] =
-				(g_heightOffset + 100.0f * blendedNoise);
+				(g_heightOffset + 130.0f * blendedNoise);
 		}
 	}
 
@@ -256,7 +257,7 @@ uint8_t getFaceId(BlockType type, Face::FaceType face)
 
 	if (type == BlockType::SNOW)
 	{
-		return 6;
+		return 5;
 	}
 
 	if (type == BlockType::SAND)
@@ -272,6 +273,7 @@ void updateFace(Chunk& chunk, const glm::ivec3 pos, BlockType type, Face::FaceTy
 	for (uint32_t iVertex = 0; iVertex < g_vertexPerFace; iVertex++)
 	{
 		glm::ivec3 posData = pos + g_faces[face][iVertex].pos;
+		float ambient = g_faces[face][iVertex].ambient;
 
 		int32_t data = 0;
 		data |= (posData.x) & 0x1F;		  // x
@@ -280,6 +282,8 @@ void updateFace(Chunk& chunk, const glm::ivec3 pos, BlockType type, Face::FaceTy
 
 		data |= (g_faces[face][iVertex].coordInd & 0x3) << 19;	// Coord ind
 		data |= (texID & 0xF) << 21;							// tex id
+
+		data |= (static_cast<int32_t>(ambient * 10) & 0xF) << 25;
 
 		chunk.mesh.vertices.push_back({data});
 	}
@@ -387,3 +391,4 @@ void GameModule::drawChunk(const Chunk& chunk)
 
 	renderMesh(&chunk.mesh);
 }
+

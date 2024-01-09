@@ -1,42 +1,17 @@
-﻿  world.cpp
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(36,17): warning C4244: 'initializing': conversion from 'const T' to 'int32_t', possible loss of data
+﻿  chunk.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(209,21): warning C4244: '=': conversion from 'float' to '_Ty', possible loss of data
           with
           [
-              T=float
+              _Ty=uint32_t
           ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(38,18): warning C4244: 'initializing': conversion from 'const T' to 'int32_t', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(221,88): warning C4244: 'argument': conversion from '_Ty' to 'const float', possible loss of data
           with
           [
-              T=float
+              _Ty=uint32_t
           ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(62,47): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(62,19): warning C4244: 'initializing': conversion from 'int' to 'const float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(62,47): warning C4244: '+=': conversion from 'float' to 'int32_t', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(182,25): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(184,26): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(186,27): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(196,20): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
-          with
-          [
-              T=float
-          ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(197,22): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
-          with
-          [
-              T=float
-          ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(198,22): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
-          with
-          [
-              T=float
-          ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(545,8): warning C4101: 'dxExit': unreferenced local variable
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(544,26): warning C4101: 'dyEntry': unreferenced local variable
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(544,8): warning C4101: 'dxEntry': unreferenced local variable
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(545,16): warning C4101: 'dzExit': unreferenced local variable
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(544,17): warning C4101: 'dzEntry': unreferenced local variable
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(545,24): warning C4101: 'dyExit': unreferenced local variable
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(685,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(686,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(687,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(321,26): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(323,27): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(353,26): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(355,27): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(267): warning C4715: 'getFaceId': not all control paths return a value
   AgainMinecraftProject.vcxproj -> D:\Working\AgainMinecraftProject\x64\Debug\AgainMinecraftProject.exe

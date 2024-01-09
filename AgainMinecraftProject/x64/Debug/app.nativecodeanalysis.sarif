@@ -91,37 +91,6 @@
         {
           "ruleId": "C26495",
           "message": {
-            "text": "Variable 'GameModule::World::updateRadius' is uninitialized. Always initialize a member variable (type.6)."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
-                },
-                "region": {
-                  "startLine": 49,
-                  "startColumn": 2,
-                  "endLine": 49,
-                  "endColumn": 2
-                }
-              },
-              "logicalLocations": [
-                {
-                  "fullyQualifiedName": "GameModule::World::{ctor}",
-                  "decoratedName": "??0World@GameModule@@QEAA@XZ",
-                  "kind": "function"
-                }
-              ]
-            }
-          ],
-          "properties": {
-            "targetSymbol": "GameModule::World::updateRadius"
-          }
-        },
-        {
-          "ruleId": "C26495",
-          "message": {
             "text": "Variable 'GameModule::World::minBorder' is uninitialized. Always initialize a member variable (type.6)."
           },
           "locations": [
@@ -179,6 +148,37 @@
           ],
           "properties": {
             "targetSymbol": "GameModule::World::maxBorder"
+          }
+        },
+        {
+          "ruleId": "C26495",
+          "message": {
+            "text": "Variable 'GameModule::World::updateRadius' is uninitialized. Always initialize a member variable (type.6)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/Working/AgainMinecraftProject/AgainMinecraftProject/src/modules/world/world.h"
+                },
+                "region": {
+                  "startLine": 49,
+                  "startColumn": 2,
+                  "endLine": 49,
+                  "endColumn": 2
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "GameModule::World::{ctor}",
+                  "decoratedName": "??0World@GameModule@@QEAA@XZ",
+                  "kind": "function"
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "targetSymbol": "GameModule::World::updateRadius"
           }
         },
         {
@@ -246,7 +246,7 @@
             "analysisTarget"
           ],
           "hashes": {
-            "sha-256": "544e102686b1f7775f42dddeba94127e2b294e730310c21960dfbcc53eb50777"
+            "sha-256": "f6b1212cd31b87a6ef991e6080d20baacec6cbf67b896ae53b96fd9344999804"
           }
         },
         {
@@ -1374,7 +1374,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/texture/texture_list.h"
           },
           "hashes": {
-            "sha-256": "34799777acc537a2636b6d091f4aa81e48dd098ddfb55a9d2e436c5934ca0c54"
+            "sha-256": "4baad938d131bd3a6b98c993756585a79390ca9a410ef909794f28c14ed40352"
           }
         },
         {
@@ -1462,7 +1462,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/modules/chunk/chunk.h"
           },
           "hashes": {
-            "sha-256": "619435c74b8bfe8e15396074747664c4c07c787c93edfeeaba4dc5ef7a4d133c"
+            "sha-256": "018721523487b9f58c812b303e07d0409f02a670a93930245007ae576e93e586"
           }
         },
         {
@@ -1470,7 +1470,7 @@
             "uri": "file:///d:/working/againminecraftproject/againminecraftproject/src/engine/renderer/mesh.h"
           },
           "hashes": {
-            "sha-256": "7f01c62dba716c5f68264d09646e42005d3a734ce29d2e8dd8b121826c198735"
+            "sha-256": "023b57ee5338b8c58fd5209d8ad413dbe4bb905a02e983d7e3b026fa86827b52"
           }
         },
         {
