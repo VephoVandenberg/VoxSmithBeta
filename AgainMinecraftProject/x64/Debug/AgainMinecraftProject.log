@@ -1,17 +1,4 @@
-﻿  chunk.cpp
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(209,21): warning C4244: '=': conversion from 'float' to '_Ty', possible loss of data
-          with
-          [
-              _Ty=uint32_t
-          ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(221,88): warning C4244: 'argument': conversion from '_Ty' to 'const float', possible loss of data
-          with
-          [
-              _Ty=uint32_t
-          ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(321,26): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(323,27): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(353,26): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(355,27): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(267): warning C4715: 'getFaceId': not all control paths return a value
+﻿  texture.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\texture\texture.cpp(49,71): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\texture\texture.cpp(91): warning C4715: 'Engine::initTextureArray': not all control paths return a value
   AgainMinecraftProject.vcxproj -> D:\Working\AgainMinecraftProject\x64\Debug\AgainMinecraftProject.exe

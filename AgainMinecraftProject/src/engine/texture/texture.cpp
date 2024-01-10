@@ -27,7 +27,7 @@ bool Engine::initTexture(Texture& texture, const char* path)
 		stbi_image_free(data);
 		return true;
 	}
-	
+
 	if (std::string(path).find(".png") && data)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.width, texture.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -58,6 +58,17 @@ bool Engine::initTextureArray(TextureArray& tArray, const std::vector<const char
 			exit(EXIT_FAILURE);
 		}
 
+		uint32_t transparency;
+
+		if (std::string(paths[index]).find(".jpg") != std::string::npos && data)
+		{
+			transparency = GL_RGB;
+		}
+		else
+		{
+			transparency = GL_RGBA;
+		}
+
 		glTexSubImage3D(
 			GL_TEXTURE_2D_ARRAY,
 			0,
@@ -67,7 +78,7 @@ bool Engine::initTextureArray(TextureArray& tArray, const std::vector<const char
 			tArray.width,
 			tArray.height,
 			1,
-			GL_RGB,
+			transparency,
 			GL_UNSIGNED_BYTE,
 			data);
 		stbi_image_free(data);

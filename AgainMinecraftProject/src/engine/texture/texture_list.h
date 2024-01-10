@@ -12,7 +12,7 @@ namespace Engine
 		"textures/stone.png",		//	3
 		"textures/sand.png",		//  4
 		"textures/snow.png",		//  5
-		"textures/snow_2.png"		//  6
+		"textures/water.png"		//  6
 	};
 
 	

@@ -20,6 +20,7 @@ namespace GameModule
 		STONE,
 		SAND,
 		SNOW,
+		WATER
 	};
 
 	struct Block

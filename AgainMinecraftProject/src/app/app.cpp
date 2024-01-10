@@ -32,8 +32,8 @@ const char* g_title = "Azamat's making Minecraft fucking again";
 constexpr size_t g_width = 1240;
 constexpr size_t g_height = 720;
 
-constexpr size_t g_numberOfChunksX = 24;
-constexpr size_t g_numberOfChunksZ = 24;
+constexpr size_t g_numberOfChunksX = 32;
+constexpr size_t g_numberOfChunksZ = 32;
 
 constexpr size_t g_jumpHeight = 3;
 
@@ -92,7 +92,7 @@ void Application::initPlayer()
 		m_player.pos.x + m_player.size.x / 2.0f, 
 		m_player.pos.y + m_player.height - 0.2f,
 		m_player.pos.z + m_player.size.z / 2.0f};
-	m_player.camera.speed	= 10.0f;
+	m_player.camera.speed	= 1.0f;
 	m_player.camera.front	= { 0.0f, 0.0f, 1.0f };
 	m_player.camera.up		= { 0.0f, 1.0f, 0.0f };
 	m_player.camera.view	= 
@@ -114,7 +114,7 @@ void Application::initShaders()
 
 	glm::mat4 projection =
 		glm::perspective(
-			glm::radians(45.0f), static_cast<float>(g_width) / static_cast<float>(g_height), 0.1f, 400.0f);
+			glm::radians(45.0f), static_cast<float>(g_width) / static_cast<float>(g_height), 0.1f, 300.0f);
 
 	useShader(m_shaders[s_cubeShader]);
 	setUniform4m(m_shaders[s_cubeShader],		"u_projection",		projection);
@@ -276,24 +276,24 @@ void Application::onUpdate(float dt)
 		glm::vec3(m_player.camera.front.x, m_player.camera.front.y, m_player.camera.front.z));
 	if (m_keyboard[GLFW_KEY_W])
 	{
-		m_player.velocity += v * 0.1f * dt;
+		m_player.velocity += v * 0.1f / 2.0f * dt;
 	}
 
 	if (m_keyboard[GLFW_KEY_S])
 	{
-		m_player.velocity += -v * 0.1f * dt;
+		m_player.velocity += -v * 0.1f / 2.0f * dt;
 	}
 
 	if (m_keyboard[GLFW_KEY_A])
 	{
 		auto left = glm::normalize(glm::cross(v, glm::vec3(0.0f, 1.0f, 0.0f)));
-		m_player.velocity += -left * 0.1f * dt;
+		m_player.velocity += -left * 0.1f / 2.0f * dt;
 	}
 
 	if (m_keyboard[GLFW_KEY_D])
 	{
 		auto right = glm::normalize(glm::cross(v, glm::vec3(0.0f, 1.0f, 0.0f)));
-		m_player.velocity += right * 0.1f * dt;
+		m_player.velocity += right * 0.1f / 2.0f * dt;
 	}
 
 	// My shitty jumping

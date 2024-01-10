@@ -116,10 +116,11 @@ void GameModule::setType(Block& block)
 
 BlockType getBlockType(Chunk& chunk, const glm::vec3& pos, const float height)
 {
+	float waterLevel = 105.0f;
+
 	if (pos.y <= height)
 	{
 		float dirtHeight = height - 3;
-		float waterLevel = 105.0f;
 		float mountainLevel = 135.0f;
 		float peakLevel = 150.0f;
 		
@@ -146,6 +147,11 @@ BlockType getBlockType(Chunk& chunk, const glm::vec3& pos, const float height)
 		}
 
 		return BlockType::STONE;
+	}
+
+	if (pos.y < waterLevel)
+	{
+		return BlockType::WATER;
 	}
 
 	return BlockType::AIR;
@@ -263,6 +269,11 @@ uint8_t getFaceId(BlockType type, Face::FaceType face)
 	if (type == BlockType::SAND)
 	{
 		return 4;
+	}
+
+	if (type == BlockType::WATER)
+	{
+		return 6;
 	}
 }
 
