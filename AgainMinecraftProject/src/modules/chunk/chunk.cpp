@@ -15,6 +15,7 @@
 
 #include "../../engine/renderer/mesh.h"
 #include "../../engine/ray/ray.h"
+#include "../../engine/texture/texture_list.h"
 
 #include "block.h"
 #include "chunk.h"
@@ -44,7 +45,7 @@ constexpr VertexArray back{ {
 	{{ 0, 0, 0 }, 0, 0.7f },
 	{{ 0, 1, 0 }, 2, 0.7f },
 	{{ 1, 0, 0 }, 1, 0.7f },
-				  
+
 	{{ 1, 0, 0 }, 1, 0.7f },
 	{{ 0, 1, 0 }, 2, 0.7f },
 	{{ 1, 1, 0 }, 3, 0.7f },
@@ -84,7 +85,7 @@ constexpr VertexArray left{ {
 	{{ 0, 0, 0 }, 0, 0.4f },
 	{{ 0, 0, 1 }, 1, 0.4f },
 	{{ 0, 1, 0 }, 2, 0.4f },
-				  
+
 	{{ 0, 0, 1 }, 1, 0.4f },
 	{{ 0, 1, 1 }, 3, 0.4f },
 	{{ 0, 1, 0 }, 2, 0.4f },
@@ -123,7 +124,7 @@ BlockType getBlockType(Chunk& chunk, const glm::vec3& pos, const float height)
 		float dirtHeight = height - 3;
 		float mountainLevel = 135.0f;
 		float peakLevel = 150.0f;
-		
+
 		if (pos.y > peakLevel)
 		{
 			return BlockType::SNOW;
@@ -132,7 +133,7 @@ BlockType getBlockType(Chunk& chunk, const glm::vec3& pos, const float height)
 		{
 			return BlockType::STONE;
 		}
-		
+
 		if (pos.y == height)
 		{
 			if (pos.y > waterLevel + 1)
@@ -166,27 +167,27 @@ Chunk GameModule::generateChunk(const glm::ivec3& pos)
 		chunk.blocks.reserve(g_nBlocks);
 	}
 
-	std::array<uint32_t, g_chunkSize.x * g_chunkSize.z> heightMap;
+	std::array<uint32_t, g_chunkSize.x* g_chunkSize.z> heightMap;
 	FastNoiseLite generator1;
 	generator1.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
 	generator1.SetFractalType(FastNoiseLite::FractalType_FBm);
 	generator1.SetFractalOctaves(6);
 	generator1.SetFrequency(0.0024f);
-	generator1.SetFractalLacunarity(1.1f);
+	generator1.SetFractalLacunarity(1.4f);
 	generator1.SetFractalWeightedStrength(1.0f);
 
 	FastNoiseLite generator2;
 	generator2.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
 	generator2.SetFractalType(FastNoiseLite::FractalType_Ridged);
-	generator2.SetFractalOctaves(5);
-	generator2.SetFrequency(0.00247f);
+	generator2.SetFractalOctaves(3);
+	generator2.SetFrequency(0.00147f);
 	generator2.SetFractalLacunarity(1.0f);
-	generator2.SetFractalWeightedStrength(0.6f);
+	generator2.SetFractalWeightedStrength(0.3f);
 
 	FastNoiseLite generator3;
 	generator3.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
 	generator3.SetFractalType(FastNoiseLite::FractalType_FBm);
-	generator3.SetFractalOctaves(4);
+	generator3.SetFractalOctaves(5);
 	generator3.SetFrequency(0.015f);
 	generator3.SetFractalLacunarity(1.3f);
 	generator3.SetFractalWeightedStrength(0.7f);
@@ -209,7 +210,7 @@ Chunk GameModule::generateChunk(const glm::ivec3& pos)
 
 			float blendedNoise = (noise1 + noise2 + noise3) / 3.343f + 0.5f;
 			blendedNoise = glm::pow(blendedNoise, 2.477f);
-				
+
 
 			heightMap[g_chunkSize.x * z + x] =
 				(g_heightOffset + 130.0f * blendedNoise);
@@ -233,53 +234,55 @@ Chunk GameModule::generateChunk(const glm::ivec3& pos)
 	return chunk;
 }
 
-uint8_t getFaceId(BlockType type, Face::FaceType face)
+Engine::TextureId getFaceId(BlockType type, Face::FaceType face)
 {
 	if (type == BlockType::GRASS)
 	{
 		switch (face)
 		{
 		case Face::FaceType::TOP:
-			return 0;
+			return Engine::TextureId::DIRT_GRASS;
+
 		case Face::FaceType::BOTTOM:
-			return 2;
+			return Engine::TextureId::DIRT;
+
 		case Face::FaceType::RIGHT:
 		case Face::FaceType::LEFT:
 		case Face::FaceType::FRONT:
 		case Face::FaceType::BACK:
-			return 1;
+			return Engine::TextureId::DIRT_GRASS;
 		}
 	}
 
 	if (type == BlockType::STONE)
 	{
-		return 3;
+		return Engine::TextureId::STONE;
 	}
-	
+
 	if (type == BlockType::DIRT)
 	{
-		return 2;
+		return Engine::TextureId::DIRT;
 	}
 
 	if (type == BlockType::SNOW)
 	{
-		return 5;
+		return Engine::TextureId::SNOW;
 	}
 
 	if (type == BlockType::SAND)
 	{
-		return 4;
+		return Engine::TextureId::SAND;
 	}
 
 	if (type == BlockType::WATER)
 	{
-		return 6;
+		return Engine::TextureId::WATER;
 	}
 }
 
 void updateFace(Chunk& chunk, const glm::ivec3 pos, BlockType type, Face::FaceType face)
 {
-	uint8_t texID = getFaceId(type, face);
+	uint8_t texID = static_cast<const uint8_t>(getFaceId(type, face));
 
 	for (uint32_t iVertex = 0; iVertex < g_vertexPerFace; iVertex++)
 	{
@@ -296,7 +299,14 @@ void updateFace(Chunk& chunk, const glm::ivec3 pos, BlockType type, Face::FaceTy
 
 		data |= (static_cast<int32_t>(ambient * 10) & 0xF) << 25;
 
-		chunk.mesh.vertices.push_back({data});
+		if (type == BlockType::WATER)
+		{
+			chunk.transparentMesh.vertices.push_back({ data });
+		}
+		else
+		{
+			chunk.solidMesh.vertices.push_back({ data });
+		}
 	}
 }
 
@@ -311,21 +321,17 @@ void GameModule::removeBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type)
 	chunk.updated = false;
 }
 
-void GameModule::generateMesh(Chunk& chunk)
-{
-
-}
-
 void GameModule::loadChunkMesh(Chunk& chunk)
 {
-	loadData(&chunk.mesh);
+	loadData(&chunk.solidMesh);
+	loadData(&chunk.transparentMesh);
 }
 
 void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
 {
-	auto& less = 
+	auto& less =
 		chunk1.pos.x < chunk2.pos.x || chunk1.pos.z < chunk2.pos.z ? chunk1 : chunk2;
-	auto& more = 
+	auto& more =
 		chunk1.pos.x > chunk2.pos.x || chunk1.pos.z > chunk2.pos.z ? chunk1 : chunk2;
 	if (less.pos.x < more.pos.x)
 	{
@@ -333,13 +339,17 @@ void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
 		{
 			for (uint32_t z = 0; z < g_chunkSize.z; z++)
 			{
-				uint32_t iLess = 
+				uint32_t iLess =
 					g_chunkSize.x * (y * g_chunkSize.z + z + 1) - 1;
-				uint32_t iMore = 
+				uint32_t iMore =
 					g_chunkSize.x * (y * g_chunkSize.z + z) + 0;
 
-				if (less.blocks[iLess].type == BlockType::AIR &&
-					more.blocks[iMore].type != BlockType::AIR)
+				bool moreSolid = more.blocks[iMore].type != BlockType::AIR && more.blocks[iMore].type != BlockType::WATER;
+				bool lessSolid = less.blocks[iLess].type != BlockType::AIR && less.blocks[iLess].type != BlockType::WATER;
+
+				if (less.blocks[iLess].type == BlockType::WATER && moreSolid ||
+					less.blocks[iLess].type == BlockType::AIR && moreSolid ||
+					less.blocks[iLess].type == BlockType::AIR && more.blocks[iMore].type == BlockType::WATER)
 				{
 					setBlockFace(
 						more,
@@ -347,11 +357,12 @@ void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
 						more.blocks[iMore].type,
 						Face::FaceType::LEFT);
 				}
-				else if (less.blocks[iLess].type != BlockType::AIR &&
-					more.blocks[iMore].type == BlockType::AIR)
+				else if(more.blocks[iMore].type == BlockType::WATER && lessSolid ||
+					more.blocks[iMore].type == BlockType::AIR && lessSolid ||
+					more.blocks[iMore].type == BlockType::AIR && less.blocks[iLess].type == BlockType::WATER)
 				{
 					setBlockFace(
-						less, 
+						less,
 						glm::vec3(g_chunkSize.x - 1, y, z),
 						less.blocks[iLess].type,
 						Face::FaceType::RIGHT);
@@ -365,22 +376,27 @@ void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
 		{
 			for (uint32_t x = 0; x < g_chunkSize.x; x++)
 			{
-				uint32_t iLess = 
+				uint32_t iLess =
 					y * g_chunkSize.x * g_chunkSize.z + (g_chunkSize.z - 1) * g_chunkSize.x + x;
-				uint32_t iMore = 
+				uint32_t iMore =
 					y * g_chunkSize.x * g_chunkSize.z + (0) * g_chunkSize.x + x;
 
-				if (less.blocks[iLess].type == BlockType::AIR &&
-					more.blocks[iMore].type != BlockType::AIR)
+				bool moreSolid = more.blocks[iMore].type != BlockType::AIR && more.blocks[iMore].type != BlockType::WATER;
+				bool lessSolid = less.blocks[iLess].type != BlockType::AIR && less.blocks[iLess].type != BlockType::WATER;
+
+				if (less.blocks[iLess].type == BlockType::WATER && moreSolid ||
+					less.blocks[iLess].type == BlockType::AIR && moreSolid ||
+					less.blocks[iLess].type == BlockType::AIR && more.blocks[iMore].type == BlockType::WATER)
 				{
 					setBlockFace(
-						more, 
-						glm::vec3(x, y, 0), 
+						more,
+						glm::vec3(x, y, 0),
 						more.blocks[iMore].type,
 						Face::FaceType::BACK);
 				}
-				else if (less.blocks[iLess].type != BlockType::AIR &&
-					more.blocks[iMore].type == BlockType::AIR)
+				else if (more.blocks[iMore].type == BlockType::WATER && lessSolid ||
+					more.blocks[iMore].type == BlockType::AIR && lessSolid ||
+					more.blocks[iMore].type == BlockType::AIR && less.blocks[iLess].type == BlockType::WATER)
 				{
 					setBlockFace(
 						less,
@@ -393,13 +409,23 @@ void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
 	}
 }
 
-void GameModule::drawChunk(const Chunk& chunk)
+void GameModule::drawSolid(const Chunk& chunk)
 {
-	if (chunk.mesh.vertices.size() == 0)
+	if (chunk.solidMesh.vertices.size() == 0)
 	{
 		return;
 	}
 
-	renderMesh(&chunk.mesh);
+	renderMesh(&chunk.solidMesh);
+}
+
+void GameModule::drawTrans(const Chunk& chunk)
+{
+	if (chunk.transparentMesh.vertices.size() == 0)
+	{
+		return;
+	}
+
+	renderMesh(&chunk.transparentMesh);
 }
 

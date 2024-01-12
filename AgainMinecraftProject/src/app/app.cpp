@@ -13,17 +13,13 @@
 #include "../engine/ray/ray.h"
 #include "../engine/renderer/block_renderer.h"
 
-#ifdef ECS
 #include "../modules/chunk/block.h"
-#endif
 
 #include "../modules/chunk/chunk.h"
 
 #include "app.h"
 
 using namespace Engine;
-#ifndef ECS
-#endif
 using namespace GameModule;
 using namespace App;
 
@@ -245,7 +241,7 @@ void Application::onRender()
 
 	setUniform4m(m_shaders[s_meshShader],		"u_view", m_player.camera.view);
 	useTextureArray(m_tArray);
-	drawWorld(m_world, m_shaders[s_meshShader]);
+	drawWorld(m_world, m_player, m_shaders[s_meshShader]);
 
 #ifdef _DEBUG
 	setUniform4m(m_shaders[s_rayShader],		"u_view", m_player.camera.view);

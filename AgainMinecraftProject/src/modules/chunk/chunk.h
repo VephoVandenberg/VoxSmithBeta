@@ -21,7 +21,7 @@ namespace GameModule
 	struct Chunk
 	{
 		Chunk() = default;
-		~Chunk() { deleteMesh(&mesh); }
+		~Chunk() { deleteMesh(&solidMesh); }
 
 		Chunk*					front		= nullptr;
 		Chunk*					back		= nullptr;
@@ -31,7 +31,8 @@ namespace GameModule
 		bool					updated		= false;
 		glm::vec3				pos;
 		std::vector<Block>		blocks		= {};
-		Engine::Renderer::Mesh	mesh;
+		Engine::Renderer::Mesh	solidMesh;
+		Engine::Renderer::Mesh	transparentMesh;
 	};
 
 	enum class ChunkDir : int8_t
@@ -50,7 +51,6 @@ namespace GameModule
 	};
 
 	Chunk	generateChunk(const glm::ivec3& pos);
-	void	generateMesh(Chunk& chunk);
 	void	loadChunkMesh(Chunk& chunk);
 	void	updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2);
 
@@ -58,6 +58,7 @@ namespace GameModule
 	void	setBlockFace(Chunk& chunk, const glm::vec3& pos, BlockType type, Face::FaceType face);
 	void	removeBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type);
 
-	void	drawChunk(const Chunk& chunk);
+	void	drawSolid(const Chunk& chunk);
+	void	drawTrans(const Chunk& chunk);
 }
  

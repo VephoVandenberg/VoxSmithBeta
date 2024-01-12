@@ -41,9 +41,8 @@ void initParallelChunks(World& world, const glm::vec3& min, const glm::vec3& max
 			Chunk chunk = generateChunk(chunkPos);
 			initChunkFaces(chunk);
 
-			g_worldMutex.lock();
+			std::lock_guard<std::mutex> lock(g_worldMutex);
 			world.chunks[chunkPos] = std::move(chunk);
-			g_worldMutex.unlock();
 		}
 	}
 }
@@ -217,22 +216,66 @@ void GameModule::initChunkFaces(Chunk& chunk)
 						setBlockFace(chunk, right, chunk.blocks[rightId].type, Face::FaceType::LEFT);
 					}
 				}
-				else
+				else if (chunk.blocks[iBlock].type == BlockType::WATER)
 				{
+					if (top.y < g_chunkSize.y &&
+						(chunk.blocks[topId].type != BlockType::AIR &&
+							chunk.blocks[topId].type != BlockType::WATER))
+					{
+						setBlockFace(chunk, top, chunk.blocks[topId].type, Face::FaceType::BOTTOM);
+					}
+
+					if (front.z < g_chunkSize.z &&
+						(chunk.blocks[frontId].type != BlockType::AIR &&
+							chunk.blocks[frontId].type != BlockType::WATER))
+					{
+						setBlockFace(chunk, front, chunk.blocks[frontId].type, Face::FaceType::BACK);
+					}
+
+					if (right.x < g_chunkSize.x &&
+						(chunk.blocks[rightId].type != BlockType::AIR &&
+							chunk.blocks[rightId].type != BlockType::WATER))
+					{
+						setBlockFace(chunk, right, chunk.blocks[rightId].type, Face::FaceType::LEFT);
+					}
+
 					if (top.y < g_chunkSize.y &&
 						chunk.blocks[topId].type == BlockType::AIR)
 					{
 						setBlockFace(chunk, pos, chunk.blocks[iBlock].type, Face::FaceType::TOP);
 					}
 
-					if (front.z < g_chunkSize.z&&
+					if (front.z < g_chunkSize.z &&
 						chunk.blocks[frontId].type == BlockType::AIR)
 					{
 						setBlockFace(chunk, pos, chunk.blocks[iBlock].type, Face::FaceType::FRONT);
 					}
 
-					if (right.x < g_chunkSize.x&&
+					if (right.x < g_chunkSize.x &&
 						chunk.blocks[rightId].type == BlockType::AIR)
+					{
+						setBlockFace(chunk, pos, chunk.blocks[iBlock].type, Face::FaceType::RIGHT);
+					}
+				}
+				else
+				{
+					if (top.y < g_chunkSize.y &&
+						(chunk.blocks[topId].type == BlockType::AIR ||
+							chunk.blocks[topId].type == BlockType::WATER))
+					{
+						setBlockFace(chunk, pos, chunk.blocks[iBlock].type, Face::FaceType::TOP);
+					}
+
+					if (front.z < g_chunkSize.z &&
+						(chunk.blocks[frontId].type == BlockType::AIR ||
+							chunk.blocks[frontId].type == BlockType::WATER))
+					{
+						setBlockFace(chunk, pos, chunk.blocks[iBlock].type, Face::FaceType::FRONT);
+					}
+
+					if (right.x < g_chunkSize.x &&
+						(chunk.blocks[rightId].type == BlockType::AIR ||
+							chunk.blocks[rightId].type == BlockType::WATER))
 					{
 						setBlockFace(chunk, pos, chunk.blocks[iBlock].type, Face::FaceType::RIGHT);
 					}
@@ -247,11 +290,11 @@ void updateBorderX(World& world, const glm::ivec3 minBorder, const glm::ivec3 ma
 	bool conditionX = dir.x > 0;
 	bool conditionZ = dir.z > 0;
 
-	int32_t signX	= conditionX ? -1 :  1;
-	int32_t signZ	= conditionZ ?  1 : -1;
-	int32_t start	= conditionZ ? minBorder.z : maxBorder.z - g_chunkSize.z;
-	int32_t end		= conditionZ ? maxBorder.z : minBorder.z - g_chunkSize.z;
-	int32_t addX	= conditionX ? maxBorder.x : minBorder.x;
+	int32_t signX = conditionX ? -1 : 1;
+	int32_t signZ = conditionZ ? 1 : -1;
+	int32_t start = conditionZ ? minBorder.z : maxBorder.z - g_chunkSize.z;
+	int32_t end = conditionZ ? maxBorder.z : minBorder.z - g_chunkSize.z;
+	int32_t addX = conditionX ? maxBorder.x : minBorder.x;
 	int32_t removeX = conditionX ? minBorder.x : maxBorder.x;
 
 	for (int32_t z = start; z != end; z += signZ * g_chunkSize.z)
@@ -260,7 +303,6 @@ void updateBorderX(World& world, const glm::ivec3 minBorder, const glm::ivec3 ma
 		glm::ivec3 chunkRemovePos = { removeX, 0, z };
 
 		Chunk chunk = generateChunk(chunkAddPos);
-		generateMesh(chunk);
 		initChunkFaces(chunk);
 
 		std::lock_guard<std::mutex> lock(g_worldMutex);
@@ -287,11 +329,11 @@ void updateBorderZ(World& world, const glm::ivec3 minBorder, const glm::ivec3 ma
 	bool conditionX = dir.x > 0;
 	bool conditionZ = dir.z > 0;
 
-	int32_t signX	= conditionX ? 1 : -1;
-	int32_t signZ	= conditionZ ? -1 : 1;
-	int32_t start	= conditionX ? minBorder.x : maxBorder.x - g_chunkSize.x;
-	int32_t end		= conditionX ? maxBorder.x : minBorder.x - g_chunkSize.x;
-	int32_t addZ	= conditionZ ? maxBorder.z : minBorder.z;
+	int32_t signX = conditionX ? 1 : -1;
+	int32_t signZ = conditionZ ? -1 : 1;
+	int32_t start = conditionX ? minBorder.x : maxBorder.x - g_chunkSize.x;
+	int32_t end = conditionX ? maxBorder.x : minBorder.x - g_chunkSize.x;
+	int32_t addZ = conditionZ ? maxBorder.z : minBorder.z;
 	int32_t removeZ = conditionZ ? minBorder.z : maxBorder.z;
 
 	for (int32_t x = start; x != end; x += signX * g_chunkSize.x)
@@ -300,7 +342,6 @@ void updateBorderZ(World& world, const glm::ivec3 minBorder, const glm::ivec3 ma
 		glm::ivec3 chunkRemovePos = { x, 0, removeZ };
 
 		Chunk chunk = generateChunk(chunkAddPos);
-		generateMesh(chunk);
 		initChunkFaces(chunk);
 
 		glm::ivec3 pos = { x, 0, addZ + signZ * g_chunkSize.z };
@@ -381,9 +422,11 @@ void GameModule::updateWorld(World& world, Player& player)
 	}
 }
 
-void GameModule::drawWorld(World& world, Engine::Shader& shader)
+void GameModule::drawWorld(World& world, const Player& player, Engine::Shader& shader)
 {
 	std::lock_guard<std::mutex> lock(g_worldMutex);
+	
+	std::multimap<float, glm::ivec3> sorted;
 	for (auto& pair : world.chunks)
 	{
 		if (!pair.second.updated)
@@ -392,8 +435,21 @@ void GameModule::drawWorld(World& world, Engine::Shader& shader)
 			pair.second.updated = true;
 		}
 		Engine::setUniform3f(shader, "u_chunkPos", pair.second.pos);
-		drawChunk(pair.second);
+		drawSolid(pair.second);
+
+		if (!pair.second.transparentMesh.vertices.empty())
+		{
+			float distance = glm::length(player.camera.pos - static_cast<const glm::vec3>(pair.first));
+			sorted.insert({ distance, pair.first });
+		}
+	} 
+	for (std::multimap<float, glm::ivec3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); it++)
+	{
+		Engine::setUniform3f(shader, "u_chunkPos", it->second);
+		drawTrans(world.chunks[it->second]);
 	}
+
+	int a = 5;
 }
 
 bool collAABB(const Player& player, const glm::vec3& pos)

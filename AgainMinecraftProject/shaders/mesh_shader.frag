@@ -8,8 +8,8 @@ out vec4 o_fragColor;
 
 uniform sampler2DArray u_textureArray;
 
-float g_near = 0.1f;
-float g_far = 225.0f;
+float g_near = 200.0f;
+float g_far = 230.0f;
 vec4 g_fogColor = vec4(147.0f/255.0f, 202.0f/255.0f, 237.0f/255.0f, 1.0f);
 
 void main()
@@ -17,6 +17,7 @@ void main()
 	float dist = length(frag_eyeCoords.xyz);
 	float fogFactor = clamp((g_far - dist) / (g_far - g_near), 0.0f, 1.0f);
 
-	o_fragColor = mix(g_fogColor, frag_ambientLight * texture(u_textureArray, frag_texCoords), fogFactor);
-	// o_fragColor = frag_ambientLight * texture(u_textureArray, frag_texCoords);
+	o_fragColor = mix(g_fogColor, texture(u_textureArray, frag_texCoords), fogFactor);
+	//o_fragColor.xyz *= frag_ambientLight;
+	//o_fragColor = texture(u_textureArray, frag_texCoords);
 }

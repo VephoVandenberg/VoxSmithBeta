@@ -1,20 +1,24 @@
 /** TO DO LIST
 * AGENDA
-* - Water Walta
-* - Let there be light(ambient light for now)
+* - Let there be light(Shadow maps)
+* -		steps: 
+*			1. Learn framebuffers.
+*			2. Learn and make shadow map
 * LATER
+* - SkyBox or maybe clouds, maybe Moon and Sun
 * - Trees
 * - Perhaps we need some kind of enabling physics
 * - Serialisation
 * - Octrees
 * - Greedy Meshing
-* - SkyBox or maybe clouds, maybe Moon and Sun
+* - More vegetation
 * - Investigate math behind coordinate systems and matrices 
 * NOTES:
 * - We might have some swiftness over the biomes with the exponent and division stuff.
-* - Multithreading works but still some bugs occur, also consider threadpool, and using futures instead threads
+* - Multithreading works but still some bugs occur, also consider threadpool, and using futures instead threads.
 * - Biomes will work for now, but it can be better
 * - Having simple fog but could be performed better.
+* - Having nice water, transperency, but I need to add some color change when underwater.
 */
 
 #include "app/app.h"

@@ -12,8 +12,18 @@ namespace Engine
 		"textures/stone.png",		//	3
 		"textures/sand.png",		//  4
 		"textures/snow.png",		//  5
-		"textures/water.png"		//  6
+		"textures/water.png",		//  6
+		//"textures/leaf.png",		//  7
 	};
 
-	
+	enum class TextureId : uint8_t
+	{
+		GRASS = 0,
+		DIRT_GRASS,
+		DIRT,
+		STONE,
+		SAND,
+		SNOW,
+		WATER
+	};
 }
