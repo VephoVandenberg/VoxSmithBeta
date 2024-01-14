@@ -272,24 +272,24 @@ void Application::onUpdate(float dt)
 		glm::vec3(m_player.camera.front.x, m_player.camera.front.y, m_player.camera.front.z));
 	if (m_keyboard[GLFW_KEY_W])
 	{
-		m_player.velocity += v * 0.1f / 2.0f * dt;
+		m_player.velocity += v * 0.1f / 3.0f * dt;
 	}
 
 	if (m_keyboard[GLFW_KEY_S])
 	{
-		m_player.velocity += -v * 0.1f / 2.0f * dt;
+		m_player.velocity += -v * 0.1f / 3.0f * dt;
 	}
 
 	if (m_keyboard[GLFW_KEY_A])
 	{
 		auto left = glm::normalize(glm::cross(v, glm::vec3(0.0f, 1.0f, 0.0f)));
-		m_player.velocity += -left * 0.1f / 2.0f * dt;
+		m_player.velocity += -left * 0.1f / 3.0f * dt;
 	}
 
 	if (m_keyboard[GLFW_KEY_D])
 	{
 		auto right = glm::normalize(glm::cross(v, glm::vec3(0.0f, 1.0f, 0.0f)));
-		m_player.velocity += right * 0.1f / 2.0f * dt;
+		m_player.velocity += right * 0.1f / 3.0f * dt;
 	}
 
 	// My shitty jumping
@@ -305,7 +305,7 @@ void Application::onUpdate(float dt)
 	if (m_player.heightJumped < g_jumpHeight)
 	{
 		m_player.heightJumped += up.y * m_player.jumpAcceleration * dt;
-		m_player.velocity += up * m_player.jumpAcceleration * dt;
+		//m_player.velocity += up * m_player.jumpAcceleration * dt;
 		m_player.jumpAcceleration -= g_gravity * down.y * dt;
 	}
 	
@@ -325,10 +325,10 @@ void Application::onUpdate(float dt)
 
 	m_player.camera.pos += m_player.velocity * dt;
 	m_player.pos += m_player.velocity * dt;
-
+	
 	m_player.velocity *= 0.95f;
 	
-	updateWorld(m_world, m_player);
+	//updateWorld(m_world, m_player);
 	updateCameraView(m_player.camera);
 	//processRay(m_world, m_player, ray, m_shaders[s_outlineShader], type);
 }

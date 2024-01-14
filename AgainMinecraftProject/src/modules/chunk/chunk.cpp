@@ -241,7 +241,7 @@ Engine::TextureId getFaceId(BlockType type, Face::FaceType face)
 		switch (face)
 		{
 		case Face::FaceType::TOP:
-			return Engine::TextureId::DIRT_GRASS;
+			return Engine::TextureId::GRASS;
 
 		case Face::FaceType::BOTTOM:
 			return Engine::TextureId::DIRT;
@@ -428,4 +428,3 @@ void GameModule::drawTrans(const Chunk& chunk)
 
 	renderMesh(&chunk.transparentMesh);
 }
-

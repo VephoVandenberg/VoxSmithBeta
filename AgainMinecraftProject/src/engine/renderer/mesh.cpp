@@ -27,5 +27,5 @@ void Engine::Renderer::renderMesh(const Mesh* mesh)
 void Engine::Renderer::deleteMesh(Mesh* mesh)
 {
 	glDeleteBuffers(1, &mesh->VBO);
-	glad_glDeleteVertexArrays(1, &mesh->VAO);
+	glDeleteVertexArrays(1, &mesh->VAO);
 }

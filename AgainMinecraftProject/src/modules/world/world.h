@@ -45,6 +45,8 @@ namespace GameModule
 		using ChunkMap = std::unordered_map<glm::ivec3, Chunk, KeyFuncs>;
 		ChunkMap chunks;
 
+		std::vector<glm::ivec3> chunksToRemove;
+
 		uint32_t threadsAvailable;
 	};
 

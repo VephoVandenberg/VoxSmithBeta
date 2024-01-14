@@ -1,21 +1,79 @@
-﻿  chunk.cpp
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(209,21): warning C4244: '=': conversion from 'float' to '_Ty', possible loss of data
+﻿  app.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(72,20): warning C4244: '=': conversion from 'float' to 'uint32_t', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(341,27): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(342,27): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(346,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(347,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(348,26): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(349,26): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
+  camera.cpp
+  texture.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\texture\texture.cpp(49,71): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  window.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\window\window.cpp(17,78): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\window\window.cpp(26,32): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  main.cpp
+  chunk.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(216,21): warning C4244: '=': conversion from 'float' to '_Ty', possible loss of data
           with
           [
               _Ty=uint32_t
           ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(221,88): warning C4244: 'argument': conversion from '_Ty' to 'const float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(228,88): warning C4244: 'argument': conversion from '_Ty' to 'const float', possible loss of data
           with
           [
               _Ty=uint32_t
           ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(321,26): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(323,27): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(353,26): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(355,27): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(338,26): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(340,27): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(375,26): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(377,27): warning C4018: '<': signed/unsigned mismatch
+  world.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(38,17): warning C4244: 'initializing': conversion from 'const T' to 'int32_t', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(40,18): warning C4244: 'initializing': conversion from 'const T' to 'int32_t', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(63,47): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(63,19): warning C4244: 'initializing': conversion from 'int' to 'const float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(63,47): warning C4244: '+=': conversion from 'float' to 'int32_t', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(183,25): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(185,26): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(187,27): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(197,20): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(198,22): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(199,22): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(602,8): warning C4101: 'dxExit': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(601,26): warning C4101: 'dyEntry': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(601,8): warning C4101: 'dxEntry': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(602,16): warning C4101: 'dzExit': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(601,17): warning C4101: 'dzEntry': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(602,24): warning C4101: 'dyExit': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(742,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(743,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(744,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
   Generating code
-  4 of 1463 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    10 functions had inline decision re-evaluated but remain unchanged
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(281): warning C4715: 'getFaceId': not all control paths return a value
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\texture\texture.cpp(91): warning C4715: 'Engine::initTextureArray': not all control paths return a value
+  269 of 1561 functions (17.2%) were compiled, the rest were copied from previous compilation.
+    100 functions were new in current compilation
+    166 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   AgainMinecraftProject.vcxproj -> D:\Working\AgainMinecraftProject\x64\Release\AgainMinecraftProject.exe
