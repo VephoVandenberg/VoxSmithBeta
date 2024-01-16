@@ -21,12 +21,11 @@ namespace GameModule
 	struct Chunk
 	{
 		Chunk() = default;
-		~Chunk() { deleteMesh(&solidMesh); }
 
-		Chunk*					front		= nullptr;
-		Chunk*					back		= nullptr;
-		Chunk*					left		= nullptr;
-		Chunk*					right		= nullptr;
+		glm::ivec3	front;
+		glm::ivec3	back;
+		glm::ivec3	left;
+		glm::ivec3	right;
 
 		bool					updated		= false;
 		glm::vec3				pos;
@@ -53,8 +52,8 @@ namespace GameModule
 	Chunk	generateChunk(const glm::ivec3& pos);
 	void	loadChunkMesh(Chunk& chunk);
 	void	updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2);
+	void	deleteChunk(Chunk& chunk);
 
-	void	setType(Block& block);
 	void	setBlockFace(Chunk& chunk, const glm::vec3& pos, BlockType type, Face::FaceType face);
 	void	removeBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type);
 

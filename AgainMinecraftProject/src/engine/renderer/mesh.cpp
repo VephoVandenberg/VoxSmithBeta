@@ -10,12 +10,12 @@ void Engine::Renderer::loadData(Mesh* mesh)
 	glGenBuffers(1, &mesh->VBO);
 
 	glBindVertexArray(mesh->VAO);
-	
+
 	glBindBuffer(GL_ARRAY_BUFFER, mesh->VBO);
 	glBufferData(GL_ARRAY_BUFFER, mesh->vertices.size() * sizeof(Vertex), mesh->vertices.data(), GL_STATIC_DRAW);
 
 	glVertexAttribIPointer(0, 1, GL_UNSIGNED_INT, sizeof(Vertex), (void*)0);
-	 glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(0);
 }
 
 void Engine::Renderer::renderMesh(const Mesh* mesh)

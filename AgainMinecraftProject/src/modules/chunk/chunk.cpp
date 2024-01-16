@@ -111,13 +111,10 @@ FaceMap g_faces = {
 	{Face::FaceType::LEFT,		left},
 };
 
-void GameModule::setType(Block& block)
-{
-}
 
 BlockType getBlockType(Chunk& chunk, const glm::vec3& pos, const float height)
 {
-	float waterLevel = 105.0f;
+	float waterLevel = 30.0f;
 
 	if (pos.y <= height)
 	{
@@ -162,6 +159,11 @@ Chunk GameModule::generateChunk(const glm::ivec3& pos)
 {
 	Chunk chunk;
 	chunk.pos = pos;
+	chunk.front = pos + glm::ivec3(0, 0, g_chunkSize.z);
+	chunk.back = pos - glm::ivec3(0, 0, g_chunkSize.z);
+	chunk.right = pos + glm::ivec3(g_chunkSize.x, 0, 0);
+	chunk.left = pos - glm::ivec3(g_chunkSize.x, 0, 0);
+
 	if (chunk.blocks.empty())
 	{
 		chunk.blocks.reserve(g_nBlocks);
@@ -325,6 +327,12 @@ void GameModule::loadChunkMesh(Chunk& chunk)
 {
 	loadData(&chunk.solidMesh);
 	loadData(&chunk.transparentMesh);
+}
+
+void GameModule::deleteChunk(Chunk& chunk)
+{
+	deleteMesh(&chunk.solidMesh);
+	deleteMesh(&chunk.transparentMesh);
 }
 
 void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
