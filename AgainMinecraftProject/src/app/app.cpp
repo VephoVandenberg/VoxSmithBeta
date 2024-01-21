@@ -330,7 +330,7 @@ void Application::onUpdate(float dt)
 	m_world.pos = static_cast<glm::ivec3>(m_world.fractionPos) / 16 * 16;
 	m_player.velocity *= 0.95f;
 	
-	updateWorld(m_world, m_player);
+	//updateWorld(m_world, m_player);
 	updateCameraView(m_player.camera);
 	//processRay(m_world, m_player, ray, m_shaders[s_outlineShader], type);
 }

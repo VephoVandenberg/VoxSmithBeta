@@ -303,11 +303,11 @@ void updateFace(Chunk& chunk, const glm::ivec3 pos, BlockType type, Face::FaceTy
 
 		if (type == BlockType::WATER)
 		{
-			chunk.transparentMesh.vertices.push_back({ data });
+			chunk.transparentMesh.push_back({ data });
 		}
 		else
 		{
-			chunk.solidMesh.vertices.push_back({ data });
+			chunk.solidMesh.push_back({ data });
 		}
 	}
 }
@@ -323,16 +323,10 @@ void GameModule::removeBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type)
 	chunk.updated = false;
 }
 
-void GameModule::loadChunkMesh(Chunk& chunk)
+void GameModule::updateMesh(Chunk& chunk, Engine::Renderer::Buffer& transBuffer, Engine::Renderer::Buffer& solidBuffer)
 {
-	loadData(&chunk.solidMesh);
-	loadData(&chunk.transparentMesh);
-}
-
-void GameModule::deleteChunk(Chunk& chunk)
-{
-	deleteMesh(&chunk.solidMesh);
-	deleteMesh(&chunk.transparentMesh);
+	updateMesh(transBuffer, chunk.solidMesh);
+	updateMesh(solidBuffer, chunk.transparentMesh);
 }
 
 void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
@@ -365,7 +359,7 @@ void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
 						more.blocks[iMore].type,
 						Face::FaceType::LEFT);
 				}
-				else if(more.blocks[iMore].type == BlockType::WATER && lessSolid ||
+				else if (more.blocks[iMore].type == BlockType::WATER && lessSolid ||
 					more.blocks[iMore].type == BlockType::AIR && lessSolid ||
 					more.blocks[iMore].type == BlockType::AIR && less.blocks[iLess].type == BlockType::WATER)
 				{
@@ -419,20 +413,20 @@ void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
 
 void GameModule::drawSolid(const Chunk& chunk)
 {
-	if (chunk.solidMesh.vertices.size() == 0)
+	if (chunk.solidMesh->vertices.size() == 0)
 	{
 		return;
 	}
 
-	renderMesh(&chunk.solidMesh);
+	renderMesh(*chunk.solidMesh);
 }
 
 void GameModule::drawTrans(const Chunk& chunk)
 {
-	if (chunk.transparentMesh.vertices.size() == 0)
+	if (chunk.transparentMesh->vertices.size() == 0)
 	{
 		return;
 	}
 
-	renderMesh(&chunk.transparentMesh);
+	renderMesh(*chunk.transparentMesh);
 }

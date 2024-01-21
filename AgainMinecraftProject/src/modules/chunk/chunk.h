@@ -12,6 +12,7 @@
 namespace Engine
 {
 	struct Ray;
+	struct Shader;
 }
 
 namespace GameModule
@@ -20,26 +21,16 @@ namespace GameModule
 
 	struct Chunk
 	{
-		Chunk() = default;
-
 		glm::ivec3	front;
 		glm::ivec3	back;
 		glm::ivec3	left;
 		glm::ivec3	right;
 
-		bool					updated		= false;
+		bool					updated = false;
 		glm::vec3				pos;
-		std::vector<Block>		blocks		= {};
-		Engine::Renderer::Mesh	solidMesh;
-		Engine::Renderer::Mesh	transparentMesh;
-	};
-
-	enum class ChunkDir : int8_t
-	{
-		NORTH,
-		SOUTH,
-		EAST,
-		WEST
+		std::vector<Block>		blocks = {};
+		Engine::Renderer::Mesh solidMesh;
+		Engine::Renderer::Mesh transparentMesh;
 	};
 
 	enum class RayType
@@ -50,9 +41,8 @@ namespace GameModule
 	};
 
 	Chunk	generateChunk(const glm::ivec3& pos);
-	void	loadChunkMesh(Chunk& chunk);
+	void	updateMesh(Chunk& chunk, Engine::Renderer::Buffer& transBuffer, Engine::Renderer::Buffer& solidBuffer);
 	void	updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2);
-	void	deleteChunk(Chunk& chunk);
 
 	void	setBlockFace(Chunk& chunk, const glm::vec3& pos, BlockType type, Face::FaceType face);
 	void	removeBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type);
@@ -60,4 +50,3 @@ namespace GameModule
 	void	drawSolid(const Chunk& chunk);
 	void	drawTrans(const Chunk& chunk);
 }
- 

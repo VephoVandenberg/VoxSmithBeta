@@ -7,11 +7,22 @@
 
 #include <glm/glm.hpp>
 
+#include "../../engine/renderer/mesh.h"
+
 namespace Engine
 {
 	struct Ray;
 	struct Shader;
+
+	namespace Renderer
+	{
+		template <uint32_t N>
+		struct MeshPool;
+	}
 }
+
+static constexpr int32_t g_chunksX = 16;
+static constexpr int32_t g_chunksZ = 16;
 
 namespace GameModule
 {
@@ -45,8 +56,9 @@ namespace GameModule
 			}
 		};
 
-		using ChunkMap = std::unordered_map<glm::ivec3, Chunk, KeyFuncs>;
-		ChunkMap chunks;
+		std::unordered_map<glm::ivec3, Chunk, KeyFuncs> chunks;
+
+		Engine::Renderer::MeshPool<2 * g_chunksX * g_chunksZ> pool; // We need for every chunk 2 meshes
 
 		std::unordered_set<glm::ivec3, KeyFuncs> chunksToRemove;
 		std::unordered_set<glm::ivec3, KeyFuncs> chunksToAdd;

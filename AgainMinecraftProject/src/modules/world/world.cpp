@@ -22,9 +22,6 @@ using namespace GameModule;
 
 constexpr glm::ivec3 g_chunkSize = { 16, 256, 16 };
 
-constexpr int32_t g_chunksX = 16;
-constexpr int32_t g_chunksZ = 16;
-
 constexpr size_t g_nBlocks = g_chunkSize.x * g_chunkSize.y * g_chunkSize.z;
 
 constexpr size_t g_updateDistance = g_chunkSize.x * (g_chunksX / 2 - 1);
@@ -114,7 +111,21 @@ void GameModule::initWorld(World& world)
 		{
 			glm::ivec3 chunkPos = { x * g_chunkSize.x, 0, z * g_chunkSize.z };
 
-			//loadChunkMesh(world.chunks[chunkPos]);
+
+			for (auto& mesh : world.pool.meshes)
+			{
+				if (!mesh.active)
+				{
+					if (!world.chunks[chunkPos].solidMesh)
+					{
+						world.chunks[chunkPos].solidMesh = &mesh;
+					}
+					else if (!world.chunks[chunkPos].transparentMesh)
+					{
+						world.chunks[chunkPos].transparentMesh = &mesh;
+					}
+				}
+			}
 		}
 	}
 }
@@ -324,7 +335,7 @@ void addChunks(World& world)
 
 		chunk.updated = false;
 		world.chunks.insert({ *world.chunksToAdd.begin(), chunk });	
-		world.chunksToAdd.erase(*world.chunksToAdd.begin());
+		world.chunksToAdd.erase(world.chunksToAdd.begin());
 	}
 }
 
@@ -338,7 +349,7 @@ void GameModule::updateWorld(World& world, const Player& player)
 			x < world.pos.x + g_chunksX * g_chunkSize.x;
 			x += g_chunkSize.x)
 		{
-			if (world.chunks.find({ x, 0, z }) == world.chunks.end())
+			if (world.chunks.find({ x, 0, z }) == world.chunks.end() && world.chunksToRemove.count({x, 0, z}) == 0)
 			{
 				world.chunksToAdd.insert({ x, 0, z });
 			}
@@ -362,7 +373,7 @@ void GameModule::updateWorld(World& world, const Player& player)
 	{
 		deleteChunk(world.chunks[*world.chunksToRemove.begin()]);
 		world.chunks.erase(*world.chunksToRemove.begin());
-		world.chunksToRemove.erase(*world.chunksToRemove.begin());
+		world.chunksToRemove.erase(world.chunksToRemove.begin());
 	}
 }
 
@@ -381,14 +392,14 @@ void GameModule::drawWorld(World& world, const Player& player, Engine::Shader& s
 		Engine::setUniform3f(shader, "u_chunkPos", pair.second.pos);
 		drawSolid(pair.second);
 
-		if (!pair.second.transparentMesh.vertices.empty())
+		if (!pair.second.transparentMesh->vertices.empty())
 		{
 			float distance = glm::length(player.camera.pos - static_cast<const glm::vec3>(pair.first));
 			sorted.insert({ distance, pair.first });
 		}
 	}
 
-	for (std::multimap<float, glm::ivec3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); it++)
+	for (auto it = sorted.rbegin(); it != sorted.rend(); it++)
 	{
 		Engine::setUniform3f(shader, "u_chunkPos", it->second);
 		drawTrans(world.chunks[it->second]);
@@ -449,7 +460,7 @@ void GameModule::processRay(World& world, const Player& player, Engine::Ray& ray
 		}
 	}
 }
-
+	
 void GameModule::traceRay(World& world, glm::vec3 rayPosFrac, Engine::Shader& shader, GameModule::RayType type)
 {
 	glm::ivec3 currBlock = static_cast<glm::ivec3>(rayPosFrac);
