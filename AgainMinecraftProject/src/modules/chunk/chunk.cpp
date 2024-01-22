@@ -440,17 +440,23 @@ void GameModule::drawTrans(const Chunk& chunk)
 	}
 }
 
-void GameModule::disableChunk(Chunk& chunk)
+uint32_t GameModule::disableChunk(Chunk& chunk)
 {
+	uint32_t disabledBuffers = 0;
+
 	if (chunk.solidBuffer)
 	{
 		chunk.solidBuffer->active = false;
 		chunk.solidBuffer = nullptr;
+		disabledBuffers++;
 	}
 
 	if (chunk.transBuffer)
 	{
 		chunk.transBuffer->active = false;
 		chunk.transBuffer = nullptr;
+		disabledBuffers++;
 	}	
+
+	return disabledBuffers;
 }

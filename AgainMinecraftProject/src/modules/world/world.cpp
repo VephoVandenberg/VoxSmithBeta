@@ -378,11 +378,6 @@ void addChunks(World& world)
 
 void GameModule::updateWorld(World& world, const Player& player)
 {
-	if (!&world)
-	{
-		int a = 5;
-	}
-
 	for (int32_t z = world.pos.z;
 		z < world.pos.z + g_chunksZ * g_chunkSize.z;
 		z += g_chunkSize.z)
@@ -414,8 +409,7 @@ void GameModule::updateWorld(World& world, const Player& player)
 
 	if (!world.chunksToRemove.empty())
 	{
-		disableChunk(world.chunks[*world.chunksToRemove.begin()]);
-		world.pool.activeCounter--;
+		world.pool.activeCounter -= disableChunk(world.chunks[*world.chunksToRemove.begin()]);
 		world.chunks.erase(*world.chunksToRemove.begin());
 		world.chunksToRemove.erase(world.chunksToRemove.begin());
 	}

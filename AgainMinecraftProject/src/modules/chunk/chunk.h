@@ -50,8 +50,8 @@ namespace GameModule
 	void	setBlockFace(Chunk& chunk, const glm::vec3& pos, BlockType type, Face::FaceType face);
 	void	removeBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type);
 
-	void	loadChunkMesh(Chunk& chunk);
-	void	drawSolid(const Chunk& chunk);
-	void	drawTrans(const Chunk& chunk);
-	void	disableChunk(Chunk& chunk);
+	void	 loadChunkMesh(Chunk& chunk);
+	void	 drawSolid(const Chunk& chunk);
+	void	 drawTrans(const Chunk& chunk);
+	uint32_t disableChunk(Chunk& chunk);
 }
