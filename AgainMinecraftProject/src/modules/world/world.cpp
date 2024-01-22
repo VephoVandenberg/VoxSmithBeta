@@ -112,17 +112,25 @@ void GameModule::initWorld(World& world)
 			glm::ivec3 chunkPos = { x * g_chunkSize.x, 0, z * g_chunkSize.z };
 
 
-			for (auto& mesh : world.pool.meshes)
+			for (auto& buffer : world.pool.buffers)
 			{
-				if (!mesh.active)
+				if (!buffer.active)
 				{
-					if (!world.chunks[chunkPos].solidMesh)
+					if (!world.chunks[chunkPos].solidBuffer)
 					{
-						world.chunks[chunkPos].solidMesh = &mesh;
+						world.chunks[chunkPos].solidBuffer = &buffer;
+						buffer.active = true;
+						world.pool.activeCounter++;
 					}
-					else if (!world.chunks[chunkPos].transparentMesh)
+					else if (!world.chunks[chunkPos].transBuffer)
 					{
-						world.chunks[chunkPos].transparentMesh = &mesh;
+						world.chunks[chunkPos].transBuffer = &buffer;
+						buffer.active = true;
+						world.pool.activeCounter++;
+					}
+					else
+					{
+						break;
 					}
 				}
 			}
@@ -334,13 +342,47 @@ void addChunks(World& world)
 		}
 
 		chunk.updated = false;
-		world.chunks.insert({ *world.chunksToAdd.begin(), chunk });	
+		world.chunks.insert({ *world.chunksToAdd.begin(), chunk });
+
+		for (auto& buffer : world.pool.buffers)
+		{
+			if (!buffer.active)
+			{
+				if (!world.chunks[*world.chunksToAdd.begin()].solidBuffer)
+				{
+					world.chunks[*world.chunksToAdd.begin()].solidBuffer = &buffer;
+					buffer.active = true;
+					world.pool.activeCounter++;
+				}
+				else if (!world.chunks[*world.chunksToAdd.begin()].transBuffer)
+				{
+					world.chunks[*world.chunksToAdd.begin()].transBuffer = &buffer;
+					buffer.active = true;
+					world.pool.activeCounter++;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			if (world.pool.activeCounter == world.pool.buffers.size())
+			{
+				break;
+			}
+		}
+
 		world.chunksToAdd.erase(world.chunksToAdd.begin());
 	}
 }
 
 void GameModule::updateWorld(World& world, const Player& player)
 {
+	if (!&world)
+	{
+		int a = 5;
+	}
+
 	for (int32_t z = world.pos.z;
 		z < world.pos.z + g_chunksZ * g_chunkSize.z;
 		z += g_chunkSize.z)
@@ -349,7 +391,8 @@ void GameModule::updateWorld(World& world, const Player& player)
 			x < world.pos.x + g_chunksX * g_chunkSize.x;
 			x += g_chunkSize.x)
 		{
-			if (world.chunks.find({ x, 0, z }) == world.chunks.end() && world.chunksToRemove.count({x, 0, z}) == 0)
+			if (world.chunks.find({ x, 0, z }) == world.chunks.end() &&
+				world.chunksToRemove.count({ x, 0, z }) == 0)
 			{
 				world.chunksToAdd.insert({ x, 0, z });
 			}
@@ -364,14 +407,15 @@ void GameModule::updateWorld(World& world, const Player& player)
 		}
 	}
 
-	if (!world.chunksToAdd.empty())
+	if (!world.chunksToAdd.empty() && world.pool.buffers.size() - world.pool.activeCounter >= 2)
 	{
 		addChunks(world);
 	}
 
 	if (!world.chunksToRemove.empty())
 	{
-		deleteChunk(world.chunks[*world.chunksToRemove.begin()]);
+		disableChunk(world.chunks[*world.chunksToRemove.begin()]);
+		world.pool.activeCounter--;
 		world.chunks.erase(*world.chunksToRemove.begin());
 		world.chunksToRemove.erase(world.chunksToRemove.begin());
 	}
@@ -392,7 +436,7 @@ void GameModule::drawWorld(World& world, const Player& player, Engine::Shader& s
 		Engine::setUniform3f(shader, "u_chunkPos", pair.second.pos);
 		drawSolid(pair.second);
 
-		if (!pair.second.transparentMesh->vertices.empty())
+		if (!pair.second.transparentMesh.empty())
 		{
 			float distance = glm::length(player.camera.pos - static_cast<const glm::vec3>(pair.first));
 			sorted.insert({ distance, pair.first });
@@ -460,7 +504,7 @@ void GameModule::processRay(World& world, const Player& player, Engine::Ray& ray
 		}
 	}
 }
-	
+
 void GameModule::traceRay(World& world, glm::vec3 rayPosFrac, Engine::Shader& shader, GameModule::RayType type)
 {
 	glm::ivec3 currBlock = static_cast<glm::ivec3>(rayPosFrac);

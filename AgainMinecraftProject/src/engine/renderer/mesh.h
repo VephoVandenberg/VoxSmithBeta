@@ -19,7 +19,7 @@ namespace Engine
 		};
 		using Mesh = std::vector<Vertex>;
 		
-		struct Buffer
+		struct MeshBuffer
 		{
 			uint32_t nVertices;
 
@@ -30,14 +30,15 @@ namespace Engine
 		};
 
 		template<uint32_t N>
-		struct MeshPool
+		struct BufferPool
 		{
-			std::array<Buffer, N> meshes;
+			std::array<MeshBuffer, N> buffers;
+			uint32_t activeCounter = 0;
 		};
 
-		void initBuffer(Buffer& buffer);
-		void updateMesh(Buffer& buffer, const Mesh& mesh);
-		void renderMesh(const Buffer& buffer);
-		void deleteMesh(Buffer& buffer);
+		void initBuffer(MeshBuffer& buffer);
+		void updateMesh(MeshBuffer& buffer, const Mesh& mesh);
+		void renderMesh(const MeshBuffer& buffer);
+		void deleteMesh(MeshBuffer& buffer);
 	}
 }

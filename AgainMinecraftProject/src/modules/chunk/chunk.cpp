@@ -323,7 +323,7 @@ void GameModule::removeBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type)
 	chunk.updated = false;
 }
 
-void GameModule::updateMesh(Chunk& chunk, Engine::Renderer::Buffer& transBuffer, Engine::Renderer::Buffer& solidBuffer)
+void GameModule::updateMesh(Chunk& chunk, Engine::Renderer::MeshBuffer& transBuffer, Engine::Renderer::MeshBuffer& solidBuffer)
 {
 	updateMesh(transBuffer, chunk.solidMesh);
 	updateMesh(solidBuffer, chunk.transparentMesh);
@@ -411,22 +411,46 @@ void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
 	}
 }
 
-void GameModule::drawSolid(const Chunk& chunk)
+void GameModule::loadChunkMesh(Chunk& chunk)
 {
-	if (chunk.solidMesh->vertices.size() == 0)
+	if (chunk.transBuffer)
 	{
-		return;
+		Engine::Renderer::updateMesh(*chunk.transBuffer, chunk.transparentMesh);
 	}
 
-	renderMesh(*chunk.solidMesh);
+	if (chunk.solidBuffer)
+	{
+		Engine::Renderer::updateMesh(*chunk.solidBuffer, chunk.solidMesh);
+	}
+}
+
+void GameModule::drawSolid(const Chunk& chunk)
+{
+	if (chunk.solidBuffer)
+	{
+		renderMesh(*chunk.solidBuffer);
+	}
 }
 
 void GameModule::drawTrans(const Chunk& chunk)
 {
-	if (chunk.transparentMesh->vertices.size() == 0)
+	if (chunk.transparentMesh.size() > 0)
 	{
-		return;
+		renderMesh(*chunk.transBuffer);
+	}
+}
+
+void GameModule::disableChunk(Chunk& chunk)
+{
+	if (chunk.solidBuffer)
+	{
+		chunk.solidBuffer->active = false;
+		chunk.solidBuffer = nullptr;
 	}
 
-	renderMesh(*chunk.transparentMesh);
+	if (chunk.transBuffer)
+	{
+		chunk.transBuffer->active = false;
+		chunk.transBuffer = nullptr;
+	}	
 }

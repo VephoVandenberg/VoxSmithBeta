@@ -29,8 +29,11 @@ namespace GameModule
 		bool					updated = false;
 		glm::vec3				pos;
 		std::vector<Block>		blocks = {};
-		Engine::Renderer::Mesh solidMesh;
-		Engine::Renderer::Mesh transparentMesh;
+		Engine::Renderer::Mesh	solidMesh;
+		Engine::Renderer::Mesh	transparentMesh;
+
+		Engine::Renderer::MeshBuffer* solidBuffer = nullptr;
+		Engine::Renderer::MeshBuffer* transBuffer = nullptr;
 	};
 
 	enum class RayType
@@ -41,12 +44,14 @@ namespace GameModule
 	};
 
 	Chunk	generateChunk(const glm::ivec3& pos);
-	void	updateMesh(Chunk& chunk, Engine::Renderer::Buffer& transBuffer, Engine::Renderer::Buffer& solidBuffer);
+	void	updateMesh(Chunk& chunk, Engine::Renderer::MeshBuffer& transBuffer, Engine::Renderer::MeshBuffer& solidBuffer);
 	void	updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2);
 
 	void	setBlockFace(Chunk& chunk, const glm::vec3& pos, BlockType type, Face::FaceType face);
 	void	removeBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type);
 
+	void	loadChunkMesh(Chunk& chunk);
 	void	drawSolid(const Chunk& chunk);
 	void	drawTrans(const Chunk& chunk);
+	void	disableChunk(Chunk& chunk);
 }

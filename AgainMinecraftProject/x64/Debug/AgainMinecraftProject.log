@@ -1,77 +1,4 @@
-﻿  main.cpp
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\mesh.h(23,3): error C2011: 'Engine::Renderer::Buffer': 'struct' type redefinition
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\block_renderer.h(17,10): message : see declaration of 'Engine::Renderer::Buffer'
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\array(574,9): error C2079: 'std::array<Engine::Renderer::Buffer,512>::_Elems' uses undefined struct 'Engine::Renderer::Buffer'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\mesh.h(35): message : see reference to class template instantiation 'std::array<Engine::Renderer::Buffer,512>' being compiled
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.h(61,57): message : see reference to class template instantiation 'Engine::Renderer::MeshPool<512>' being compiled
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.h(61,31): error C2079: 'App::Application::m_rayBuffer' uses undefined struct 'Engine::Renderer::Buffer'
-  app.cpp
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\mesh.h(23,3): error C2011: 'Engine::Renderer::Buffer': 'struct' type redefinition
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\block_renderer.h(17,10): message : see declaration of 'Engine::Renderer::Buffer'
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\array(574,9): error C2079: 'std::array<Engine::Renderer::Buffer,512>::_Elems' uses undefined struct 'Engine::Renderer::Buffer'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\mesh.h(35): message : see reference to class template instantiation 'std::array<Engine::Renderer::Buffer,512>' being compiled
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.h(61,57): message : see reference to class template instantiation 'Engine::Renderer::MeshPool<512>' being compiled
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.h(61,31): error C2079: 'App::Application::m_rayBuffer' uses undefined struct 'Engine::Renderer::Buffer'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(72,20): warning C4244: '=': conversion from 'float' to 'uint32_t', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(343,27): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(344,27): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(348,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(349,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(350,26): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(351,26): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
-  mesh.cpp
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\mesh.cpp(28,32): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
-  chunk.cpp
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(218,21): warning C4244: '=': conversion from 'float' to '_Ty', possible loss of data
-          with
-          [
-              _Ty=uint32_t
-          ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(230,88): warning C4244: 'argument': conversion from '_Ty' to 'const float', possible loss of data
-          with
-          [
-              _Ty=uint32_t
-          ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(306,25): error C2819: type 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>' does not have an overloaded member 'operator ->'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\mesh.h(20,21): message : see declaration of 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(306,25): message : did you intend to use '.' instead?
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(306,27): error C2039: 'vertices': is not a member of 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\mesh.h(20,21): message : see declaration of 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(310,19): error C2819: type 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>' does not have an overloaded member 'operator ->'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\mesh.h(20,21): message : see declaration of 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(310,19): message : did you intend to use '.' instead?
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(310,21): error C2039: 'vertices': is not a member of 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\mesh.h(20,21): message : see declaration of 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(328,11): error C2100: illegal indirection
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(328,2): error C3861: 'loadData': identifier not found
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(329,11): error C2100: illegal indirection
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(329,2): error C3861: 'loadData': identifier not found
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(334,13): error C2100: illegal indirection
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(335,13): error C2100: illegal indirection
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(340,13): error C2100: illegal indirection
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(341,13): error C2100: illegal indirection
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(352,26): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(354,27): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(389,26): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(391,27): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(428): error C2819: type 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>' does not have an overloaded member 'operator ->'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\mesh.h(20,21): message : see declaration of 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(428): message : did you intend to use '.' instead?
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(428,23): error C2039: 'vertices': is not a member of 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\mesh.h(20,21): message : see declaration of 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(433,13): error C2100: illegal indirection
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(438): error C2819: type 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>' does not have an overloaded member 'operator ->'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\mesh.h(20,21): message : see declaration of 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(438): message : did you intend to use '.' instead?
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(438,29): error C2039: 'vertices': is not a member of 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\mesh.h(20,21): message : see declaration of 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(443,13): error C2100: illegal indirection
-  world.cpp
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\mesh.h(23,3): error C2011: 'Engine::Renderer::Buffer': 'struct' type redefinition
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\block_renderer.h(17,10): message : see declaration of 'Engine::Renderer::Buffer'
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\array(574,9): error C2079: 'std::array<Engine::Renderer::Buffer,512>::_Elems' uses undefined struct 'Engine::Renderer::Buffer'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\mesh.h(35): message : see reference to class template instantiation 'std::array<Engine::Renderer::Buffer,512>' being compiled
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.h(61,57): message : see reference to class template instantiation 'Engine::Renderer::MeshPool<512>' being compiled
+﻿  world.cpp
 D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(34,17): warning C4244: 'initializing': conversion from 'const T' to 'int32_t', possible loss of data
           with
           [
@@ -85,74 +12,31 @@ D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.c
 D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(59,47): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
 D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(59,19): warning C4244: 'initializing': conversion from 'int' to 'const float', possible loss of data
 D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(59,47): warning C4244: '+=': conversion from 'float' to 'int32_t', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(117): error C2027: use of undefined type 'Engine::Renderer::Buffer'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\block_renderer.h(17,10): message : see declaration of 'Engine::Renderer::Buffer'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(119,33): error C2678: binary '!': no operator found which takes a left-hand operand of type 'Engine::Renderer::Mesh' (or there is no acceptable conversion)
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(119,33): message : could be 'built-in C++ operator!(bool)'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(119,33): message : while trying to match the argument list '(Engine::Renderer::Mesh)'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(119,10): error C2088: '!': illegal for class
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(121,29): error C2679: binary '=': no operator found which takes a right-hand operand of type '_Ty *' (or there is no acceptable conversion)
-          with
-          [
-              _Ty=Engine::Renderer::Buffer
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(1566,26): message : could be 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>> &std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>::operator =(std::initializer_list<_Ty>)'
-          with
-          [
-              _Ty=Engine::Renderer::Vertex
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(1545,26): message : or       'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>> &std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>::operator =(const std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>> &)'
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(798,26): message : or       'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>> &std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>::operator =(std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>> &&) noexcept'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(121,29): message : while trying to match the argument list '(Engine::Renderer::Mesh, _Ty *)'
-          with
-          [
-              _Ty=Engine::Renderer::Buffer
-          ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(123,38): error C2678: binary '!': no operator found which takes a left-hand operand of type 'Engine::Renderer::Mesh' (or there is no acceptable conversion)
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(123,38): message : could be 'built-in C++ operator!(bool)'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(123,38): message : while trying to match the argument list '(Engine::Renderer::Mesh)'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(123,15): error C2088: '!': illegal for class
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(125,29): error C2679: binary '=': no operator found which takes a right-hand operand of type '_Ty *' (or there is no acceptable conversion)
-          with
-          [
-              _Ty=Engine::Renderer::Buffer
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(1566,26): message : could be 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>> &std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>::operator =(std::initializer_list<_Ty>)'
-          with
-          [
-              _Ty=Engine::Renderer::Vertex
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(1545,26): message : or       'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>> &std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>::operator =(const std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>> &)'
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(798,26): message : or       'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>> &std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>::operator =(std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>> &&) noexcept'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(125,29): message : while trying to match the argument list '(Engine::Renderer::Mesh, _Ty *)'
-          with
-          [
-              _Ty=Engine::Renderer::Buffer
-          ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(195,25): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(197,26): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(199,27): warning C4018: '<': signed/unsigned mismatch
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(209,20): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(203,25): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(205,26): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(207,27): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(217,20): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
           with
           [
               T=float
           ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(210,22): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(218,22): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
           with
           [
               T=float
           ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(211,22): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(219,22): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
           with
           [
               T=float
           ]
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(395): error C2819: type 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>' does not have an overloaded member 'operator ->'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\mesh.h(20,21): message : see declaration of 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(395): message : did you intend to use '.' instead?
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(395,37): error C2039: 'vertices': is not a member of 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\mesh.h(20,21): message : see declaration of 'std::vector<Engine::Renderer::Vertex,std::allocator<Engine::Renderer::Vertex>>'
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(695,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(696,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(697,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-  Generating Code...
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(599,8): warning C4101: 'dxExit': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(598,26): warning C4101: 'dyEntry': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(598,8): warning C4101: 'dxEntry': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(599,16): warning C4101: 'dzExit': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(598,17): warning C4101: 'dzEntry': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(599,24): warning C4101: 'dyExit': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(739,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(740,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(741,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  AgainMinecraftProject.vcxproj -> D:\Working\AgainMinecraftProject\x64\Debug\AgainMinecraftProject.exe

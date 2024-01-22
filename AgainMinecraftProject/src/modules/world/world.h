@@ -17,7 +17,7 @@ namespace Engine
 	namespace Renderer
 	{
 		template <uint32_t N>
-		struct MeshPool;
+		struct BufferPool;
 	}
 }
 
@@ -58,7 +58,7 @@ namespace GameModule
 
 		std::unordered_map<glm::ivec3, Chunk, KeyFuncs> chunks;
 
-		Engine::Renderer::MeshPool<2 * g_chunksX * g_chunksZ> pool; // We need for every chunk 2 meshes
+		Engine::Renderer::BufferPool<2 * g_chunksX * g_chunksZ> pool; // We need for every chunk 2 meshes
 
 		std::unordered_set<glm::ivec3, KeyFuncs> chunksToRemove;
 		std::unordered_set<glm::ivec3, KeyFuncs> chunksToAdd;
