@@ -1,11 +1,5 @@
-﻿  app.cpp
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(72,20): warning C4244: '=': conversion from 'float' to 'uint32_t', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(343,27): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(344,27): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(348,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(349,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(350,26): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\app\app.cpp(351,26): warning C4244: '=': conversion from 'const double' to 'float', possible loss of data
+﻿  mesh.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\renderer\mesh.cpp(33,32): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
   chunk.cpp
 D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\chunk\chunk.cpp(218,21): warning C4244: '=': conversion from 'float' to '_Ty', possible loss of data
           with

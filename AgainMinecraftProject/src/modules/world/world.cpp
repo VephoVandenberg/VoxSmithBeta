@@ -402,16 +402,16 @@ void GameModule::updateWorld(World& world, const Player& player)
 		}
 	}
 
-	if (!world.chunksToAdd.empty() && world.pool.buffers.size() - world.pool.activeCounter >= 2)
-	{
-		addChunks(world);
-	}
-
 	if (!world.chunksToRemove.empty())
 	{
 		world.pool.activeCounter -= disableChunk(world.chunks[*world.chunksToRemove.begin()]);
 		world.chunks.erase(*world.chunksToRemove.begin());
 		world.chunksToRemove.erase(world.chunksToRemove.begin());
+	}
+
+	if (!world.chunksToAdd.empty() && world.pool.buffers.size() - world.pool.activeCounter >= 2)
+	{
+		addChunks(world);
 	}
 }
 

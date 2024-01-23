@@ -114,7 +114,7 @@ FaceMap g_faces = {
 
 BlockType getBlockType(Chunk& chunk, const glm::vec3& pos, const float height)
 {
-	float waterLevel = 30.0f;
+	float waterLevel = 100.0f;
 
 	if (pos.y <= height)
 	{
@@ -215,7 +215,7 @@ Chunk GameModule::generateChunk(const glm::ivec3& pos)
 
 
 			heightMap[g_chunkSize.x * z + x] =
-				(g_heightOffset + 130.0f * blendedNoise);
+				(g_heightOffset + 100.0f * blendedNoise);
 		}
 	}
 
@@ -415,12 +415,12 @@ void GameModule::loadChunkMesh(Chunk& chunk)
 {
 	if (chunk.transBuffer)
 	{
-		Engine::Renderer::updateMesh(*chunk.transBuffer, chunk.transparentMesh);
+		updateMesh(*chunk.transBuffer, chunk.transparentMesh);
 	}
 
 	if (chunk.solidBuffer)
 	{
-		Engine::Renderer::updateMesh(*chunk.solidBuffer, chunk.solidMesh);
+		updateMesh(*chunk.solidBuffer, chunk.solidMesh);
 	}
 }
 
@@ -446,6 +446,7 @@ uint32_t GameModule::disableChunk(Chunk& chunk)
 
 	if (chunk.solidBuffer)
 	{
+		updateMesh(*chunk.solidBuffer, {});
 		chunk.solidBuffer->active = false;
 		chunk.solidBuffer = nullptr;
 		disabledBuffers++;
@@ -453,6 +454,7 @@ uint32_t GameModule::disableChunk(Chunk& chunk)
 
 	if (chunk.transBuffer)
 	{
+		updateMesh(*chunk.transBuffer, {});
 		chunk.transBuffer->active = false;
 		chunk.transBuffer = nullptr;
 		disabledBuffers++;

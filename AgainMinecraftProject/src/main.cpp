@@ -5,9 +5,9 @@
 *			1. Learn framebuffers.
 *			2. Learn and make shadow map
 * LATER
+* - Perhaps we need some kind of enabling physics
 * - SkyBox or maybe clouds, maybe Moon and Sun
 * - Trees
-* - Perhaps we need some kind of enabling physics
 * - Serialisation
 * - Octrees
 * - Greedy Meshing

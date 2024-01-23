@@ -21,8 +21,8 @@ namespace Engine
 	}
 }
 
-static constexpr int32_t g_chunksX = 16;
-static constexpr int32_t g_chunksZ = 16;
+static constexpr int32_t g_chunksX = 32;
+static constexpr int32_t g_chunksZ = 32;
 
 namespace GameModule
 {
