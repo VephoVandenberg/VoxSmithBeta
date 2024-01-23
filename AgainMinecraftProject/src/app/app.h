@@ -60,8 +60,6 @@ namespace App
 		Engine::Ray								m_ray;
 		Engine::Renderer::Buffer				m_rayBuffer;
 		
-		std::vector<std::thread>				m_threads;
-
 		friend void cursorCallbackWrapper(GLFWwindow* window, const double x, const double y);
 	};
 }

@@ -111,13 +111,10 @@ FaceMap g_faces = {
 	{Face::FaceType::LEFT,		left},
 };
 
-void GameModule::setType(Block& block)
-{
-}
 
 BlockType getBlockType(Chunk& chunk, const glm::vec3& pos, const float height)
 {
-	float waterLevel = 105.0f;
+	float waterLevel = 100.0f;
 
 	if (pos.y <= height)
 	{
@@ -162,6 +159,11 @@ Chunk GameModule::generateChunk(const glm::ivec3& pos)
 {
 	Chunk chunk;
 	chunk.pos = pos;
+	chunk.front = pos + glm::ivec3(0, 0, g_chunkSize.z);
+	chunk.back = pos - glm::ivec3(0, 0, g_chunkSize.z);
+	chunk.right = pos + glm::ivec3(g_chunkSize.x, 0, 0);
+	chunk.left = pos - glm::ivec3(g_chunkSize.x, 0, 0);
+
 	if (chunk.blocks.empty())
 	{
 		chunk.blocks.reserve(g_nBlocks);
@@ -213,7 +215,7 @@ Chunk GameModule::generateChunk(const glm::ivec3& pos)
 
 
 			heightMap[g_chunkSize.x * z + x] =
-				(g_heightOffset + 130.0f * blendedNoise);
+				(g_heightOffset + 100.0f * blendedNoise);
 		}
 	}
 
@@ -241,7 +243,7 @@ Engine::TextureId getFaceId(BlockType type, Face::FaceType face)
 		switch (face)
 		{
 		case Face::FaceType::TOP:
-			return Engine::TextureId::DIRT_GRASS;
+			return Engine::TextureId::GRASS;
 
 		case Face::FaceType::BOTTOM:
 			return Engine::TextureId::DIRT;
@@ -301,11 +303,11 @@ void updateFace(Chunk& chunk, const glm::ivec3 pos, BlockType type, Face::FaceTy
 
 		if (type == BlockType::WATER)
 		{
-			chunk.transparentMesh.vertices.push_back({ data });
+			chunk.transparentMesh.push_back({ data });
 		}
 		else
 		{
-			chunk.solidMesh.vertices.push_back({ data });
+			chunk.solidMesh.push_back({ data });
 		}
 	}
 }
@@ -321,10 +323,10 @@ void GameModule::removeBlockFace(Chunk& chunk, uint32_t id, Face::FaceType type)
 	chunk.updated = false;
 }
 
-void GameModule::loadChunkMesh(Chunk& chunk)
+void GameModule::updateMesh(Chunk& chunk, Engine::Renderer::MeshBuffer& transBuffer, Engine::Renderer::MeshBuffer& solidBuffer)
 {
-	loadData(&chunk.solidMesh);
-	loadData(&chunk.transparentMesh);
+	updateMesh(transBuffer, chunk.solidMesh);
+	updateMesh(solidBuffer, chunk.transparentMesh);
 }
 
 void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
@@ -357,7 +359,7 @@ void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
 						more.blocks[iMore].type,
 						Face::FaceType::LEFT);
 				}
-				else if(more.blocks[iMore].type == BlockType::WATER && lessSolid ||
+				else if (more.blocks[iMore].type == BlockType::WATER && lessSolid ||
 					more.blocks[iMore].type == BlockType::AIR && lessSolid ||
 					more.blocks[iMore].type == BlockType::AIR && less.blocks[iLess].type == BlockType::WATER)
 				{
@@ -409,23 +411,54 @@ void GameModule::updateChunkNeighbourFace(Chunk& chunk1, Chunk& chunk2)
 	}
 }
 
-void GameModule::drawSolid(const Chunk& chunk)
+void GameModule::loadChunkMesh(Chunk& chunk)
 {
-	if (chunk.solidMesh.vertices.size() == 0)
+	if (chunk.transBuffer)
 	{
-		return;
+		updateMesh(*chunk.transBuffer, chunk.transparentMesh);
 	}
 
-	renderMesh(&chunk.solidMesh);
+	if (chunk.solidBuffer)
+	{
+		updateMesh(*chunk.solidBuffer, chunk.solidMesh);
+	}
+}
+
+void GameModule::drawSolid(const Chunk& chunk)
+{
+	if (chunk.solidBuffer)
+	{
+		renderMesh(*chunk.solidBuffer);
+	}
 }
 
 void GameModule::drawTrans(const Chunk& chunk)
 {
-	if (chunk.transparentMesh.vertices.size() == 0)
+	if (chunk.transparentMesh.size() > 0)
 	{
-		return;
+		renderMesh(*chunk.transBuffer);
 	}
-
-	renderMesh(&chunk.transparentMesh);
 }
 
+uint32_t GameModule::disableChunk(Chunk& chunk)
+{
+	uint32_t disabledBuffers = 0;
+
+	if (chunk.solidBuffer)
+	{
+		updateMesh(*chunk.solidBuffer, {});
+		chunk.solidBuffer->active = false;
+		chunk.solidBuffer = nullptr;
+		disabledBuffers++;
+	}
+
+	if (chunk.transBuffer)
+	{
+		updateMesh(*chunk.transBuffer, {});
+		chunk.transBuffer->active = false;
+		chunk.transBuffer = nullptr;
+		disabledBuffers++;
+	}	
+
+	return disabledBuffers;
+}

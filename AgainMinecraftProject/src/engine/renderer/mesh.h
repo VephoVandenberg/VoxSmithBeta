@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <unordered_map>
+#include <array>
 
 #include <glm/glm.hpp>
 
@@ -15,17 +17,28 @@ namespace Engine
 			// Total 25 bits
 			int32_t data;
 		};
+		using Mesh = std::vector<Vertex>;
 		
-		struct Mesh
+		struct MeshBuffer
 		{
+			uint32_t nVertices;
+
 			uint32_t VAO;
 			uint32_t VBO;
 
-			std::vector<Vertex> vertices;
+			bool active = false;
 		};
 
-		void loadData(Mesh* mesh);
-		void renderMesh(const Mesh* mesh);
-		void deleteMesh(Mesh* mesh);
+		template<uint32_t N>
+		struct BufferPool
+		{
+			std::array<MeshBuffer, N> buffers;
+			uint32_t activeCounter = 0;
+		};
+
+		void initBuffer(MeshBuffer& buffer);
+		void updateMesh(MeshBuffer& buffer, const Mesh& mesh);
+		void renderMesh(const MeshBuffer& buffer);
+		void deleteMesh(MeshBuffer& buffer);
 	}
 }

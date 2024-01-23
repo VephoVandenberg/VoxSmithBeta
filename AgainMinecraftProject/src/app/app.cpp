@@ -28,8 +28,8 @@ const char* g_title = "Azamat's making Minecraft fucking again";
 constexpr size_t g_width = 1240;
 constexpr size_t g_height = 720;
 
-constexpr size_t g_numberOfChunksX = 32;
-constexpr size_t g_numberOfChunksZ = 32;
+constexpr size_t g_numberOfChunksX = 16;
+constexpr size_t g_numberOfChunksZ = 16;
 
 constexpr size_t g_jumpHeight = 3;
 
@@ -78,7 +78,7 @@ void Application::initPlayer()
 	m_player.velocity = { 0.0f, 0.0f, 0.0f };
 	m_player.size = { 0.6f, 2.0f, 0.6f };
 
-	m_player.speed			= 0;
+	m_player.speed			= 400;
 	m_player.isJumping		= false;
 	m_player.camera.lastX	= 620;
 	m_player.camera.lastY	= 360;
@@ -146,7 +146,7 @@ void Application::run()
 	while (m_isRunning)
 	{
 		float currentFrame = (float)glfwGetTime();
-		float dt = (currentFrame - previousFrame) / limits;
+		float dt = (currentFrame - previousFrame);
 		previousFrame = currentFrame;
 
 		onUpdate(dt);
@@ -272,24 +272,24 @@ void Application::onUpdate(float dt)
 		glm::vec3(m_player.camera.front.x, m_player.camera.front.y, m_player.camera.front.z));
 	if (m_keyboard[GLFW_KEY_W])
 	{
-		m_player.velocity += v * 0.1f / 2.0f * dt;
+		m_player.velocity += v * m_player.speed *dt;
 	}
 
 	if (m_keyboard[GLFW_KEY_S])
 	{
-		m_player.velocity += -v * 0.1f / 2.0f * dt;
+		m_player.velocity += -v * m_player.speed * dt;
 	}
 
 	if (m_keyboard[GLFW_KEY_A])
 	{
 		auto left = glm::normalize(glm::cross(v, glm::vec3(0.0f, 1.0f, 0.0f)));
-		m_player.velocity += -left * 0.1f / 2.0f * dt;
+		m_player.velocity += -left * m_player.speed * dt;
 	}
 
 	if (m_keyboard[GLFW_KEY_D])
 	{
 		auto right = glm::normalize(glm::cross(v, glm::vec3(0.0f, 1.0f, 0.0f)));
-		m_player.velocity += right * 0.1f / 2.0f * dt;
+		m_player.velocity += right * m_player.speed * dt;
 	}
 
 	// My shitty jumping
@@ -305,7 +305,7 @@ void Application::onUpdate(float dt)
 	if (m_player.heightJumped < g_jumpHeight)
 	{
 		m_player.heightJumped += up.y * m_player.jumpAcceleration * dt;
-		m_player.velocity += up * m_player.jumpAcceleration * dt;
+		//m_player.velocity += up * m_player.jumpAcceleration * dt;
 		m_player.jumpAcceleration -= g_gravity * down.y * dt;
 	}
 	
@@ -326,6 +326,8 @@ void Application::onUpdate(float dt)
 	m_player.camera.pos += m_player.velocity * dt;
 	m_player.pos += m_player.velocity * dt;
 
+	m_world.fractionPos += m_player.velocity * dt;
+	m_world.pos = static_cast<glm::ivec3>(m_world.fractionPos) / 16 * 16;
 	m_player.velocity *= 0.95f;
 	
 	updateWorld(m_world, m_player);

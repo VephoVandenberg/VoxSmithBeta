@@ -4,28 +4,40 @@
 
 using namespace Engine::Renderer;
 
-void Engine::Renderer::loadData(Mesh* mesh)
+void Engine::Renderer::initBuffer(MeshBuffer& buffer)
 {
-	glGenVertexArrays(1, &mesh->VAO);
-	glGenBuffers(1, &mesh->VBO);
+	glGenVertexArrays(1, &buffer.VAO);
+	glGenBuffers(1, &buffer.VBO);
 
-	glBindVertexArray(mesh->VAO);
-	
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->VBO);
-	glBufferData(GL_ARRAY_BUFFER, mesh->vertices.size() * sizeof(Vertex), mesh->vertices.data(), GL_STATIC_DRAW);
+	glBindVertexArray(buffer.VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, buffer.VBO);
 
 	glVertexAttribIPointer(0, 1, GL_UNSIGNED_INT, sizeof(Vertex), (void*)0);
-	 glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(0);
 }
 
-void Engine::Renderer::renderMesh(const Mesh* mesh)
+void Engine::Renderer::renderMesh(const MeshBuffer& buffer)
 {
-	glBindVertexArray(mesh->VAO);
-	glDrawArrays(GL_TRIANGLES, 0, mesh->vertices.size());
+	glBindVertexArray(buffer.VAO);
+	glDrawArrays(GL_TRIANGLES, 0, buffer.nVertices);
 }
 
-void Engine::Renderer::deleteMesh(Mesh* mesh)
+void Engine::Renderer::updateMesh(MeshBuffer& buffer, const Mesh& mesh)
 {
-	glDeleteBuffers(1, &mesh->VBO);
-	glad_glDeleteVertexArrays(1, &mesh->VAO);
+	if (!buffer.VAO)
+	{
+		initBuffer(buffer);
+	}
+
+	buffer.nVertices = mesh.size();
+	glBindVertexArray(buffer.VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, buffer.VBO);
+	glBufferData(GL_ARRAY_BUFFER, mesh.size() * sizeof(Vertex), mesh.data(), GL_DYNAMIC_DRAW);
+}
+
+void Engine::Renderer::deleteMesh(MeshBuffer& mesh)
+{
+	glDeleteBuffers(1, &mesh.VBO);
+	glDeleteVertexArrays(1, &mesh.VAO);
 }

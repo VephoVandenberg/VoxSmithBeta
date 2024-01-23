@@ -17,7 +17,9 @@ void main()
 	float dist = length(frag_eyeCoords.xyz);
 	float fogFactor = clamp((g_far - dist) / (g_far - g_near), 0.0f, 1.0f);
 
-	o_fragColor = mix(g_fogColor, texture(u_textureArray, frag_texCoords), fogFactor);
-	//o_fragColor.xyz *= frag_ambientLight;
+	vec4 textureWithLight = texture(u_textureArray, frag_texCoords);
+	textureWithLight = vec4(frag_ambientLight * textureWithLight.xyz, textureWithLight.a);
+
+	o_fragColor = mix(g_fogColor, textureWithLight, fogFactor);
 	//o_fragColor = texture(u_textureArray, frag_texCoords);
 }
