@@ -40,5 +40,8 @@ namespace Engine
 		void updateMesh(MeshBuffer& buffer, const Mesh& mesh);
 		void renderMesh(const MeshBuffer& buffer);
 		void deleteMesh(MeshBuffer& buffer);
+
+		void enableCulling();
+		void disableCulling();
 	}
 }

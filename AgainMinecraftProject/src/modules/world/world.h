@@ -19,6 +19,9 @@ namespace Engine
 		template <uint32_t N>
 		struct BufferPool;
 	}
+
+	void enableCulling();
+	void disableCulling();
 }
 
 static constexpr int32_t g_chunksX = 32;
@@ -36,6 +39,8 @@ namespace GameModule
 	{
 		glm::ivec3 pos;
 		glm::vec3 fractionPos;
+
+		glm::vec3 lightPos = {0.0f, 190.0f, 0.0f};
 
 		float updateRadius;
 		
@@ -70,6 +75,7 @@ namespace GameModule
 	void initChunkFaces(Chunk& chunk);
 	void updateWorld(World& world, const Player& player);
 	void drawWorld(World& world, const Player& player, Engine::Shader& shader);
+	void drawWorlToSM(World& world, const Player& player, Engine::Shader& shader);
 
 	void processRay(World& world, const Player& player, Engine::Ray& ray, Engine::Shader& shader, RayType type);
 	void traceRay(World& world, glm::vec3 rayPosFrac, Engine::Shader& shader, RayType type);

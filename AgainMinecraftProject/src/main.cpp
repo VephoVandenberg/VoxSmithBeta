@@ -1,9 +1,6 @@
 /** TO DO LIST
 * AGENDA
 * - Let there be light(Shadow maps)
-* -		steps: 
-*			1. Learn framebuffers.
-*			2. Learn and make shadow map
 * LATER
 * - Perhaps we need some kind of enabling physics
 * - SkyBox or maybe clouds, maybe Moon and Sun

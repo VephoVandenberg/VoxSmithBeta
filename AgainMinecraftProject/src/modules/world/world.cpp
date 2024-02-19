@@ -3,7 +3,6 @@
 #include <iostream>
 #include <array>
 #include <thread>
-#include <glfw3.h>
 #include <mutex>
 #include <algorithm>
 #include <functional>
@@ -12,6 +11,8 @@
 #include "../../engine/ray/ray.h"
 #include "../../engine/shader/shader.h"
 #include "../../engine/renderer/block_renderer.h"
+#include "../../engine/renderer/mesh.h"
+#include "../../engine/texture/framebuffer.h"
 
 #include "../chunk/chunk.h"
 #include "../player/player.h"
@@ -21,13 +22,13 @@
 using namespace GameModule;
 
 constexpr glm::ivec3 g_chunkSize = { 16, 256, 16 };
-
 constexpr size_t g_nBlocks = g_chunkSize.x * g_chunkSize.y * g_chunkSize.z;
-
 constexpr size_t g_updateDistance = g_chunkSize.x * (g_chunksX / 2 - 1);
 
 std::mutex g_worldMutex;
 std::vector<std::future<void>> g_futures;
+
+Engine::FBuffer g_shadowData;
 
 void initParallelChunks(World& world, const glm::vec3& min, const glm::vec3& max)
 {
@@ -48,6 +49,8 @@ void initParallelChunks(World& world, const glm::vec3& min, const glm::vec3& max
 
 void GameModule::initWorld(World& world)
 {
+	//Engine::initFArrayBuffer()
+
 	world.pos = glm::ivec3(0);
 	world.fractionPos = glm::vec3(0.0f);
 
@@ -132,6 +135,8 @@ void GameModule::initWorld(World& world)
 					{
 						break;
 					}
+					loadChunkMesh(world.chunks[chunkPos]);
+					world.chunks[chunkPos].updated = true;
 				}
 			}
 		}
@@ -415,11 +420,53 @@ void GameModule::updateWorld(World& world, const Player& player)
 	}
 }
 
+void GameModule::drawWorlToSM(World& world, const Player& player, Engine::Shader& shader)
+{
+	//Engine::Renderer::bindFBuffer(g_shadowData);
+	//Engine::Renderer::setFramebufferViewport();
+
+	glm::mat4 shadowMapOrtho = glm::ortho(-1000.0f, 1000.0f, -1000.0f, 1000.0f, 0.1f, 300.0f);
+	glm::mat4 lightView = glm::lookAt(
+		world.lightPos,
+		static_cast<glm::vec3>(world.pos)
+			+ glm::vec3(g_chunkSize.x * g_chunksX / 2, 0.0f, g_chunkSize.z * g_chunksZ / 2),
+			//- world.lightPos,
+		glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 lightSpaceMatrix = shadowMapOrtho * lightView;
+	Engine::setUniform4m(shader, "u_lightSpaceMatrix", lightSpaceMatrix);
+
+	Engine::enableCulling();
+	for (auto& pair : world.chunks)
+	{
+		if (!pair.second.updated)
+		{
+			loadChunkMesh(pair.second);
+			pair.second.updated = true;
+		}
+		Engine::setUniform3f(shader, "u_chunkPos", pair.second.pos);
+		
+		drawSolid(pair.second);
+	}
+	Engine::disableCulling();
+	//Engine::Renderer::unbindFBuffer();
+}
+
 void GameModule::drawWorld(World& world, const Player& player, Engine::Shader& shader)
 {
 	std::lock_guard<std::mutex> lock(g_worldMutex);
 	std::multimap<float, glm::ivec3> sorted;
+	glm::mat4 shadowMapOrtho = glm::ortho(-1000.0f, 1000.0f, -1000.0f, 1000.0f, 0.1f, 300.0f);
+	glm::mat4 lightView = glm::lookAt(
+		world.lightPos,
+		static_cast<glm::vec3>(world.pos)
+			+ glm::vec3(g_chunkSize.x * g_chunksX / 2, 0.0f, g_chunkSize.z * g_chunksZ / 2),
+			//- world.lightPos,
+		glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 lightSpaceMatrix = shadowMapOrtho * lightView;
 
+	Engine::setUniform4m(shader, "u_lightSpaceMatrix", lightSpaceMatrix);
+	Engine::setUniformi(shader, "u_shadowMap", 0);
+	Engine::setUniform3f(shader, "u_lightPos", world.lightPos);
 	for (auto& pair : world.chunks)
 	{
 		if (!pair.second.updated)
@@ -437,11 +484,13 @@ void GameModule::drawWorld(World& world, const Player& player, Engine::Shader& s
 		}
 	}
 
+	Engine::Renderer::disableCulling();
 	for (auto it = sorted.rbegin(); it != sorted.rend(); it++)
 	{
 		Engine::setUniform3f(shader, "u_chunkPos", it->second);
 		drawTrans(world.chunks[it->second]);
 	}
+	Engine::Renderer::enableCulling();
 }
 
 bool collAABB(const Player& player, const glm::vec3& pos)

@@ -10,6 +10,7 @@ namespace Engine
 		{
 			RAY,
 			CUBE,
+			CUBE_LINES,
 			QUAD,
 			PLAYER
 		};

@@ -41,3 +41,15 @@ void Engine::Renderer::deleteMesh(MeshBuffer& mesh)
 	glDeleteBuffers(1, &mesh.VBO);
 	glDeleteVertexArrays(1, &mesh.VAO);
 }
+
+
+void Engine::Renderer::enableCulling()
+{
+	glEnable(GL_CULL_FACE);
+}
+
+void Engine::Renderer::disableCulling()
+{
+	glDisable(GL_CULL_FACE);
+}
+

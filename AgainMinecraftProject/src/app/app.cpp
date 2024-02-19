@@ -25,7 +25,7 @@ using namespace App;
 
 
 const char* g_title = "Azamat's making Minecraft fucking again";
-constexpr size_t g_width = 1240;
+constexpr size_t g_width = 1280;
 constexpr size_t g_height = 720;
 
 constexpr size_t g_numberOfChunksX = 16;
@@ -75,6 +75,7 @@ void Application::initPlayer()
 		g_chunkSize.y / 2 + 10,
 		g_chunkSize.z * g_numberOfChunksZ / 2
 	};
+	m_player.pos = m_world.lightPos;
 	m_player.velocity = { 0.0f, 0.0f, 0.0f };
 	m_player.size = { 0.6f, 2.0f, 0.6f };
 
@@ -112,21 +113,26 @@ void Application::initShaders()
 		glm::perspective(
 			glm::radians(45.0f), static_cast<float>(g_width) / static_cast<float>(g_height), 0.1f, 300.0f);
 
-	useShader(m_shaders[s_cubeShader]);
-	setUniform4m(m_shaders[s_cubeShader],		"u_projection",		projection);
-	setUniform4m(m_shaders[s_cubeShader],		"u_view",			m_player.camera.view);
+	useShader(m_shaders[ShadersAvailable::s_cubeShader]);
+	setUniform4m(m_shaders[ShadersAvailable::s_cubeShader],		"u_projection",		projection);
+	setUniform4m(m_shaders[ShadersAvailable::s_cubeShader],		"u_view",			m_player.camera.view);
 
-	useShader(m_shaders[s_meshShader]);
-	setUniform4m(m_shaders[s_meshShader],		"u_projection",		projection);
-	setUniform4m(m_shaders[s_meshShader],		"u_view",			m_player.camera.view);
+	useShader(m_shaders[ShadersAvailable::s_meshAndShadow]);
+	setUniform4m(m_shaders[ShadersAvailable::s_meshAndShadow],	"u_projection",		projection);
+	setUniform4m(m_shaders[ShadersAvailable::s_meshAndShadow],	"u_view",			m_player.camera.view);
 
-	useShader(m_shaders[s_rayShader]);
-	setUniform4m(m_shaders[s_rayShader],		"u_projection",		projection);
-	setUniform4m(m_shaders[s_rayShader],		"u_view",			m_player.camera.view);
+	useShader(m_shaders[ShadersAvailable::s_lightObj]);
+	setUniform4m(m_shaders[ShadersAvailable::s_lightObj],		"u_projection",		projection);
+	setUniform3f(m_shaders[ShadersAvailable::s_lightObj],		"u_position",		m_world.lightPos);
+	setUniform4m(m_shaders[ShadersAvailable::s_lightObj],		"u_view",			m_player.camera.view);
 
-	useShader(m_shaders[s_outlineShader]);
-	setUniform4m(m_shaders[s_outlineShader],	"u_projection",		projection);
-	setUniform4m(m_shaders[s_outlineShader],	"u_view",			m_player.camera.view);
+	useShader(m_shaders[ShadersAvailable::s_rayShader]);
+	setUniform4m(m_shaders[ShadersAvailable::s_rayShader],		"u_projection",		projection);
+	setUniform4m(m_shaders[ShadersAvailable::s_rayShader],		"u_view",			m_player.camera.view);
+
+	useShader(m_shaders[ShadersAvailable::s_outlineShader]);
+	setUniform4m(m_shaders[ShadersAvailable::s_outlineShader],	"u_projection",		projection);
+	setUniform4m(m_shaders[ShadersAvailable::s_outlineShader],	"u_view",			m_player.camera.view);
 }
 
 void Application::initTextures()
@@ -232,19 +238,26 @@ void Application::handleInput()
 
 void Application::onRender()
 {
-	setUniform4m(m_shaders[s_outlineShader],	"u_view", m_player.camera.view);
+	setUniform4m(m_shaders[ShadersAvailable::s_lightObj], "u_view", m_player.camera.view);
 	Renderer::render(Renderer::Type::CUBE);
 
-	setUniform4m(m_shaders[s_outlineShader],	"u_view", m_player.camera.view);
-	setUniform3f(m_shaders[s_outlineShader],	"u_position", m_player.pos);
+	setUniform4m(m_shaders[ShadersAvailable::s_outlineShader],	"u_view", m_player.camera.view);
+	Renderer::render(Renderer::Type::CUBE_LINES);
+
+	setUniform4m(m_shaders[ShadersAvailable::s_outlineShader],	"u_view", m_player.camera.view);
+	setUniform3f(m_shaders[ShadersAvailable::s_outlineShader],	"u_position", m_player.pos);
 	Renderer::render(Renderer::Type::PLAYER);
 
-	setUniform4m(m_shaders[s_meshShader],		"u_view", m_player.camera.view);
+	//drawWorlToSM(m_world, m_player, m_shaders[ShadersAvailable::s_shadowDepth]);
+	
+	Engine::clearBuffers();
+	Engine::setViewport(g_width, g_height);
+	setUniform4m(m_shaders[ShadersAvailable::s_meshAndShadow],		"u_view", m_player.camera.view);
 	useTextureArray(m_tArray);
-	drawWorld(m_world, m_player, m_shaders[s_meshShader]);
+	drawWorld(m_world, m_player, m_shaders[ShadersAvailable::s_meshAndShadow]);
 
 #ifdef _DEBUG
-	setUniform4m(m_shaders[s_rayShader],		"u_view", m_player.camera.view);
+	setUniform4m(m_shaders[ShadersAvailable::s_rayShader],		"u_view", m_player.camera.view);
 	Renderer::render(Renderer::Type::RAY);
 #endif
 }
@@ -326,11 +339,11 @@ void Application::onUpdate(float dt)
 	m_player.camera.pos += m_player.velocity * dt;
 	m_player.pos += m_player.velocity * dt;
 
-	m_world.fractionPos += m_player.velocity * dt;
-	m_world.pos = static_cast<glm::ivec3>(m_world.fractionPos) / 16 * 16;
+	//m_world.fractionPos += m_player.velocity * dt;
+	//m_world.pos = static_cast<glm::ivec3>(m_world.fractionPos) / 16 * 16;
 	m_player.velocity *= 0.95f;
 	
-	updateWorld(m_world, m_player);
+	//updateWorld(m_world, m_player);
 	updateCameraView(m_player.camera);
 	//processRay(m_world, m_player, ray, m_shaders[s_outlineShader], type);
 }

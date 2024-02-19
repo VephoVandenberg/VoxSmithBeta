@@ -7,7 +7,8 @@
 
 using namespace Engine::Renderer;
 
-static IBuffer g_cubeBuff;
+static IBuffer g_cubeOutlineBuff;
+static Buffer g_cubeBuff;
 static IBuffer g_pOutlineBuff;
 static Buffer g_rayBuff;
 
@@ -21,6 +22,56 @@ constexpr float g_cubeOutlineVerts[] = {
 	0, 1, 1, // -x +y +z (5)
 	1, 1, 1, // +x +y +z (6)
 	1, 0, 1, // +x -y +z (7)
+};
+
+constexpr float g_cubeVerts[] = {
+	// front
+	0, 0, 0,
+	1, 0, 0,
+	0, 1, 0,
+	1, 0, 0,
+	0, 1, 0,
+	1, 1, 0,
+
+	// back
+	0, 0, 1,
+	1, 0, 1,
+	0, 1, 1,
+	1, 0, 1,
+	0, 1, 1,
+	1, 1, 1,
+
+	// left
+	0, 0, 0,
+	0, 0, 1,
+	0, 1, 0,
+	0, 0, 1,
+	0, 1, 0,
+	0, 1, 1,
+
+	// right
+	1, 0, 0,
+	1, 0, 1,
+	1, 1, 0,
+	1, 0, 1,
+	1, 1, 0,
+	1, 1, 1,
+
+	// top
+	0, 1, 0,
+	1, 1, 0,
+	1, 1, 1,
+	1, 1, 1,
+	0, 1, 1,
+	0, 1, 0,
+	
+	// bottom
+	0, 0, 0,
+	1, 0, 0,
+	1, 0, 1,
+	1, 0, 1,
+	0, 0, 1,
+	0, 0, 0
 };
 
 constexpr float g_playerOutlineVerts[] = {
@@ -45,14 +96,14 @@ constexpr float g_lineWidth = 3.0f;
 
 void Engine::Renderer::loadCubeData()
 {
-	// This function might not be needed at all
-	glGenVertexArrays(1, &g_cubeBuff.VAO);
-	glGenBuffers(1, &g_cubeBuff.VBO);
-	glGenBuffers(1, &g_cubeBuff.IBO);
+	// Outline cube
+	glGenVertexArrays(1, &g_cubeOutlineBuff.VAO);
+	glGenBuffers(1, &g_cubeOutlineBuff.VBO);
+	glGenBuffers(1, &g_cubeOutlineBuff.IBO);
 
-	glBindVertexArray(g_cubeBuff.VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, g_cubeBuff.VBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_cubeBuff.IBO);
+	glBindVertexArray(g_cubeOutlineBuff.VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, g_cubeOutlineBuff.VBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_cubeOutlineBuff.IBO);
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_cubeOutlineVerts), g_cubeOutlineVerts, GL_STATIC_DRAW);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(g_cubeOutlineInds), g_cubeOutlineInds, GL_STATIC_DRAW);
@@ -61,11 +112,22 @@ void Engine::Renderer::loadCubeData()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
 	glLineWidth(g_lineWidth);
+	
+	// Cube
+	glGenVertexArrays(1, &g_cubeBuff.VAO);
+	glGenBuffers(1, &g_cubeBuff.VBO);
+
+	glBindVertexArray(g_cubeBuff.VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, g_cubeBuff.VBO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_cubeVerts), g_cubeVerts, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 }
 
 void Engine::Renderer::loadPlayerOutlineData()
 {
-	// This function might not be needed at all
 	glGenVertexArrays(1, &g_pOutlineBuff.VAO);
 	glGenBuffers(1, &g_pOutlineBuff.VBO);
 	glGenBuffers(1, &g_pOutlineBuff.IBO);
@@ -110,6 +172,11 @@ void Engine::Renderer::render(const Type type)
 	{
 	case Type::CUBE:
 		glBindVertexArray(g_cubeBuff.VAO);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		break;
+
+	case Type::CUBE_LINES:
+		glBindVertexArray(g_cubeOutlineBuff.VAO);
 		glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT, 0);
 		break;
 
