@@ -29,6 +29,7 @@ namespace Engine
 		};
 
 		void loadCubeData();
+		void loadQuadData();
 		void loadPlayerOutlineData();
 		void loadRayData(const Ray& ray);
 

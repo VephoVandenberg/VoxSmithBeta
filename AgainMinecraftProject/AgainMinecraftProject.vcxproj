@@ -171,6 +171,8 @@
     <ClInclude Include="src\modules\world\world.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\debug_quad.fs" />
+    <None Include="shaders\debug_quad.vs" />
     <None Include="shaders\face_outline_shader.fs" />
     <None Include="shaders\face_outline_shader.vs" />
     <None Include="shaders\light_obj.fs" />
@@ -181,7 +183,9 @@
     <None Include="shaders\mesh_shadow_mapping.vs" />
     <None Include="shaders\ray_shader.fs" />
     <None Include="shaders\ray_shader.vs" />
+    <None Include="shaders\shadow_cascade_mapping_depth.vs" />
     <None Include="shaders\shadow_mapping_depth.fs" />
+    <None Include="shaders\shadow_mapping_depth.gs" />
     <None Include="shaders\shadow_mapping_depth.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

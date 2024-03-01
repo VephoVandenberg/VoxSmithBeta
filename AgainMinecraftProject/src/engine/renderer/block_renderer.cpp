@@ -7,10 +7,11 @@
 
 using namespace Engine::Renderer;
 
-static IBuffer g_cubeOutlineBuff;
-static Buffer g_cubeBuff;
-static IBuffer g_pOutlineBuff;
-static Buffer g_rayBuff;
+static IBuffer	g_cubeOutlineBuff;
+static Buffer	g_cubeBuff;
+static IBuffer	g_pOutlineBuff;
+static Buffer	g_rayBuff;
+static Buffer	g_quadBuffer;
 
 // This might not be needed anymore
 constexpr float g_cubeOutlineVerts[] = {
@@ -92,6 +93,17 @@ constexpr uint32_t g_cubeOutlineInds[] = {
 	3, 7,	2, 6					// right
 };
 
+constexpr float g_quadVertices[] = {
+	// positions    // texture Coords
+	-1, -1, 0,		0, 0,
+	 1, -1, 0,		1, 0,
+	-1,  1, 0,		0, 1,
+
+	 1,  1, 0,		1, 1,
+	-1,  1, 0,		0, 1,
+	 1, -1, 0,		1, 0
+};
+
 constexpr float g_lineWidth = 3.0f;
 
 void Engine::Renderer::loadCubeData()
@@ -166,6 +178,23 @@ void Engine::Renderer::loadRayData(const Ray& ray)
 	glLineWidth(g_lineWidth);
 }
 
+void Engine::Renderer::loadQuadData()
+{
+	glGenVertexArrays(1, &g_quadBuffer.VAO);
+	glGenBuffers(1, &g_quadBuffer.VBO);
+
+	glBindVertexArray(g_quadBuffer.VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, g_quadBuffer.VBO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_quadVertices), &g_quadVertices, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+}
+
 void Engine::Renderer::render(const Type type)
 {
 	switch (type)
@@ -181,6 +210,7 @@ void Engine::Renderer::render(const Type type)
 		break;
 
 	case Type::QUAD:
+		glBindVertexArray(g_quadBuffer.VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		break;
 	

@@ -8,11 +8,13 @@
 #include <glm/glm.hpp>
 
 #include "../../engine/renderer/mesh.h"
+#include "../../engine/texture/framebuffer.h"
 
 namespace Engine
 {
 	struct Ray;
 	struct Shader;
+	struct FBuffer;
 
 	namespace Renderer
 	{
@@ -24,8 +26,8 @@ namespace Engine
 	void disableCulling();
 }
 
-static constexpr int32_t g_chunksX = 32;
-static constexpr int32_t g_chunksZ = 32;
+static constexpr int32_t g_chunksX = 28;
+static constexpr int32_t g_chunksZ = 28;
 
 namespace GameModule
 {
@@ -39,8 +41,8 @@ namespace GameModule
 	{
 		glm::ivec3 pos;
 		glm::vec3 fractionPos;
-
-		glm::vec3 lightPos = {0.0f, 190.0f, 0.0f};
+		
+		glm::vec3 lightDir = glm::normalize(glm::vec3(22.0f, 15, 30.0f));
 
 		float updateRadius;
 		
@@ -69,13 +71,23 @@ namespace GameModule
 		std::unordered_set<glm::ivec3, KeyFuncs> chunksToAdd;
 
 		uint32_t threadsAvailable;
+
+		std::vector<float> shadowCascadeLevels;
+		std::vector<glm::mat4> lightSpaceMatrices;
+
+		Engine::FBuffer shadowBuffer;
+		Engine::Renderer::UBuffer lightSpaceMatricesUBO;
 	};
 
-	void initWorld(World& world);
+	void initWorld(World& world, const Player& player);
 	void initChunkFaces(Chunk& chunk);
 	void updateWorld(World& world, const Player& player);
+
 	void drawWorld(World& world, const Player& player, Engine::Shader& shader);
-	void drawWorlToSM(World& world, const Player& player, Engine::Shader& shader);
+	void drawWorlToSM(World& world, Player& player, Engine::Shader& shader);
+#ifdef _DEBUG
+	void drawDebugQuad(World& world, const int32_t layer, Engine::Shader& shader);
+#endif
 
 	void processRay(World& world, const Player& player, Engine::Ray& ray, Engine::Shader& shader, RayType type);
 	void traceRay(World& world, glm::vec3 rayPosFrac, Engine::Shader& shader, RayType type);

@@ -10,13 +10,16 @@ namespace Engine
 
 	struct FBuffer
 	{
-		uint32_t ID;
+		uint32_t id;
 		uint32_t map;
 	};
 
 	void initFBuffer(FBuffer& fBuffer);
-	void initFArrayBuffer(FBuffer& fBuffer, uint32_t n, const std::vector<glm::vec3>& cascades);
+	void initFArrayBuffer(FBuffer& fBuffer, const std::vector<float>& cascades);
 	void bindFBuffer(FBuffer& fBuffer);
+	void useFArray(FBuffer& buffer);
 	void unbindFBuffer();
 	void setFramebufferViewport();
+	void cullFront();
+	void cullBack();
 }

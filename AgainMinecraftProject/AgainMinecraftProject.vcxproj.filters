@@ -121,5 +121,9 @@
     <None Include="shaders\mesh_shadow_mapping.fs" />
     <None Include="shaders\light_obj.vs" />
     <None Include="shaders\light_obj.fs" />
+    <None Include="shaders\shadow_mapping_depth.gs" />
+    <None Include="shaders\shadow_cascade_mapping_depth.vs" />
+    <None Include="shaders\debug_quad.vs" />
+    <None Include="shaders\debug_quad.fs" />
   </ItemGroup>
 </Project>

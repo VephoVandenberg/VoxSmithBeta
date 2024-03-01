@@ -8,6 +8,7 @@ namespace Engine
 
 	void		clearScreen();
 	void		clearBuffers();
+	void		clearDepthBuff();
 	void		setViewport(const size_t width, const size_t height);
 	void		updateScreen(GLFWwindow* window);
 	void		enableCulling();

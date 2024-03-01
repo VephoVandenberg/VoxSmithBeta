@@ -36,10 +36,16 @@ namespace Engine
 			uint32_t activeCounter = 0;
 		};
 
+		using UBuffer = uint32_t;
+
 		void initBuffer(MeshBuffer& buffer);
 		void updateMesh(MeshBuffer& buffer, const Mesh& mesh);
 		void renderMesh(const MeshBuffer& buffer);
 		void deleteMesh(MeshBuffer& buffer);
+
+		void initUBufferLM(UBuffer& buffer);
+		void useUBufferLM(UBuffer& buffer);
+		void updateUBufferLM(UBuffer& buffer, const std::vector<glm::mat4>& lightMatrices);
 
 		void enableCulling();
 		void disableCulling();

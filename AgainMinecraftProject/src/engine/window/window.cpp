@@ -44,14 +44,19 @@ void Engine::clearBuffers()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+void Engine::clearDepthBuff()
+{
+	glClear(GL_DEPTH_BUFFER_BIT);
+}
+
 void Engine::enableCulling()
 {
-//	glCullFace(GL_FRONT);
+	//glCullFace(GL_FRONT);
 }
 
 void Engine::disableCulling()
 {
-//	glCullFace(GL_BACK);
+	//glCullFace(GL_BACK);
 }
 
 void Engine::setViewport(const size_t width, const size_t height)
