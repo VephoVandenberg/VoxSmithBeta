@@ -18,11 +18,14 @@ namespace Engine
 		glm::vec3 up;
 		glm::vec3 front;
 		glm::mat4 view;
+		glm::mat4 projection;
 		
 		float lastX;
 		float lastY;
 		float yaw;
 		float pitch;
+		float nearPlane;
+		float farPlane;
 
 		Ray ray;
 	};

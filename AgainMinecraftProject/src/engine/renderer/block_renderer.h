@@ -10,6 +10,7 @@ namespace Engine
 		{
 			RAY,
 			CUBE,
+			CUBE_LINES,
 			QUAD,
 			PLAYER
 		};
@@ -28,6 +29,7 @@ namespace Engine
 		};
 
 		void loadCubeData();
+		void loadQuadData();
 		void loadPlayerOutlineData();
 		void loadRayData(const Ray& ray);
 

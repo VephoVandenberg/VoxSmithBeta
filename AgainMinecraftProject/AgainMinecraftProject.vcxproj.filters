@@ -51,6 +51,9 @@
     <ClCompile Include="src\engine\noise\noise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\texture\framebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app\app.h">
@@ -101,13 +104,26 @@
     <ClInclude Include="src\engine\noise\noise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\texture\framebuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\mesh_shader.vert" />
-    <None Include="shaders\mesh_shader.frag" />
-    <None Include="shaders\ray_shader.vert" />
-    <None Include="shaders\ray_shader.frag" />
-    <None Include="shaders\face_outline_shader.vert" />
-    <None Include="shaders\face_outline_shader.frag" />
+    <None Include="shaders\mesh_shader.vs" />
+    <None Include="shaders\mesh_shader.fs" />
+    <None Include="shaders\ray_shader.vs" />
+    <None Include="shaders\ray_shader.fs" />
+    <None Include="shaders\face_outline_shader.vs" />
+    <None Include="shaders\face_outline_shader.fs" />
+    <None Include="shaders\mesh_shadow_mapping.vs" />
+    <None Include="shaders\shadow_mapping_depth.vs" />
+    <None Include="shaders\shadow_mapping_depth.fs" />
+    <None Include="shaders\mesh_shadow_mapping.fs" />
+    <None Include="shaders\light_obj.vs" />
+    <None Include="shaders\light_obj.fs" />
+    <None Include="shaders\shadow_mapping_depth.gs" />
+    <None Include="shaders\shadow_cascade_mapping_depth.vs" />
+    <None Include="shaders\debug_quad.vs" />
+    <None Include="shaders\debug_quad.fs" />
   </ItemGroup>
 </Project>

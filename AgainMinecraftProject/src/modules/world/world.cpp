@@ -1,17 +1,23 @@
 #include <limits>
 #include <glm/gtc/matrix_transform.hpp>
+#include <algorithm>
 #include <iostream>
 #include <array>
 #include <thread>
-#include <glfw3.h>
 #include <mutex>
 #include <algorithm>
 #include <functional>
 #include <future>
+#include <string>
+#ifdef _DEBUG
+#include <iostream>
+#endif
 
 #include "../../engine/ray/ray.h"
 #include "../../engine/shader/shader.h"
 #include "../../engine/renderer/block_renderer.h"
+#include "../../engine/renderer/mesh.h"
+#include "../../engine/window/window.h"
 
 #include "../chunk/chunk.h"
 #include "../player/player.h"
@@ -21,10 +27,11 @@
 using namespace GameModule;
 
 constexpr glm::ivec3 g_chunkSize = { 16, 256, 16 };
-
 constexpr size_t g_nBlocks = g_chunkSize.x * g_chunkSize.y * g_chunkSize.z;
-
 constexpr size_t g_updateDistance = g_chunkSize.x * (g_chunksX / 2 - 1);
+
+constexpr size_t g_width = 1280;
+constexpr size_t g_height = 720;
 
 std::mutex g_worldMutex;
 std::vector<std::future<void>> g_futures;
@@ -46,8 +53,19 @@ void initParallelChunks(World& world, const glm::vec3& min, const glm::vec3& max
 	}
 }
 
-void GameModule::initWorld(World& world)
+void initCascadeShadows(World& world, const Player& player)
 {
+	world.shadowCascadeLevels.push_back(player.camera.farPlane / 10.0f);
+	world.shadowCascadeLevels.push_back(player.camera.farPlane / 5.0f);
+	world.shadowCascadeLevels.push_back(player.camera.farPlane / 2.0f);
+}
+
+void GameModule::initWorld(World& world, const Player& player)
+{
+	initCascadeShadows(world, player);
+	Engine::initFArrayBuffer(world.shadowBuffer, world.shadowCascadeLevels);
+	Engine::Renderer::initUBufferLM(world.lightSpaceMatricesUBO);
+
 	world.pos = glm::ivec3(0);
 	world.fractionPos = glm::vec3(0.0f);
 
@@ -132,6 +150,8 @@ void GameModule::initWorld(World& world)
 					{
 						break;
 					}
+					loadChunkMesh(world.chunks[chunkPos]);
+					world.chunks[chunkPos].updated = true;
 				}
 			}
 		}
@@ -415,11 +435,156 @@ void GameModule::updateWorld(World& world, const Player& player)
 	}
 }
 
+std::vector<glm::vec4> getFrustumCornersWorldSpace(const glm::mat4& proj, const glm::mat4& view)
+{
+	const auto inv = glm::inverse(proj * view);
+
+	std::vector<glm::vec4> frustumCorners;
+	for (uint32_t x = 0; x < 2; x++)
+	{
+		for (uint32_t y = 0; y < 2; y++)
+		{
+			for (uint32_t z = 0; z < 2; z++)
+			{
+				const glm::vec4 pt =
+					inv * glm::vec4(
+						2.0f * x - 1.0f,
+						2.0f * y - 1.0f,
+						2.0f * z - 1.0f,
+						1.0f);
+				frustumCorners.push_back(pt / pt.w);
+			}
+		}
+	}
+
+	return frustumCorners;
+}
+
+glm::mat4 getLightSpaceMatrix(const World& world, const Player& player, const float nearPlane, const float farPlane)
+{
+	const auto proj = glm::perspective(
+		glm::radians(45.0f),
+		static_cast<float>(g_width) / static_cast<float>(g_height),
+		nearPlane, farPlane);
+	const auto corners = getFrustumCornersWorldSpace(proj, player.camera.view);
+
+	glm::vec3 center = glm::vec3(0, 0, 0);
+	for (const auto& v : corners)
+	{
+		center += glm::vec3(v);
+	}
+	center /= corners.size();
+
+	const auto lightView = glm::lookAt(center + world.lightDir, center, glm::vec3(0.0f, 1.0f, 0.0f));
+
+	float minX = std::numeric_limits<float>::max();
+	float maxX = std::numeric_limits<float>::lowest();
+	float minY = std::numeric_limits<float>::max();
+	float maxY = std::numeric_limits<float>::lowest();
+	float minZ = std::numeric_limits<float>::max();
+	float maxZ = std::numeric_limits<float>::lowest();
+	for (const auto& v : corners)
+	{
+		const auto trf = lightView * v;
+		minX = std::min(minX, trf.x);
+		maxX = std::max(maxX, trf.x);
+		minY = std::min(minY, trf.y);
+		maxY = std::max(maxY, trf.y);
+		minZ = std::min(minZ, trf.z);
+		maxZ = std::max(maxZ, trf.z);
+	}
+
+	// Tune this parameter according to the scene
+	constexpr float zMult = 70.0f;
+	if (minZ < 0)
+	{
+		minZ *= zMult;
+	}
+	else
+	{
+		minZ /= zMult;
+	}
+	if (maxZ < 0)
+	{
+		maxZ /= zMult;
+	}
+	else
+	{
+		maxZ *= zMult;
+	}
+
+	const glm::mat4 lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
+	return lightProjection * lightView;
+}
+
+std::vector<glm::mat4> getLightSpaceMatrices(const World& world, const Player& player)
+{
+	std::vector<glm::mat4> ret;
+	for (size_t i = 0; i < world.shadowCascadeLevels.size() + 1; i++)
+	{
+		if (i == 0)
+		{
+			ret.push_back(getLightSpaceMatrix(world, player, player.camera.nearPlane, world.shadowCascadeLevels[i]));
+		}
+		else if (i < world.shadowCascadeLevels.size())
+		{
+			ret.push_back(getLightSpaceMatrix(world, player, world.shadowCascadeLevels[i - 1], world.shadowCascadeLevels[i]));
+		}
+		else
+		{
+			ret.push_back(getLightSpaceMatrix(world, player, world.shadowCascadeLevels[i - 1], player.camera.farPlane));
+		}
+	}
+	return ret;
+}
+
+void GameModule::drawWorlToSM(World& world, Player& player, Engine::Shader& shader)
+{
+	world.lightSpaceMatrices = getLightSpaceMatrices(world, player);
+	Engine::Renderer::updateUBufferLM(world.lightSpaceMatricesUBO, world.lightSpaceMatrices);
+
+	Engine::bindFBuffer(world.shadowBuffer);
+	Engine::setFramebufferViewport();
+	Engine::clearDepthBuff();
+	Engine::Renderer::disableCulling();
+	for (auto& pair : world.chunks)
+	{
+		if (!pair.second.updated)
+		{
+			loadChunkMesh(pair.second);
+			pair.second.updated = true;
+		}
+		Engine::setUniform3f(shader, "u_chunkPos", pair.first);
+		drawSolid(pair.second);
+	}
+	Engine::Renderer::enableCulling();
+	Engine::unbindFBuffer();
+}
+
+#ifdef _DEBUG
+void GameModule::drawDebugQuad(World& world, const int32_t layer, Engine::Shader& shader)
+{
+	Engine::useFArray(world.shadowBuffer);
+	//setUniformi(shader, "u_layer", layer);
+	Engine::Renderer::render(Engine::Renderer::Type::QUAD);
+}
+#endif
+
 void GameModule::drawWorld(World& world, const Player& player, Engine::Shader& shader)
 {
+	Engine::useFArray(world.shadowBuffer);
 	std::lock_guard<std::mutex> lock(g_worldMutex);
 	std::multimap<float, glm::ivec3> sorted;
 
+	for (uint32_t i = 0; i < world.shadowCascadeLevels.size(); i++)
+	{
+		const std::string uniform = "u_cascadePlaneDistances[" + std::to_string(i) + "]";
+		Engine::setUniformf(shader, uniform.c_str(), world.shadowCascadeLevels[i]);
+	}
+
+	Engine::setUniform3f(shader, "u_lightDir", world.lightDir);
+	Engine::setUniformf(shader, "u_farPlane", player.camera.farPlane);
+	Engine::setUniformi(shader, "u_cascadeCount", world.shadowCascadeLevels.size());
 	for (auto& pair : world.chunks)
 	{
 		if (!pair.second.updated)
@@ -437,11 +602,14 @@ void GameModule::drawWorld(World& world, const Player& player, Engine::Shader& s
 		}
 	}
 
+
+	Engine::Renderer::disableCulling();
 	for (auto it = sorted.rbegin(); it != sorted.rend(); it++)
 	{
 		Engine::setUniform3f(shader, "u_chunkPos", it->second);
 		drawTrans(world.chunks[it->second]);
 	}
+	Engine::Renderer::enableCulling();
 }
 
 bool collAABB(const Player& player, const glm::vec3& pos)
@@ -503,10 +671,10 @@ void GameModule::traceRay(World& world, glm::vec3 rayPosFrac, Engine::Shader& sh
 {
 	glm::ivec3 currBlock = static_cast<glm::ivec3>(rayPosFrac);
 
-	glm::ivec3 rightBlock = { currBlock.x + 1,	currBlock.y,		currBlock.z };
-	glm::ivec3 leftBlock = { currBlock.x - 1,	currBlock.y,		currBlock.z };
-	glm::ivec3 frontBlock = { currBlock.x,		currBlock.y,		currBlock.z + 1 };
-	glm::ivec3 backBlock = { currBlock.x,		currBlock.y,		currBlock.z - 1 };
+	glm::ivec3 rightBlock = { currBlock.x + 1, currBlock.y, currBlock.z };
+	glm::ivec3 leftBlock = { currBlock.x - 1, currBlock.y, currBlock.z };
+	glm::ivec3 frontBlock = { currBlock.x, currBlock.y, currBlock.z + 1 };
+	glm::ivec3 backBlock = { currBlock.x, currBlock.y, currBlock.z - 1 };
 
 	glm::ivec3 iPosCurr = currBlock - getChunkPos(currBlock);
 	glm::ivec3 iPosRight = rightBlock - getChunkPos(rightBlock);
@@ -736,18 +904,18 @@ void GameModule::checkPlayerCollision(World& world, Player& player, float dt)
 
 	const glm::vec3 start = { player.pos.x, player.pos.y, player.pos.z };
 
-	const Block& leftZ = getBlock(world, { start.x,			start.y,		start.z + z });
-	const Block& rightZ = getBlock(world, { start.x + 1.0f,		start.y,		start.z + z });
-	const Block& backX = getBlock(world, { start.x + x,		start.y,		start.z });
-	const Block& frontX = getBlock(world, { start.x + x,		start.y,		start.z + 1.0f });
-	const Block& leftFZ = getBlock(world, { start.x,			start.y + 1.0f,	start.z + z });
-	const Block& rightFZ = getBlock(world, { start.x + 1.0f,		start.y + 1.0f,	start.z + z });
-	const Block& backFX = getBlock(world, { start.x + x,		start.y + 1.0f,	start.z });
-	const Block& frontFX = getBlock(world, { start.x + x,		start.y + 1.0f,	start.z + 1.0f });
-	const Block& frontLY = getBlock(world, { start.x,			start.y + y,	start.z + 1.0f });
-	const Block& frontRY = getBlock(world, { start.x + 1.0f,		start.y + y,	start.z + 1.0f });
-	const Block& backLY = getBlock(world, { start.x,			start.y + y,	start.z });
-	const Block& backRY = getBlock(world, { start.x + 1.0f,		start.y + y,	start.z });
+	const Block& leftZ = getBlock(world, { start.x,	start.y, start.z + z });
+	const Block& rightZ = getBlock(world, { start.x + 1.0f,	start.y, start.z + z });
+	const Block& backX = getBlock(world, { start.x + x,	start.y, start.z });
+	const Block& frontX = getBlock(world, { start.x + x, start.y, start.z + 1.0f });
+	const Block& leftFZ = getBlock(world, { start.x, start.y + 1.0f, start.z + z });
+	const Block& rightFZ = getBlock(world, { start.x + 1.0f, start.y + 1.0f, start.z + z });
+	const Block& backFX = getBlock(world, { start.x + x, start.y + 1.0f, start.z });
+	const Block& frontFX = getBlock(world, { start.x + x, start.y + 1.0f, start.z + 1.0f });
+	const Block& frontLY = getBlock(world, { start.x, start.y + y, start.z + 1.0f });
+	const Block& frontRY = getBlock(world, { start.x + 1.0f, start.y + y, start.z + 1.0f });
+	const Block& backLY = getBlock(world, { start.x, start.y + y, start.z });
+	const Block& backRY = getBlock(world, { start.x + 1.0f,	start.y + y, start.z });
 
 	glm::vec3 normals = glm::vec3(0);
 

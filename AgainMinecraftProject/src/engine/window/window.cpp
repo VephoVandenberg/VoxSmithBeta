@@ -23,7 +23,7 @@ GLFWwindow* Engine::getWindow(const char* title, size_t width, size_t height)
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		exit(EXIT_FAILURE);
 	}
-	glViewport(0, 0, width, height);
+	setViewport(width, height);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -36,7 +36,32 @@ GLFWwindow* Engine::getWindow(const char* title, size_t width, size_t height)
 void Engine::clearScreen()
 {
 	glClearColor(147.0f/255.0f, 202.0f/255.0f, 237.0f/255.0f, 1.0f);
+	clearBuffers();
+}
+
+void Engine::clearBuffers()
+{
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void Engine::clearDepthBuff()
+{
+	glClear(GL_DEPTH_BUFFER_BIT);
+}
+
+void Engine::enableCulling()
+{
+	//glCullFace(GL_FRONT);
+}
+
+void Engine::disableCulling()
+{
+	//glCullFace(GL_BACK);
+}
+
+void Engine::setViewport(const size_t width, const size_t height)
+{
+	glViewport(0, 0, width, height);
 }
 
 void Engine::updateScreen(GLFWwindow* window)

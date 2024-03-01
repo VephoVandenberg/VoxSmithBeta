@@ -42,63 +42,63 @@ struct BlockVert
 using VertexArray = std::array<BlockVert, g_vertexPerFace>;
 
 constexpr VertexArray back{ {
-	{{ 0, 0, 0 }, 0, 0.7f },
-	{{ 0, 1, 0 }, 2, 0.7f },
-	{{ 1, 0, 0 }, 1, 0.7f },
+	{{ 0, 0, 0 }, 0, 5 },
+	{{ 0, 1, 0 }, 2, 5 },
+	{{ 1, 0, 0 }, 1, 5 },
 
-	{{ 1, 0, 0 }, 1, 0.7f },
-	{{ 0, 1, 0 }, 2, 0.7f },
-	{{ 1, 1, 0 }, 3, 0.7f },
+	{{ 1, 0, 0 }, 1, 5 },
+	{{ 0, 1, 0 }, 2, 5 },
+	{{ 1, 1, 0 }, 3, 5 },
 } };
 
 constexpr VertexArray front{ {
-	{{ 0, 0, 1 }, 0, 0.7f },
-	{{ 1, 0, 1 }, 1, 0.7f },
-	{{ 0, 1, 1 }, 2, 0.7f },
+	{{ 0, 0, 1 }, 0, 4 },
+	{{ 1, 0, 1 }, 1, 4 },
+	{{ 0, 1, 1 }, 2, 4 },
 
-	{{ 1, 0, 1 }, 1, 0.7f },
-	{{ 1, 1, 1 }, 3, 0.7f },
-	{{ 0, 1, 1 }, 2, 0.7f },
+	{{ 1, 0, 1 }, 1, 4 },
+	{{ 1, 1, 1 }, 3, 4 },
+	{{ 0, 1, 1 }, 2, 4 },
 } };
 
 constexpr VertexArray top{ {
-	{{ 0, 1, 1 }, 0, 1.0f },
-	{{ 1, 1, 1 }, 1, 1.0f },
-	{{ 0, 1, 0 }, 2, 1.0f },
+	{{ 0, 1, 1 }, 0, 2 },
+	{{ 1, 1, 1 }, 1, 2 },
+	{{ 0, 1, 0 }, 2, 2 },
 
-	{{ 1, 1, 1 }, 1, 1.0f },
-	{{ 1, 1, 0 }, 3, 1.0f },
-	{{ 0, 1, 0 }, 2, 1.0f },
+	{{ 1, 1, 1 }, 1, 2 },
+	{{ 1, 1, 0 }, 3, 2 },
+	{{ 0, 1, 0 }, 2, 2 },
 } };
 
 constexpr VertexArray bottom{ {
-	{{ 0, 0, 1 }, 0, 0.2f },
-	{{ 0, 0, 0 }, 2, 0.2f },
-	{{ 1, 0, 1 }, 1, 0.2f },
+	{{ 0, 0, 1 }, 0, 3 },
+	{{ 0, 0, 0 }, 2, 3 },
+	{{ 1, 0, 1 }, 1, 3 },
 
-	{{ 1, 0, 0 }, 3, 0.2f },
-	{{ 1, 0, 1 }, 1, 0.2f },
-	{{ 0, 0, 0 }, 2, 0.2f },
+	{{ 1, 0, 0 }, 3, 3 },
+	{{ 1, 0, 1 }, 1, 3 },
+	{{ 0, 0, 0 }, 2, 3 },
 } };
 
 constexpr VertexArray left{ {
-	{{ 0, 0, 0 }, 0, 0.4f },
-	{{ 0, 0, 1 }, 1, 0.4f },
-	{{ 0, 1, 0 }, 2, 0.4f },
+	{{ 0, 0, 0 }, 0, 1 },
+	{{ 0, 0, 1 }, 1, 1 },
+	{{ 0, 1, 0 }, 2, 1 },
 
-	{{ 0, 0, 1 }, 1, 0.4f },
-	{{ 0, 1, 1 }, 3, 0.4f },
-	{{ 0, 1, 0 }, 2, 0.4f },
+	{{ 0, 0, 1 }, 1, 1 },
+	{{ 0, 1, 1 }, 3, 1 },
+	{{ 0, 1, 0 }, 2, 1 },
 } };
 
 constexpr VertexArray right{ {
-	{{ 1, 0, 1 }, 0, 0.9f },
-	{{ 1, 0, 0 }, 1, 0.9f },
-	{{ 1, 1, 1 }, 2, 0.9f },
+	{{ 1, 0, 1 }, 0, 0 },
+	{{ 1, 0, 0 }, 1, 0 },
+	{{ 1, 1, 1 }, 2, 0 },
 
-	{{ 1, 0, 0 }, 1, 0.9f },
-	{{ 1, 1, 0 }, 3, 0.9f },
-	{{ 1, 1, 1 }, 2, 0.9f }
+	{{ 1, 0, 0 }, 1, 0 },
+	{{ 1, 1, 0 }, 3, 0 },
+	{{ 1, 1, 1 }, 2, 0 }
 } };
 
 using FaceMap = std::unordered_map<Face::FaceType, const VertexArray, EnumHash>;
@@ -119,8 +119,8 @@ BlockType getBlockType(Chunk& chunk, const glm::vec3& pos, const float height)
 	if (pos.y <= height)
 	{
 		float dirtHeight = height - 3;
-		float mountainLevel = 135.0f;
-		float peakLevel = 150.0f;
+		float mountainLevel = 155.0f;
+		float peakLevel = 160.0f;
 
 		if (pos.y > peakLevel)
 		{
@@ -215,7 +215,7 @@ Chunk GameModule::generateChunk(const glm::ivec3& pos)
 
 
 			heightMap[g_chunkSize.x * z + x] =
-				(g_heightOffset + 100.0f * blendedNoise);
+				(g_heightOffset + 200.0f * blendedNoise);
 		}
 	}
 
@@ -289,17 +289,17 @@ void updateFace(Chunk& chunk, const glm::ivec3 pos, BlockType type, Face::FaceTy
 	for (uint32_t iVertex = 0; iVertex < g_vertexPerFace; iVertex++)
 	{
 		glm::ivec3 posData = pos + g_faces[face][iVertex].pos;
-		float ambient = g_faces[face][iVertex].ambient;
+		uint32_t normalID = g_faces[face][iVertex].ambient;
+		uint32_t texCoord = g_faces[face][iVertex].coordInd;
 
 		int32_t data = 0;
 		data |= (posData.x) & 0x1F;		  // x
 		data |= (posData.y & 0x1FF) << 5; // y
 		data |= (posData.z & 0x1F) << 14; // z
 
-		data |= (g_faces[face][iVertex].coordInd & 0x3) << 19;	// Coord ind
-		data |= (texID & 0xF) << 21;							// tex id
-
-		data |= (static_cast<int32_t>(ambient * 10) & 0xF) << 25;
+		data |= (texCoord & 0x3) << 19;	// Coord ind
+		data |= (texID & 0xF) << 21;	// tex id
+		data |= (normalID & 0x3) << 25; // normal id
 
 		if (type == BlockType::WATER)
 		{

@@ -92,6 +92,7 @@ bool Engine::initTextureArray(TextureArray& tArray, const std::vector<const char
 
 void Engine::useTextureArray(TextureArray& tArray)
 {
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, tArray.id);
 }
 
