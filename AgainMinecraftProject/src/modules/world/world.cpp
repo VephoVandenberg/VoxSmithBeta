@@ -57,7 +57,6 @@ void initCascadeShadows(World& world, const Player& player)
 {
 	world.shadowCascadeLevels.push_back(player.camera.farPlane / 10.0f);
 	world.shadowCascadeLevels.push_back(player.camera.farPlane / 5.0f);
-	world.shadowCascadeLevels.push_back(player.camera.farPlane / 2.0f);
 }
 
 void GameModule::initWorld(World& world, const Player& player)
@@ -396,8 +395,14 @@ void addChunks(World& world)
 	}
 }
 
-void GameModule::updateWorld(World& world, const Player& player)
+void GameModule::updateWorld(World& world, const Player& player, float dt)
 {
+	// glm::mat4 model = glm::mat4(1.0f);
+	// model = glm::rotate(model, glm::radians(dt) * 10, glm::vec3(0.0f, 0.0f, 1.0f));
+	// world.lightDir = glm::normalize(glm::vec3(model * glm::vec4(world.lightDir, 1.0f)));
+
+	return;
+
 	for (int32_t z = world.pos.z;
 		z < world.pos.z + g_chunksZ * g_chunkSize.z;
 		z += g_chunkSize.z)
@@ -495,7 +500,7 @@ glm::mat4 getLightSpaceMatrix(const World& world, const Player& player, const fl
 	}
 
 	// Tune this parameter according to the scene
-	constexpr float zMult = 70.0f;
+	constexpr float zMult = 50.0f;
 	if (minZ < 0)
 	{
 		minZ *= zMult;
@@ -513,7 +518,49 @@ glm::mat4 getLightSpaceMatrix(const World& world, const Player& player, const fl
 		maxZ *= zMult;
 	}
 
-	const glm::mat4 lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
+	std::vector<glm::vec4> boundingVertices = {
+			{-1.0f,	-1.0f,	-1.0f,	1.0f},
+			{-1.0f,	-1.0f,	1.0f,	1.0f},
+			{-1.0f,	1.0f,	-1.0f,	1.0f},
+			{-1.0f,	1.0f,	1.0f,	1.0f},
+			{1.0f,	-1.0f,	-1.0f,	1.0f},
+			{1.0f,	-1.0f,	1.0f,	1.0f},
+			{1.0f,	1.0f,	-1.0f,	1.0f},
+			{1.0f,	1.0f,	1.0f,	1.0f}
+	};
+
+	float actualSize;
+	float farFaceDiagonal = glm::length(glm::vec3(boundingVertices[7]) - glm::vec3(boundingVertices[1]));
+	float forwardDiagonal = glm::length(glm::vec3(boundingVertices[7]) - glm::vec3(boundingVertices[0]));
+	actualSize = std::max(farFaceDiagonal, forwardDiagonal);
+
+	float W = maxX - minX, H = maxY - minY;
+	float diff = actualSize - H;
+	if (diff > 0) 
+	{
+		maxY += diff / 2.0f;
+		minY -= diff / 2.0f;
+	}
+	diff = actualSize - W;
+	if (diff > 0) 
+	{
+		maxX += diff / 2.0f;
+		minX -= diff / 2.0f;
+	}
+
+	float pixelSize = actualSize / 2048.0f;
+	minX = std::round(minX / pixelSize) * pixelSize;
+	maxX = std::round(maxX / pixelSize) * pixelSize;
+	minY = std::round(minY / pixelSize) * pixelSize;
+	maxY = std::round(maxY / pixelSize) * pixelSize;
+
+	auto lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
+	lightProjection = glm::mat4(
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, .5f, 0,
+		0, 0, .5f, 1
+	) * lightProjection;
 	return lightProjection * lightView;
 }
 
@@ -540,8 +587,7 @@ std::vector<glm::mat4> getLightSpaceMatrices(const World& world, const Player& p
 
 void GameModule::drawWorlToSM(World& world, Player& player, Engine::Shader& shader)
 {
-	world.lightSpaceMatrices = getLightSpaceMatrices(world, player);
-	Engine::Renderer::updateUBufferLM(world.lightSpaceMatricesUBO, world.lightSpaceMatrices);
+	Engine::Renderer::updateUBufferLM(world.lightSpaceMatricesUBO, getLightSpaceMatrices(world, player));
 
 	Engine::bindFBuffer(world.shadowBuffer);
 	Engine::setFramebufferViewport();
@@ -562,10 +608,9 @@ void GameModule::drawWorlToSM(World& world, Player& player, Engine::Shader& shad
 }
 
 #ifdef _DEBUG
-void GameModule::drawDebugQuad(World& world, const int32_t layer, Engine::Shader& shader)
+void GameModule::drawDebugQuad(World& world, Engine::Shader& shader)
 {
 	Engine::useFArray(world.shadowBuffer);
-	//setUniformi(shader, "u_layer", layer);
 	Engine::Renderer::render(Engine::Renderer::Type::QUAD);
 }
 #endif

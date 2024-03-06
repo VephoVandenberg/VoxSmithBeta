@@ -31,7 +31,6 @@ namespace Engine
 	};
 
 	void updateCameraView(Camera& camera);
-	void updateCameraRotation(GLFWwindow* window, const double xPos, const double yPos);
 	
 	Ray castRay(const Camera& camera);
 }

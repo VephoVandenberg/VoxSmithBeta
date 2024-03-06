@@ -7,7 +7,7 @@
 
 using namespace Engine;
 
-constexpr uint32_t g_shadowResolution = 3072;
+constexpr uint32_t g_shadowResolution = 2048;
 
 void Engine::initFBuffer(FBuffer& fBuffer) 
 {

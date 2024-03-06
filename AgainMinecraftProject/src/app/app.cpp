@@ -301,7 +301,7 @@ void Application::onRender()
 	{
 		setUniformi(m_shaders[ShadersAvailable::s_debugQuad], "u_depthMap", 1);
 		setUniformi(m_shaders[ShadersAvailable::s_debugQuad], "u_layer", g_layer);
-		drawDebugQuad(m_world, g_layer, m_shaders[ShadersAvailable::s_debugQuad]);
+		drawDebugQuad(m_world, m_shaders[ShadersAvailable::s_debugQuad]);
 	}
 	else
 	{
@@ -424,7 +424,7 @@ void Application::onUpdate(float dt)
 	//m_world.pos = static_cast<glm::ivec3>(m_world.fractionPos) / 16 * 16;
 	m_player.velocity *= 0.95f;
 
-	//updateWorld(m_world, m_player);
+	updateWorld(m_world, m_player, dt);
 	updateCameraView(m_player.camera);
 	//processRay(m_world, m_player, ray, m_shaders[s_outlineShader], type);
 }

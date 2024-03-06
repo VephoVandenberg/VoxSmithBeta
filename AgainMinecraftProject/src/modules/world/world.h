@@ -26,8 +26,8 @@ namespace Engine
 	void disableCulling();
 }
 
-static constexpr int32_t g_chunksX = 28;
-static constexpr int32_t g_chunksZ = 28;
+static constexpr int32_t g_chunksX = 32;
+static constexpr int32_t g_chunksZ = 32;
 
 namespace GameModule
 {
@@ -42,7 +42,7 @@ namespace GameModule
 		glm::ivec3 pos;
 		glm::vec3 fractionPos;
 		
-		glm::vec3 lightDir = glm::normalize(glm::vec3(22.0f, 15, 30.0f));
+		glm::vec3 lightDir = glm::normalize(glm::vec3(40.0f, 25.0f, 0.0f));
 
 		float updateRadius;
 		
@@ -73,7 +73,6 @@ namespace GameModule
 		uint32_t threadsAvailable;
 
 		std::vector<float> shadowCascadeLevels;
-		std::vector<glm::mat4> lightSpaceMatrices;
 
 		Engine::FBuffer shadowBuffer;
 		Engine::Renderer::UBuffer lightSpaceMatricesUBO;
@@ -81,12 +80,12 @@ namespace GameModule
 
 	void initWorld(World& world, const Player& player);
 	void initChunkFaces(Chunk& chunk);
-	void updateWorld(World& world, const Player& player);
+	void updateWorld(World& world, const Player& player, float dt);
 
 	void drawWorld(World& world, const Player& player, Engine::Shader& shader);
 	void drawWorlToSM(World& world, Player& player, Engine::Shader& shader);
 #ifdef _DEBUG
-	void drawDebugQuad(World& world, const int32_t layer, Engine::Shader& shader);
+	void drawDebugQuad(World& world, Engine::Shader& shader);
 #endif
 
 	void processRay(World& world, const Player& player, Engine::Ray& ray, Engine::Shader& shader, RayType type);

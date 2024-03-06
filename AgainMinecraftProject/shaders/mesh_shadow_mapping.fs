@@ -16,8 +16,6 @@ uniform sampler2DArray u_shadowMap;
 uniform vec3 u_lightDir;
 uniform float u_farPlane;
 
-// uniform mat4 u_lightSpaceMatrices[16];
-
 layout (std140) uniform LightSpaceMatrices
 {
     mat4 u_lightSpaceMatrices[16];
@@ -53,7 +51,7 @@ void main()
 
     vec3 lightDir = normalize(u_lightDir);
     float diff = max(dot(lightDir, frag_in.normal), 0.0);
-    vec3 diffuse = diff * textureWithLight.rgb;
+    vec3 diffuse = 1.5f * diff * textureWithLight.rgb;
 
     float shadow = calculateShadow(frag_in.fragPosWorld);
 
@@ -103,7 +101,7 @@ float calculateShadow(vec3 fragPosWorldSpace)
     // calculate bias (based on depth map resolution and slope)
     vec3 normal = normalize(frag_in.normal);
     //vec3 lightDir = normalize(-u_lightDir);
-    float bias = max(0.05f * (1.0f - dot(normal, u_lightDir)), 0.0005f);
+    float bias = max(0.05f * (1.0f - dot(normal, u_lightDir)), 0.055f);
     const float biasModifier = 0.5f;
     if (layer == u_cascadeCount)
     {

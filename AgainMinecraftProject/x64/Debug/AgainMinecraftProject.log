@@ -1,3 +1,43 @@
-﻿  framebuffer.cpp
-D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\engine\texture\framebuffer.cpp(69,10): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+﻿  world.cpp
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(41,17): warning C4244: 'initializing': conversion from 'const T' to 'int32_t', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(43,18): warning C4244: 'initializing': conversion from 'const T' to 'int32_t', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(76,47): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(76,19): warning C4244: 'initializing': conversion from 'int' to 'const float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(76,47): warning C4244: '+=': conversion from 'float' to 'int32_t', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(222,25): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(224,26): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(226,27): warning C4018: '<': signed/unsigned mismatch
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(236,20): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(237,22): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(238,22): warning C4244: 'initializing': conversion from 'T' to 'uint32_t', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(632,80): warning C4267: 'argument': conversion from 'size_t' to 'int32_t', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(806,8): warning C4101: 'dxExit': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(805,26): warning C4101: 'dyEntry': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(805,8): warning C4101: 'dxEntry': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(806,16): warning C4101: 'dzExit': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(805,17): warning C4101: 'dzEntry': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(806,24): warning C4101: 'dyExit': unreferenced local variable
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(946,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(947,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+D:\Working\AgainMinecraftProject\AgainMinecraftProject\src\modules\world\world.cpp(948,10): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
   AgainMinecraftProject.vcxproj -> D:\Working\AgainMinecraftProject\x64\Debug\AgainMinecraftProject.exe

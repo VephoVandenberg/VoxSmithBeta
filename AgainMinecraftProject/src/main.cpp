@@ -1,5 +1,7 @@
 /** TO DO LIST
 * AGENDA
+* - MipMaps
+* - FrameTime and FPS
 * - Let there be light(Shadow maps)
 * LATER
 * - Perhaps we need some kind of instrument for enabling physics

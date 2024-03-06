@@ -20,11 +20,6 @@ void Engine::updateCameraView(Camera& camera)
 	);
 }
 
-void Engine::updateCameraRotation(GLFWwindow* window, const double xPos, const double yPos)
-{
-
-}
-
 Ray Engine::castRay(const Camera& camera)
 {
 	glm::vec3 start = camera.pos;
