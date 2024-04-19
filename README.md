@@ -1,1 +1,1 @@
-# Prototye of VoxSmith engine
+# Prototpye of VoxSmith engine
