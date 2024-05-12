@@ -7,8 +7,6 @@
 
 using namespace Engine;
 
-constexpr uint32_t g_shadowResolution = 2048;
-
 void Engine::initFBuffer(FBuffer& fBuffer) 
 {
 	glGenFramebuffers(1, &fBuffer.id);

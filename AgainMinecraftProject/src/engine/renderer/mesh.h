@@ -41,6 +41,7 @@ namespace Engine
 		void initBuffer(MeshBuffer& buffer);
 		void updateMesh(MeshBuffer& buffer, const Mesh& mesh);
 		void renderMesh(const MeshBuffer& buffer);
+		void renderMeshFaces(const MeshBuffer& buffer);
 		void deleteMesh(MeshBuffer& buffer);
 
 		void initUBufferLM(UBuffer& buffer);

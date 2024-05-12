@@ -48,6 +48,13 @@ void Engine::Renderer::renderMesh(const MeshBuffer& buffer)
 	glBindVertexArray(0);
 }
 
+void Engine::Renderer::renderMeshFaces(const MeshBuffer& buffer)
+{
+	glBindVertexArray(buffer.VAO);
+	glDrawArrays(GL_LINE, 0, buffer.nVertices);
+	glBindVertexArray(0);
+}
+
 void Engine::Renderer::updateMesh(MeshBuffer& buffer, const Mesh& mesh)
 {
 	if (!buffer.VAO)

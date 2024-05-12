@@ -55,8 +55,10 @@ void initParallelChunks(World& world, const glm::vec3& min, const glm::vec3& max
 
 void initCascadeShadows(World& world, const Player& player)
 {
-	world.shadowCascadeLevels.push_back(player.camera.farPlane / 10.0f);
-	world.shadowCascadeLevels.push_back(player.camera.farPlane / 5.0f);
+	world.shadowCascadeLevels = {
+		player.camera.farPlane / 20.0f,
+		player.camera.farPlane / 5.0f
+	};
 }
 
 void GameModule::initWorld(World& world, const Player& player)
@@ -440,147 +442,117 @@ void GameModule::updateWorld(World& world, const Player& player, float dt)
 	}
 }
 
-std::vector<glm::vec4> getFrustumCornersWorldSpace(const glm::mat4& proj, const glm::mat4& view)
+glm::mat4 getLightSpaceMatrix(const World& world, const Player& player, 
+	const float nearPlane, const float farPlane,
+	const float prevSplitD, const float currSplitD)
 {
-	const auto inv = glm::inverse(proj * view);
+	std::vector<glm::vec3> boundingVertices = {
+		glm::vec3(-1.0f,  1.0f, -1.0f),
+		glm::vec3( 1.0f,  1.0f, -1.0f),
+		glm::vec3( 1.0f, -1.0f, -1.0f),
+		glm::vec3(-1.0f, -1.0f, -1.0f),
+		glm::vec3(-1.0f,  1.0f,  1.0f),
+		glm::vec3( 1.0f,  1.0f,  1.0f),
+		glm::vec3( 1.0f, -1.0f,  1.0f),
+		glm::vec3(-1.0f, -1.0f,  1.0f),
+	};
 
-	std::vector<glm::vec4> frustumCorners;
-	for (uint32_t x = 0; x < 2; x++)
-	{
-		for (uint32_t y = 0; y < 2; y++)
-		{
-			for (uint32_t z = 0; z < 2; z++)
-			{
-				const glm::vec4 pt =
-					inv * glm::vec4(
-						2.0f * x - 1.0f,
-						2.0f * y - 1.0f,
-						2.0f * z - 1.0f,
-						1.0f);
-				frustumCorners.push_back(pt / pt.w);
-			}
-		}
-	}
-
-	return frustumCorners;
-}
-
-glm::mat4 getLightSpaceMatrix(const World& world, const Player& player, const float nearPlane, const float farPlane)
-{
-	const auto proj = glm::perspective(
+	const auto eyeViewMatrix = player.camera.view;
+	const auto projectionMatrix = glm::perspective(
 		glm::radians(45.0f),
 		static_cast<float>(g_width) / static_cast<float>(g_height),
 		nearPlane, farPlane);
-	const auto corners = getFrustumCornersWorldSpace(proj, player.camera.view);
+	const auto inv = glm::inverse(projectionMatrix * eyeViewMatrix);
 
-	glm::vec3 center = glm::vec3(0, 0, 0);
-	for (const auto& v : corners)
+	for (unsigned int i = 0; i < boundingVertices.size(); i++)
 	{
-		center += glm::vec3(v);
-	}
-	center /= corners.size();
-
-	const auto lightView = glm::lookAt(center + world.lightDir, center, glm::vec3(0.0f, 1.0f, 0.0f));
-
-	float minX = std::numeric_limits<float>::max();
-	float maxX = std::numeric_limits<float>::lowest();
-	float minY = std::numeric_limits<float>::max();
-	float maxY = std::numeric_limits<float>::lowest();
-	float minZ = std::numeric_limits<float>::max();
-	float maxZ = std::numeric_limits<float>::lowest();
-	for (const auto& v : corners)
-	{
-		const auto trf = lightView * v;
-		minX = std::min(minX, trf.x);
-		maxX = std::max(maxX, trf.x);
-		minY = std::min(minY, trf.y);
-		maxY = std::max(maxY, trf.y);
-		minZ = std::min(minZ, trf.z);
-		maxZ = std::max(maxZ, trf.z);
+		glm::vec4 invPoint = inv * glm::vec4(boundingVertices[i], 1.0f);
+		boundingVertices[i] = glm::vec3(invPoint / invPoint.w);
 	}
 
-	// Tune this parameter according to the scene
-	constexpr float zMult = 50.0f;
-	if (minZ < 0)
+	for (unsigned int i = 0; i < boundingVertices.size() / 2.0f; i++)
 	{
-		minZ *= zMult;
-	}
-	else
-	{
-		minZ /= zMult;
-	}
-	if (maxZ < 0)
-	{
-		maxZ /= zMult;
-	}
-	else
-	{
-		maxZ *= zMult;
+		glm::vec3 cornerRay = boundingVertices[i + 4] - boundingVertices[i];
+		glm::vec3 nearCornerRay = cornerRay * prevSplitD;
+		glm::vec3 farCornerRay = cornerRay * currSplitD;
+		boundingVertices[i + 4] = boundingVertices[i] + farCornerRay;
+		boundingVertices[i] = boundingVertices[i] + nearCornerRay;
 	}
 
-	std::vector<glm::vec4> boundingVertices = {
-			{-1.0f,	-1.0f,	-1.0f,	1.0f},
-			{-1.0f,	-1.0f,	1.0f,	1.0f},
-			{-1.0f,	1.0f,	-1.0f,	1.0f},
-			{-1.0f,	1.0f,	1.0f,	1.0f},
-			{1.0f,	-1.0f,	-1.0f,	1.0f},
-			{1.0f,	-1.0f,	1.0f,	1.0f},
-			{1.0f,	1.0f,	-1.0f,	1.0f},
-			{1.0f,	1.0f,	1.0f,	1.0f}
-	};
-
-	float actualSize;
-	float farFaceDiagonal = glm::length(glm::vec3(boundingVertices[7]) - glm::vec3(boundingVertices[1]));
-	float forwardDiagonal = glm::length(glm::vec3(boundingVertices[7]) - glm::vec3(boundingVertices[0]));
-	actualSize = std::max(farFaceDiagonal, forwardDiagonal);
-
-	float W = maxX - minX, H = maxY - minY;
-	float diff = actualSize - H;
-	if (diff > 0) 
+	glm::vec3 center = glm::vec3(0.0f);
+	for (unsigned int i = 0; i < boundingVertices.size(); i++)
 	{
-		maxY += diff / 2.0f;
-		minY -= diff / 2.0f;
+		center += boundingVertices[i];
 	}
-	diff = actualSize - W;
-	if (diff > 0) 
+	center /= 8.0f;
+
+	float radius = 0.0f;
+	for (unsigned int i = 0; i < boundingVertices.size(); i++)
 	{
-		maxX += diff / 2.0f;
-		minX -= diff / 2.0f;
+		float distance = glm::length(boundingVertices[i] - center);
+		radius = std::max(radius, distance);
 	}
 
-	float pixelSize = actualSize / 2048.0f;
-	minX = std::round(minX / pixelSize) * pixelSize;
-	maxX = std::round(maxX / pixelSize) * pixelSize;
-	minY = std::round(minY / pixelSize) * pixelSize;
-	maxY = std::round(maxY / pixelSize) * pixelSize;
+	radius = std::ceil(radius * 16.0f) / 16.0f;
 
-	auto lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
-	lightProjection = glm::mat4(
-		1, 0, 0, 0,
-		0, 1, 0, 0,
-		0, 0, .5f, 0,
-		0, 0, .5f, 1
-	) * lightProjection;
-	return lightProjection * lightView;
+	glm::vec3 maxExtents = glm::vec3(radius);
+	glm::vec3 minExtents = -maxExtents;
+
+	// Position the viewmatrix looking down the center of the frustum with an arbitrary lighht direction
+	glm::vec3 lightDirection = center - glm::normalize(-world.lightDir) * - minExtents.z;
+	glm::mat4 lightViewMatrix = glm::mat4(1.0f);
+	lightViewMatrix = glm::lookAt(lightDirection, center, glm::vec3(0.0f, 1.0f, 0.0f));
+
+	glm::vec3 cascadeExtents = maxExtents - minExtents;
+
+	glm::mat4 lightOrthoMatrix = 
+		glm::ortho(minExtents.x, maxExtents.x, minExtents.y, maxExtents.y, 0.0f, cascadeExtents.z);
+
+	glm::mat4 shadowMatrix = lightOrthoMatrix * lightViewMatrix;
+	glm::vec4 shadowOrigin = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	shadowOrigin = shadowMatrix * shadowOrigin;
+	shadowOrigin = shadowOrigin * Engine::g_shadowResolution / 2.0f;
+
+	glm::vec4 roundedOrigin = glm::round(shadowOrigin);
+	glm::vec4 roundOffset = roundedOrigin - shadowOrigin;
+	roundOffset = roundOffset * 2.0f / Engine::g_shadowResolution;
+	roundOffset.z = 0.0f;
+	roundOffset.w = 0.0f;
+
+	glm::mat4 shadowProj = lightOrthoMatrix;
+	shadowProj[3] += roundOffset;
+	lightOrthoMatrix = shadowProj;
+
+	return shadowProj * lightViewMatrix;
 }
 
 std::vector<glm::mat4> getLightSpaceMatrices(const World& world, const Player& player)
 {
 	std::vector<glm::mat4> ret;
+	float prevSplitDistance = 0.1f;
+	float currSplitDistance;
 	for (size_t i = 0; i < world.shadowCascadeLevels.size() + 1; i++)
 	{
 		if (i == 0)
 		{
-			ret.push_back(getLightSpaceMatrix(world, player, player.camera.nearPlane, world.shadowCascadeLevels[i]));
+			currSplitDistance = world.shadowCascadeLevels[i] - player.camera.nearPlane;
+			ret.push_back(getLightSpaceMatrix(world, player, 
+				player.camera.nearPlane, world.shadowCascadeLevels[i], prevSplitDistance, currSplitDistance));
 		}
 		else if (i < world.shadowCascadeLevels.size())
 		{
-			ret.push_back(getLightSpaceMatrix(world, player, world.shadowCascadeLevels[i - 1], world.shadowCascadeLevels[i]));
+			currSplitDistance = world.shadowCascadeLevels[i] - world.shadowCascadeLevels[i - 1];
+			ret.push_back(getLightSpaceMatrix(world, player, 
+				world.shadowCascadeLevels[i - 1], world.shadowCascadeLevels[i], prevSplitDistance, currSplitDistance));
 		}
 		else
 		{
-			ret.push_back(getLightSpaceMatrix(world, player, world.shadowCascadeLevels[i - 1], player.camera.farPlane));
+			currSplitDistance = player.camera.farPlane - world.shadowCascadeLevels[i - 1];
+			ret.push_back(getLightSpaceMatrix(world, player,
+				world.shadowCascadeLevels[i - 1], player.camera.farPlane, prevSplitDistance, currSplitDistance));
 		}
+
+		prevSplitDistance = currSplitDistance;
 	}
 	return ret;
 }
@@ -593,6 +565,7 @@ void GameModule::drawWorlToSM(World& world, Player& player, Engine::Shader& shad
 	Engine::setFramebufferViewport();
 	Engine::clearDepthBuff();
 	Engine::Renderer::disableCulling();
+
 	for (auto& pair : world.chunks)
 	{
 		if (!pair.second.updated)
@@ -600,7 +573,7 @@ void GameModule::drawWorlToSM(World& world, Player& player, Engine::Shader& shad
 			loadChunkMesh(pair.second);
 			pair.second.updated = true;
 		}
-		Engine::setUniform3f(shader, "u_chunkPos", pair.first);
+		Engine::setUniform3f(shader, "u_chunkPos", pair.second.pos);
 		drawSolid(pair.second);
 	}
 	Engine::Renderer::enableCulling();
@@ -665,7 +638,8 @@ bool collAABB(const Player& player, const glm::vec3& pos)
 	return collX && collY && collZ;
 }
 
-void GameModule::processRay(World& world, const Player& player, Engine::Ray& ray, Engine::Shader& shader, RayType type)
+void GameModule::processRay(World& world, const Player& player,
+	Engine::Ray& ray, Engine::Shader& shader, RayType type)
 {
 	bool		hit = false;
 	float		dl = 0.1f;

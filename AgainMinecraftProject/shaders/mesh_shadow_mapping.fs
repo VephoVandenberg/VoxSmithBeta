@@ -25,8 +25,8 @@ uniform float u_cascadePlaneDistances[16];
 uniform int u_cascadeCount;
 uniform bool u_showCascades;
 
-float g_near = 200.0f;
-float g_far = 230.0f;
+float g_near = 180.0f;
+float g_far = 200.0f;
 vec4 g_fogColor = vec4(147.0f/255.0f, 202.0f/255.0f, 237.0f/255.0f, 1.0f);
 
 const vec3 g_debugColors[5] = {
@@ -101,7 +101,7 @@ float calculateShadow(vec3 fragPosWorldSpace)
     // calculate bias (based on depth map resolution and slope)
     vec3 normal = normalize(frag_in.normal);
     //vec3 lightDir = normalize(-u_lightDir);
-    float bias = max(0.05f * (1.0f - dot(normal, u_lightDir)), 0.055f);
+    float bias = max(0.05f * (1.0f - dot(normal, u_lightDir)), 0.03f);
     const float biasModifier = 0.5f;
     if (layer == u_cascadeCount)
     {

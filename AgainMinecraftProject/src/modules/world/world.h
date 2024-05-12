@@ -26,8 +26,8 @@ namespace Engine
 	void disableCulling();
 }
 
-static constexpr int32_t g_chunksX = 32;
-static constexpr int32_t g_chunksZ = 32;
+static constexpr int32_t g_chunksX = 24;
+static constexpr int32_t g_chunksZ = 24;
 
 namespace GameModule
 {

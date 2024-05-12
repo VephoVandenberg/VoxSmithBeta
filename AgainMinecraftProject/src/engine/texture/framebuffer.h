@@ -6,6 +6,8 @@
 
 namespace Engine
 {
+	static constexpr float g_shadowResolution = 4 * 1024.0f;
+
 	void setViewport(const size_t width, const size_t height);
 
 	struct FBuffer

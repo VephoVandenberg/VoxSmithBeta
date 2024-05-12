@@ -25,12 +25,12 @@ using namespace GameModule;
 using namespace App;
 
 
-const char* g_title = "Azamat's making Minecraft fucking again";
-constexpr size_t g_width = 1280;
-constexpr size_t g_height = 720;
+const char* g_title = "VoxSmithBeta";
+constexpr size_t g_width = 1600;
+constexpr size_t g_height = 900;
 
-constexpr size_t g_numberOfChunksX = 16;
-constexpr size_t g_numberOfChunksZ = 16;
+constexpr size_t g_numberOfChunksX = 24;
+constexpr size_t g_numberOfChunksZ = 24;
 
 constexpr size_t g_jumpHeight = 3;
 
@@ -105,7 +105,7 @@ void Application::initPlayer()
 			m_player.camera.front,
 			m_player.camera.up);
 	m_player.camera.nearPlane = 0.1f;
-	m_player.camera.farPlane = 300.0f;
+	m_player.camera.farPlane = 200.0f;
 
 	glfwSetWindowUserPointer(m_window, this);
 
@@ -245,6 +245,7 @@ void Application::handleInput()
 		m_keyboardPressed[GLFW_KEY_N] = false;
 	}
 
+#ifdef _DEBUG
 	if (glfwGetKey(m_window, GLFW_KEY_R) == GLFW_PRESS &&
 		!m_keyboardPressed[GLFW_KEY_R])
 	{
@@ -254,6 +255,7 @@ void Application::handleInput()
 	{
 		g_showCascades = false;
 	}
+#endif
 
 
 	if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS &&
